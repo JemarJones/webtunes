@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Major Version</key><integer>1</integer>
+	<key>Minor Version</key><integer>1</integer>
+	<key>Date</key><date>2015-03-10T20:50:05Z</date>
+	<key>Application Version</key><string>12.0.1.26</string>
+	<key>Features</key><integer>5</integer>
+	<key>Show Content Ratings</key><true/>
+	<key>Music Folder</key><string>file:///Users/Nalwa/Music/iTunes/iTunes%20Music/</string>
+	<key>Library Persistent ID</key><string>67F88CD8F1AE57BF</string>
+	<key>Tracks</key>
+	<dict>
+		<key>5562</key>
+		<dict>
+			<key>Track ID</key><integer>5562</integer>
+			<key>Name</key><string>All Me</string>
+			<key>Artist</key><string>Drake</string>
+			<key>Composer</key><string>LeakedEarly.com</string>
+			<key>Album</key><string>NWTS</string>
+			<key>Grouping</key><string>www.viperial.com</string>
+			<key>Kind</key><string>MPEG audio file</string>
+			<key>Size</key><integer>6593604</integer>
+			<key>Total Time</key><integer>273162</integer>
+			<key>Year</key><integer>2013</integer>
+			<key>Date Modified</key><date>2015-03-10T19:48:16Z</date>
+			<key>Date Added</key><date>2013-09-19T21:31:44Z</date>
+			<key>Bit Rate</key><integer>192</integer>
+			<key>Sample Rate</key><integer>44100</integer>
+			<key>Comments</key><string>www.viperial.com</string>
+			<key>Play Count</key><integer>4</integer>
+			<key>Play Date</key><integer>3486717244</integer>
+			<key>Play Date UTC</key><date>2014-06-27T16:34:04Z</date>
+			<key>Skip Count</key><integer>3</integer>
+			<key>Skip Date</key><date>2014-02-07T17:16:12Z</date>
+			<key>Artwork Count</key><integer>1</integer>
+			<key>Persistent ID</key><string>324B6E8D000ED38A</string>
+			<key>Track Type</key><string>File</string>
+			<key>Location</key><string>file:///Users/Nalwa/Music/iTunes/iTunes%20Music/Drake/NWTS/All%20Me.mp3</string>
+			<key>File Folder Count</key><integer>4</integer>
+			<key>Library Folder Count</key><integer>1</integer>
+		</dict>
+		<key>5564</key>
+		<dict>
+			<key>Track ID</key><integer>5564</integer>
+			<key>Name</key><string>The Motion</string>
+			<key>Artist</key><string>Drake Ft. Sampha</string>
+			<key>Album Artist</key><string>www.АudioCastle.net</string>
+			<key>Composer</key><string>LeakedEarly.com</string>
+			<key>Album</key><string>www.АudioCastle.net</string>
+			<key>Grouping</key><string>www.viperial.com</string>
+			<key>Kind</key><string>MPEG audio file</string>
+			<key>Size</key><integer>9893009</integer>
+			<key>Total Time</key><integer>245472</integer>
+			<key>Year</key><integer>2013</integer>
+			<key>Date Modified</key><date>2013-09-16T10:34:40Z</date>
+			<key>Date Added</key><date>2013-09-19T21:31:44Z</date>
+			<key>Bit Rate</key><integer>320</integer>
+			<key>Sample Rate</key><integer>44100</integer>
+			<key>Comments</key><string>www.viperial.com</string>
+			<key>Play Count</key><integer>29</integer>
+			<key>Play Date</key><integer>3495568073</integer>
+			<key>Play Date UTC</key><date>2014-10-08T03:07:53Z</date>
+			<key>Skip Count</key><integer>10</integer>
+			<key>Skip Date</key><date>2014-01-17T21:56:28Z</date>
+			<key>Artwork Count</key><integer>1</integer>
+			<key>Sort Name</key><string>Motion</string>
+			<key>Persistent ID</key><string>D950C7937BEE7DDA</string>
+			<key>Track Type</key><string>File</string>
+			<key>Location</key><string>file:///Users/Nalwa/Music/iTunes/iTunes%20Music/www.%D0%90udioCastle.net/www.%D0%90udioCastle.net/The%20Motion.mp3</string>
+			<key>File Folder Count</key><integer>4</integer>
+			<key>Library Folder Count</key><integer>1</integer>
+		</dict>
+		<key>5568</key>
+		<dict>
+			<key>Track ID</key><integer>5568</integer>
+			<key>Name</key><string>Versace Ft. Meek Mill, Tyga, Migos</string>
+			<key>Artist</key><string>Drake</string>
+			<key>Kind</key><string>MPEG audio file</string>
+			<key>Size</key><integer>2399764</integer>
+			<key>Total Time</key><integer>298684</integer>
+			<key>Date Modified</key><date>2015-03-10T19:48:29Z</date>
+			<key>Date Added</key><date>2013-09-25T00:05:47Z</date>
+			<key>Bit Rate</key><integer>64</integer>
+			<key>Sample Rate</key><integer>22050</integer>
+			<key>Play Count</key><integer>31</integer>
+			<key>Play Date</key><integer>3499886749</integer>
+			<key>Play Date UTC</key><date>2014-11-27T02:45:49Z</date>
+			<key>Skip Count</key><integer>6</integer>
+			<key>Skip Date</key><date>2015-02-07T19:28:11Z</date>
+			<key>Persistent ID</key><string>F8DE9D677A7CF62F</string>
+			<key>Track Type</key><string>File</string>
+			<key>Location</key><string>file:///Users/Nalwa/Music/iTunes/iTunes%20Music/Drake/Unknown%20Album/Versace%20Ft.%20Meek%20Mill,%20Tyga,%20Migos.mp3</string>
+			<key>File Folder Count</key><integer>4</integer>
+			<key>Library Folder Count</key><integer>1</integer>
+		</dict>
+		<key>5572</key>
+		<dict>
+			<key>Track ID</key><integer>5572</integer>
+			<key>Name</key><string>U.O.E.N.O. (Black Hippy Remix)</string>
+			<key>Artist</key><string>Kendrick Lamar, Schoolboy Q, Ab-Soul &#38; Jay Rock</string>
+			<key>Kind</key><string>MPEG audio file</string>
+			<key>Size</key><integer>6750616</integer>
+			<key>Total Time</key><integer>337423</integer>
+			<key>Date Modified</key><date>2013-09-29T16:59:44Z</date>
+			<key>Date Added</key><date>2013-09-29T16:59:45Z</date>
+			<key>Bit Rate</key><integer>160</integer>
+			<key>Sample Rate</key><integer>44100</integer>
+			<key>Play Count</key><integer>43</integer>
+			<key>Play Date</key><integer>3482144720</integer>
+			<key>Play Date UTC</key><date>2014-05-05T18:25:20Z</date>
+			<key>Skip Count</key><integer>9</integer>
+			<key>Skip Date</key><date>2015-02-20T19:54:36Z</date>
+			<key>Normalization</key><integer>1372</integer>
+			<key>Persistent ID</key><string>67CB57ADDFAE5895</string>
+			<key>Track Type</key><string>File</string>
+			<key>Location</key><string>file:///Users/Nalwa/Music/iTunes/iTunes%20Music/Kendrick%20Lamar,%20Schoolboy%20Q,%20Ab-Soul%20&#38;%20Jay%20Rock/Unknown%20Album/U.O.E.N.O.%20(Black%20Hippy%20Remix).mp3</string>
+			<key>File Folder Count</key><integer>4</integer>
+			<key>Library Folder Count</key><integer>1</integer>
+		</dict>
+		<key>5582</key>
+		<dict>
+			<key>Track ID</key><integer>5582</integer>
+			<key>Name</key><string>My life be like</string>
+			<key>Artist</key><string>Grits</string>
+			<key>Album</key><string>The Art Of Translation</string>
+			<key>Genre</key><string>Rap/R&#38;B</string>
+			<key>Kind</key><string>MPEG audio file</string>
+			<key>Size</key><integer>3733716</integer>
+			<key>Total Time</key><integer>233221</integer>
+			<key>Track Number</key><integer>2</integer>
+			<key>Date Modified</key><date>2015-03-10T19:48:19Z</date>
+			<key>Date Added</key><date>2013-10-10T19:08:54Z</date>
+			<key>Bit Rate</key><integer>128</integer>
+			<key>Sample Rate</key><integer>44100</integer>
+			<key>Play Count</key><integer>30</integer>
+			<key>Play Date</key><integer>3481531905</integer>
+			<key>Play Date UTC</key><date>2014-04-28T16:11:45Z</date>
+			<key>Skip Count</key><integer>9</integer>
+			<key>Skip Date</key><date>2014-03-26T20:02:19Z</date>
+			<key>Sort Album</key><string>Art Of Translation</string>
+			<key>Persistent ID</key><string>0CBA66D9DA4BFCCD</string>
+			<key>Track Type</key><string>File</string>
+			<key>Location</key><string>file:///Users/Nalwa/Music/iTunes/iTunes%20Music/Grits/The%20Art%20Of%20Translation/02%20My%20life%20be%20like.mp3</string>
+			<key>File Folder Count</key><integer>4</integer>
+			<key>Library Folder Count</key><integer>1</integer>
+		</dict>
+		<key>5588</key>
+		<dict>
+			<key>Track ID</key><integer>5588</integer>
+			<key>Name</key><string>I Cant Stop</string>
+			<key>Artist</key><string>Flux Pavilion</string>
+			<key>Kind</key><string>MPEG audio file</string>
+			<key>Size</key><integer>8880061</integer>
+			<key>Total Time</key><integer>220943</integer>
+			<key>Date Modified</key><date>2011-10-06T22:37:52Z</date>
+			<key>Date Added</key><date>2013-10-13T00:57:04Z</date>
+			<key>Bit Rate</key><integer>320</integer>
+			<key>Sample Rate</key><integer>44100</integer>
+			<key>Play Count</key><integer>9</integer>
+			<key>Play Date</key><integer>3466446425</integer>
+			<key>Play Date UTC</key><date>2013-11-05T01:47:05Z</date>
+			<key>Skip Count</key><integer>2</integer>
+			<key>Skip Date</key><date>2013-10-28T02:48:23Z</date>
+			<key>Artwork Count</key><integer>1</integer>
+			<key>Persistent ID</key><string>57A5014568800CE0</string>
+			<key>Track Type</key><string>File</string>
+			<key>Location</key><string>file:///Users/Nalwa/Music/iTunes/iTunes%20Music/Flux%20Pavilion/Unknown%20Album/I%20Cant%20Stop.mp3</string>
+			<key>File Folder Count</key><integer>4</integer>
+			<key>Library Folder Count</key><integer>1</integer>
+		</dict>
+		<key>5592</key>
+		<dict>
+			<key>Track ID</key><integer>5592</integer>
+			<key>Name</key><string>Cinema (Skrillex Remix)</string>
+			<key>Album</key><string>www.Dub-Level.com</string>
+			<key>Genre</key><string>Dubstep</string>
+			<key>Kind</key><string>MPEG audio file</string>
+			<key>Size</key><integer>12331793</integer>
+			<key>Total Time</key><integer>307931</integer>
+			<key>Year</key><integer>2011</integer>
+			<key>Date Modified</key><date>2015-03-10T19:55:04Z</date>
+			<key>Date Added</key><date>2013-10-13T00:57:17Z</date>
+			<key>Bit Rate</key><integer>320</integer>
+			<key>Sample Rate</key><integer>44100</integer>
+			<key>Play Count</key><integer>10</integer>
+			<key>Play Date</key><integer>3465337642</integer>
+			<key>Play Date UTC</key><date>2013-10-23T05:47:22Z</date>
+			<key>Skip Count</key><integer>6</integer>
+			<key>Skip Date</key><date>2014-01-19T01:42:53Z</date>
+			<key>Persistent ID</key><string>28A73B9A032D1848</string>
+			<key>Track Type</key><string>File</string>
+			<key>Location</key><string>file:///Users/Nalwa/Music/iTunes/iTunes%20Music/Unknown%20Artist/www.Dub-Level.com/Cinema%20(Skrillex%20Remix).mp3</string>
+			<key>File Folder Count</key><integer>4</integer>
+			<key>Library Folder Count</key><integer>1</integer>
+		</dict>
+		<key>5594</key>
+		<dict>
+			<key>Track ID</key><integer>5594</integer>
+			<key>Name</key><string>Animals (Original Mix)</string>
+			<key>Artist</key><string>Martin Garrix</string>
+			<key>Album Artist</key><string>[Free-Beatport.Com]</string>
+			<key>Composer</key><string>[Free-Beatport.Com]</string>
+			<key>Genre</key><string>Electro House</string>
+			<key>Kind</key><string>MPEG audio file</string>
+			<key>Size</key><integer>12698567</integer>
+			<key>Total Time</key><integer>313887</integer>
+			<key>Year</key><integer>2013</integer>
+			<key>BPM</key><integer>130</integer>
+			<key>Date Modified</key><date>2015-03-10T19:55:08Z</date>
+			<key>Date Added</key><date>2013-10-13T01:07:21Z</date>
+			<key>Bit Rate</key><integer>320</integer>
+			<key>Sample Rate</key><integer>44100</integer>
+			<key>Comments</key><string>[Free-Beatport.Com]</string>
+			<key>Play Count</key><integer>16</integer>
+			<key>Play Date</key><integer>3506165860</integer>
+			<key>Play Date UTC</key><date>2015-02-07T18:57:40Z</date>
+			<key>Skip Count</key><integer>2</integer>
+			<key>Skip Date</key><date>2014-01-27T02:47:22Z</date>
+			<key>Artwork Count</key><integer>1</integer>
+			<key>Persistent ID</key><string>40CD6F42B9985DAA</string>
+			<key>Track Type</key><string>File</string>
+			<key>Location</key><string>file:///Users/Nalwa/Music/iTunes/iTunes%20Music/%5BFree-Beatport.Com%5D/Unknown%20Album/Animals%20(Original%20Mix).mp3</string>
+			<key>File Folder Count</key><integer>4</integer>
+			<key>Library Folder Count</key><integer>1</integer>
+		</dict>
+	</dict>
+	<key>Playlists</key>
+	<array>
+		<dict>
+			<key>Name</key><string>On-The-Go 3</string>
+			<key>Playlist ID</key><integer>12182</integer>
+			<key>Playlist Persistent ID</key><string>B55D01AD2F824DB1</string>
+			<key>All Items</key><true/>
+			<key>Playlist Items</key>
+			<array>
+				<dict>
+					<key>Track ID</key><integer>5592</integer>
+				</dict>
+				<dict>
+					<key>Track ID</key><integer>5594</integer>
+				</dict>
+				<dict>
+					<key>Track ID</key><integer>5568</integer>
+				</dict>
+				<dict>
+					<key>Track ID</key><integer>5582</integer>
+				</dict>
+				<dict>
+					<key>Track ID</key><integer>5588</integer>
+				</dict>
+				<dict>
+					<key>Track ID</key><integer>5562</integer>
+				</dict>
+				<dict>
+					<key>Track ID</key><integer>5572</integer>
+				</dict>
+				<dict>
+					<key>Track ID</key><integer>5564</integer>
+				</dict>
+				<dict>
+					<key>Track ID</key><integer>5588</integer>
+				</dict>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>

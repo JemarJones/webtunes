@@ -5,13 +5,13 @@ var express = require('express');
 
 //Do we need file system access? Maybe not
 var fs      = require('fs');
-
+var xml2js = require('xml2js');
 //Set up routes
 var routes = express();
 
 //Router for the custom page
 var customRouter = require('./customRouter');
-
+var xmlrouter = require('./xmlparser');
 
 
 /**
@@ -117,6 +117,7 @@ var customRouter = require('./customRouter');
         //     res.send(self.cache_get('index.html') );
         // };
         self.routes['/custom'] = customRouter.customPage;
+        self.routes['/nalwa'] = xmlrouter.xml;
     };
 
 
