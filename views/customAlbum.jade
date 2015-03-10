@@ -1,0 +1,7 @@
+extends customPage
+
+block content
+	each album in albums
+		img(src= album.img)
+		p= album.title
+		p= album.artist
