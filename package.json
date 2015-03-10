@@ -1,22 +1,22 @@
 {
-  "name": "OpenShift-Sample-App",
-  "version": "1.0.0",
-  "description": "OpenShift Sample Application",
+  "name": "WebTunes",
+  "version": "0.0.1",
+  "description": "Share your library online!",
   "keywords": [
-    "OpenShift",
-    "Node.js",
-    "application",
-    "openshift"
+    "Music",
+    "iTunes",
+    "McMaster University",
+    "2XB3"
   ],
   "author": {
-    "name": "OpenShift",
-    "email": "ramr@example.org",
-    "url": "http://www.openshift.com/"
+    "name": "Samraj Nalwa, Jemar Jones, Nikolai Savas",
+    "email": "niko@savas.ca",
+    "url": "http://app-webtunes.rhcloud.com/"
   },
-  "homepage": "http://www.openshift.com/",
+  "homepage": "http://app-webtunes.rhcloud.com/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openshift/origin-server"
+    "url": "https://github.com/sam-nalwa/WebTunes"
   },
 
   "engines": {
@@ -31,5 +31,5 @@
   "bundleDependencies": [],
 
   "private": true,
-  "main": "server.js"
+  "main": "main.js"
 }

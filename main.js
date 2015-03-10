@@ -1,7 +1,14 @@
 #!/bin/env node
-//  OpenShift sample Node application
+
+//Include express.js
 var express = require('express');
+
+//Do we need file system access? Maybe not
 var fs      = require('fs');
+
+//Set up routes
+var routes = express();
+
 
 
 /**
