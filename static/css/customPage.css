@@ -28,11 +28,12 @@ body{
 	margin-top: 20px;
 	font-size: 1.3em;
 	/*background-color: black;*/
-	text-align: center;
+	/*text-align: center;*/
 }
 .albumCont{
 	display: inline-block;
-	margin-right: 5%;
+	margin-left: 2%;
+	/*margin-right: 2.5%;*/
 	margin-bottom: 2%;
 	text-align: center;
 	width: 150px;
