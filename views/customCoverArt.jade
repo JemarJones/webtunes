@@ -3,6 +3,12 @@ extends customPage
 block header
 	#alb.highlighted Cover
 	#lib.normal Library
+	p#sort.hide Sort By: 
+	select#sortOpt.hide
+		option(value="Title") Title
+		option(value="Artist") Artist
+		option(value="Album") Album
+		option(value="Plays") Plays
 block content
 	each album in albums
 		.albumCont

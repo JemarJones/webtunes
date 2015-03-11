@@ -12,7 +12,7 @@ body{
 	position: relative;
 }
 #alb, #lib{
-	display: inline-block;
+	display: inline;
 	font-size: 1.7em;
 	height: 35%;
 	margin-top: 1.7%;
@@ -40,17 +40,24 @@ body{
 	display: inline;
 	margin-left: 2%;
 	font-size: 1.7em;
-	display: none;
+	/*display: none;*/
+	/*visibility: hidden;*/
+	/*vertical-align: middle;*/
 }
 #sortOpt{
 	display: inline;
-	margin-top: 2%;
+	margin-top: 1.5%;
 	background-color: grey;
 	font-size: 1.7em;
 	background-color: rgba(0,0,0,0.5);
 	color: white;
 	border: 0px;
-	display: none;
+	/*display: none;*/
+	/*visibility: hidden;*/
+}
+.hide{
+	visibility: hidden;
+	transition: visibility 0.4s linear;
 }
 #searchForm{
 	display: inline;
