@@ -11,22 +11,48 @@ body{
 	margin-left: -10px;
 	position: relative;
 }
-#header > *{
-	display: inline;
+#alb, #lib{
+	display: inline-block;
+	font-size: 1.7em;
+	height: 35%;
+	margin-top: 1.7%;
+	vertical-align: middle;
+	padding: 0.2em;
 }
-#header > p{
+#alb{
+	margin-left: 4%;
+	border-bottom-left-radius: 5px;
+	border-top-left-radius: 5px;
+	border-right: 1px solid white;
+}
+#lib{
+	border-bottom-right-radius: 5px;
+	border-top-right-radius: 5px;
+	border-left: 1px solid white;
+}
+.highlighted{
+	background-color: rgba(0,0,0,0.7); 
+}
+.normal{
+	background-color: rgba(0,0,0,0.5);
+}
+#sort{
+	display: inline;
 	margin-left: 2%;
 	font-size: 1.7em;
 }
-#header > select{
+#sortOpt{
+	display: inline;
 	margin-top: 2%;
-}
-select{
 	background-color: grey;
 	font-size: 1.7em;
 	background-color: rgba(0,0,0,0.5);
 	color: white;
 	border: 0px;
+}
+#searchForm{
+	display: inline;
+	vertical-align: middle;
 }
 #search{
 	float: right;
