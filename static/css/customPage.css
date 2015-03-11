@@ -9,10 +9,28 @@ body{
 	background-color: rgba(62, 163, 219, 1.0);
 	margin-top: -10px;
 	margin-left: -10px;
+	position: relative;
+}
+#header > *{
+	display: inline;
+}
+#header > p{
+	margin-left: 2%;
+	font-size: 1.7em;
+}
+#header > select{
+	margin-top: 2%;
+}
+select{
+	background-color: grey;
+	font-size: 1.7em;
+	background-color: rgba(0,0,0,0.5);
+	color: white;
+	border: 0px;
 }
 #search{
 	float: right;
-	vertical-align: center;
+	vertical-align: middle;
 	margin: 1.5%;
 	background-color: rgba(0,0,0,0.5);
 	color: white;

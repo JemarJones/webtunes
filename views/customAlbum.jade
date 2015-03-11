@@ -1,5 +1,12 @@
 extends customPage
 
+block header
+	p Sort By: 
+	select
+		option(value="Album") Album
+		option(value="Artist") Artist
+		option(value="Plays") Plays
+		option(value="Title") Title
 block content
 	each album in albums
 		.albumCont
