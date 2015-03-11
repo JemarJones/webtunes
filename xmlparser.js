@@ -41,7 +41,7 @@ exports.xml = function(req ,res){
                         if (keycheck[k]=='Sample Rate') {playcount++;}
                 	}
                     playcounter = thisint[++playcount];
-                    spotifyApi.searchTracks(currentsong[0]+" - "+currentsong[1]+" - "+currentsong[2])
+                    spotifyApi.searchTracks(currentsong[0]+" - "+currentsong[1])
                         .then(function(data) {
                         // console.log(data.body.tracks.items[0].name);
                              if (data.body.tracks.items[0]!=undefined){
