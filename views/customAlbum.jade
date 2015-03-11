@@ -2,6 +2,7 @@ extends customPage
 
 block content
 	each album in albums
-		img(src= album.img)
-		p= album.title
-		p= album.artist
+		.albumCont
+			img.albCover(src= album.img)
+			p.albTitle= album.title
+			p.albArtist= album.artist

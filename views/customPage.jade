@@ -6,7 +6,8 @@ html
 		each sheet in css
 			link(type="text/css", rel="stylesheet", href= sheet)
 	body
-		form
-			input#search(placeholder="Search..")
+		#header
+			form
+				input#search(placeholder="Search..")
 		#contentView
 			block content

@@ -1,14 +1,51 @@
 body{
-	background-color: rgba(62, 163, 219, 1.0);
+	background-color: rgba(108,122,137,1.0);
+	color: white;
 	font-family: 'Helvetica Neue';
+}
+#header{
+	width: 101.5%;
+	height: 80px;
+	background-color: rgba(62, 163, 219, 1.0);
+	margin-top: -10px;
+	margin-left: -10px;
 }
 #search{
 	float: right;
-	margin: 1%;
+	vertical-align: center;
+	margin: 1.5%;
 	background-color: rgba(0,0,0,0.5);
 	color: white;
 	border: 0px;
 	border-radius: 5px;
 	font-size: 1.7em;
 	padding: 0.2em;
+}
+#contentView{
+	/*display: inline-block;*/
+	padding: 1%;
+	clear: both;
+	margin-top: 20px;
+	font-size: 1.3em;
+	/*background-color: black;*/
+	text-align: center;
+}
+.albumCont{
+	display: inline-block;
+	margin-right: 5%;
+	margin-bottom: 2%;
+	text-align: center;
+	width: 150px;
+	/*border: 2px white solid;*/
+}
+.albCover{
+	width: 150px;
+	height: 150px;
+	border-radius: 3px;
+}
+.albTitle{
+	margin: 0 auto;
+}
+.albArtist{
+	margin: 0 auto;
 }
