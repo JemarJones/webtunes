@@ -40,6 +40,7 @@ body{
 	display: inline;
 	margin-left: 2%;
 	font-size: 1.7em;
+	display: none;
 }
 #sortOpt{
 	display: inline;
@@ -49,6 +50,7 @@ body{
 	background-color: rgba(0,0,0,0.5);
 	color: white;
 	border: 0px;
+	display: none;
 }
 #searchForm{
 	display: inline;
