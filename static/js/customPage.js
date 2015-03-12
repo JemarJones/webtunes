@@ -7,19 +7,17 @@ var switchMode = function(){
 	var oldView;
 	var newView;
 	if ($(this)[0] != $('#alb')[0]){
-		console.log('Switching to alb');
 		oldView = '#alb';
 		newView = '#lib';
-		$('#sort').show();
-		$('#sortOpt').show();
-		$('#contentView').hide();
+		$('#sort').removeClass('hide');
+		$('#sortOpt').removeClass('hide');
+		$('#contentView').fadeOut();
 	}else{
-		console.log('Switching to lib');
 		oldView = '#lib';
 		newView = '#alb';
-		$('#sort').hide();
-		$('#sortOpt').hide();
-		$('#contentView').show();
+		$('#sort').addClass('hide');
+		$('#sortOpt').addClass('hide');
+		$('#contentView').fadeIn();
 	}
 	$(oldView).removeClass('highlighted').addClass('normal');
 	$(newView).addClass('highlighted').removeClass('normal');
