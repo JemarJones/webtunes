@@ -4,9 +4,10 @@ async = require('async');
 var SpotifyWebApi = require('spotify-web-api-node');
 
 var songarray=new Array();
+var albumarray=new Array();
 var currentsong=['','','',0,'','',''];
 var playcounter;
-
+var albtest;
 
 exports.xml = function(req ,res){
 	
@@ -35,6 +36,7 @@ exports.xml = function(req ,res){
                         if (keycheck[k]=='Disc Number') {playcount++;}
                         if (keycheck[k]=='Disc Count') {playcount++;}
                         if (keycheck[k]=='Track Number') {playcount++;}
+                        if (keycheck[k]=='Track Count') {playcount++;}
                         if (keycheck[k]=='Year') {playcount++;}
                         if (keycheck[k]=='BPM') {playcount++;}
                         if (keycheck[k]=='Bit Rate') {playcount++;}
@@ -56,11 +58,14 @@ exports.xml = function(req ,res){
                              var artsm=spotifysong.album.images[2].url;
                              var trackid=spotifysong.id;
                              var albumid=spotifysong.album.id;
-                             console.log(name);
+                             console.log(name+" - "+artist);
                              //console.log(name,artist,album,playcounter,artlg,artmd,artsm,trackid,albumid);
                              songarray.push(new Song(name,artist,album,playcounter,artlg,artmd,artsm,trackid,albumid)); 
+                             albumarray.push(new Album(artmd,album,artist));
                              //callback();
                              //console.log(songarray); 
+                             //show_image(albummd);
+                             albtest=artmd;
                             }
                             loop.next();
                         }, function(err) {
@@ -70,7 +75,10 @@ exports.xml = function(req ,res){
                         });
                         
                     }, function(){
-                        res.send(songarray);
+                        //res.send(albumarray);
+                        res.render('customCoverArt',{css: ['./css/customPage.css'],js: ['./js/customPage.js'], albums: albumarray});
+
+                        //res.render("done");
                     });
                     //}
             //    }
@@ -98,6 +106,23 @@ function Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid){
     this.albumid=albumid;
 }
 
+function Album(artmd,album,artist){
+    this.img=artmd;
+    this.title=album;
+    this.artist=artist;
+}
+
+
+function show_image(src) {
+    var img = document.createElement("img");
+    img.src = src;
+    img.width = 300;
+    img.height = 300;
+    //img.alt = alt;
+
+    // This next line will just add it to the <body> tag
+    document.body.appendChild(img);
+}
 
 function asyncLoop(iterations, func, callback) {
     var index = 0;
