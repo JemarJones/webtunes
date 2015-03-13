@@ -25,14 +25,15 @@ exports.xml = function(req ,res){
                 	var thissong = extracteddata[i].string;
                     var thisint = extracteddata[i].integer;
                     //console.log(extracteddata[i]);
-                	currentsong=['','','',0,'','',''];
+                	currentsong=['','','','','',''];
                 	keycheck=extracteddata[i].key;
                     var playcount=2;
                     //console.log(keycheck);
         			for (k=0;k<keycheck.length;k++){
                 		if (keycheck[k]=='Name') {currentsong[0]=thissong[(k-1)];}
                 		if (keycheck[k]=='Artist') {currentsong[1]=thissong[(k-1)];}
-                		if (keycheck[k]=='Album') {currentsong[2]=thissong[(k-1)];}
+                		if (keycheck[k]=='Album Artist') {currentsong[2]=thissong[(k-1)];}
+                        if (keycheck[k]=='Album'){currentsong[3]=thissong[(k-1)]}
                         if (keycheck[k]=='Disc Number') {playcount++;}
                         if (keycheck[k]=='Disc Count') {playcount++;}
                         if (keycheck[k]=='Track Number') {playcount++;}
@@ -48,9 +49,9 @@ exports.xml = function(req ,res){
                         // console.log(data.body.tracks.items[0].name);
                              if (data.body.tracks.items[0]!=undefined){
                              var spotifysong=data.body.tracks.items[0];
-                             //console.log(spotifysong.album.id);
+                             //console.log(spotifysong);
                              var name = spotifysong.name;
-                             //console.log(name);
+                             console.log(name);
                              var artist = spotifysong.artists[0].name;
                              var album = spotifysong.album.name;
                              var artlg=spotifysong.album.images[0].url;
@@ -58,10 +59,12 @@ exports.xml = function(req ,res){
                              var artsm=spotifysong.album.images[2].url;
                              var trackid=spotifysong.id;
                              var albumid=spotifysong.album.id;
-                             console.log(name+" - "+artist);
+                             var albumartist=currentsong[2];
+                             //console.log(name+" - "+artist);
                              //console.log(name,artist,album,playcounter,artlg,artmd,artsm,trackid,albumid);
+
                              songarray.push(new Song(name,artist,album,playcounter,artlg,artmd,artsm,trackid,albumid)); 
-                             albumarray.push(new Album(artmd,album,artist));
+                             albumarray.push(new Album(artmd,"",""/*album,albumartist*/));
                              //callback();
                              //console.log(songarray); 
                              //show_image(albummd);
@@ -112,17 +115,6 @@ function Album(artmd,album,artist){
     this.artist=artist;
 }
 
-
-function show_image(src) {
-    var img = document.createElement("img");
-    img.src = src;
-    img.width = 300;
-    img.height = 300;
-    //img.alt = alt;
-
-    // This next line will just add it to the <body> tag
-    document.body.appendChild(img);
-}
 
 function asyncLoop(iterations, func, callback) {
     var index = 0;
