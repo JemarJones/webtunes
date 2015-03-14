@@ -3,14 +3,13 @@ xml2js = require('xml2js');
 async = require('async');
 var SpotifyWebApi = require('spotify-web-api-node');
 
-var songarray=new Array();
-var albumarray=new Array();
-var currentsong=['','','',0,'','',''];
-var playcounter;
-var albtest;
 
 exports.xml = function(req ,res){
-	
+	var songarray=new Array();
+    var albumarray=new Array();
+    var currentsong=['','','',0,'','',''];
+    var playcounter;
+    var albtest;
 	var parser = new xml2js.Parser();
     var spotifyApi = new SpotifyWebApi();
 
