@@ -9,15 +9,18 @@ body{
 	background-color: rgba(62, 163, 219, 1.0);
 	margin-top: -10px;
 	margin-left: -10px;
-	position: relative;
 }
 #alb, #lib{
-	display: inline;
+	display: inline-block;
 	font-size: 1.7em;
 	height: 35%;
-	margin-top: 1.7%;
+	/*margin-top: 1.7%;*/
 	vertical-align: middle;
 	padding: 0.2em;
+
+	position: relative; 
+	top: 25%;
+	transform: translateY(-50%);
 }
 #alb{
 	margin-left: 4%;
@@ -37,36 +40,48 @@ body{
 	background-color: rgba(0,0,0,0.5);
 }
 #sort{
-	display: inline;
+	display: inline-block;
 	margin-left: 2%;
 	font-size: 1.7em;
 	/*display: none;*/
 	/*visibility: hidden;*/
-	/*vertical-align: middle;*/
+	vertical-align: middle;
+
+	position: relative; 
+	top: 25%;
+	transform: translateY(-50%);
 }
 #sortOpt{
-	display: inline;
-	margin-top: 1.5%;
+	display: inline-block;
 	background-color: grey;
 	font-size: 1.7em;
 	background-color: rgba(0,0,0,0.5);
 	color: white;
 	border: 0px;
-	/*display: none;*/
-	/*visibility: hidden;*/
+	vertical-align: middle;
+	margin-left: 1%;
+	position: relative; 
+	top: 25%;
+	transform: translateY(-50%);
 }
 .hide{
 	visibility: hidden;
 	transition: visibility 0.4s linear;
 }
 #searchForm{
-	display: inline;
-	vertical-align: middle;
+	display: inline-block;
+	float: right;
+
+	/*vertical-align: middle;*/
+
+	position: relative; 
+	top: 50%;
+	transform: translateY(-50%);
 }
 #search{
-	float: right;
-	vertical-align: middle;
-	margin: 1.5%;
+	/*float: right;*/
+	/*vertical-align: middle;*/
+	/*margin: 1.5%;*/
 	background-color: rgba(0,0,0,0.5);
 	color: white;
 	border: 0px;
@@ -75,7 +90,7 @@ body{
 	padding: 0.2em;
 }
 #contentView{
-	/*display: inline-block;*/
+	display: inline-block;
 	padding: 1%;
 	clear: both;
 	margin-top: 20px;
