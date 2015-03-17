@@ -23,7 +23,7 @@ body{
 	transform: translateY(-50%);
 }
 #alb{
-	margin-left: 4%;
+	margin-left: 3.7%;
 	border-bottom-left-radius: 5px;
 	border-top-left-radius: 5px;
 	border-right: 1px solid white;
@@ -71,7 +71,7 @@ body{
 #searchForm{
 	display: inline-block;
 	float: right;
-
+	margin-right: 3%;
 	/*vertical-align: middle;*/
 
 	position: relative; 
