@@ -43,6 +43,7 @@ function handleDisconnect() {
 exports.customPage = function(req, res){
 	var query = "SELECT * FROM user_libraries WHERE user="+req.param.user;
 	connection.query(query,function(err,rows,fields){
+		console.log("The rows are as following");
 		console.log(rows);
 	});
 	res.render('customCoverArt',{css: ['./css/customPage.css'],js: ['./js/customPage.js'], albums: [{img: './images/grad.jpg', title: 'Graduation', artist: 'Kanye West'},{img: './images/grad.jpg', title: 'Graduation', artist: 'Kanye West'},{img: './images/grad.jpg', title: 'Graduation', artist: 'Kanye West'},{img: './images/grad.jpg', title: 'Graduation', artist: 'Kanye West'},{img: './images/grad.jpg', title: 'Graduation', artist: 'Kanye West'},{img: './images/grad.jpg', title: 'Graduation', artist: 'Kanye West'},{img: './images/grad.jpg', title: 'Graduation', artist: 'Kanye West'},{img: './images/grad.jpg', title: 'Graduation', artist: 'Kanye West'},{img: './images/grad.jpg', title: 'Graduation', artist: 'Kanye West'},{img: './images/grad.jpg', title: 'Graduation', artist: 'Kanye West'},{img: './images/grad.jpg', title: 'Graduation', artist: 'Kanye West'},{img: './images/grad.jpg', title: 'Graduation', artist: 'Kanye West'},{img: './images/grad.jpg', title: 'Graduation', artist: 'Kanye West'},{img: './images/grad.jpg', title: 'Graduation', artist: 'Kanye West'},{img: './images/grad.jpg', title: 'Graduation', artist: 'Kanye West'},{img: './images/grad.jpg', title: 'Graduation', artist: 'Kanye West'},{img: './images/grad.jpg', title: 'Graduation', artist: 'Kanye West'}]});
