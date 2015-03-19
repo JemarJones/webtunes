@@ -63,7 +63,7 @@ exports.xml = function(req ,res){
                              //console.log(name,artist,album,playcounter,artlg,artmd,artsm,trackid,albumid);
 
                              songarray.push(new Song(name,artist,album,playcounter,artlg,artmd,artsm,trackid,albumid)); 
-                             albumarray.push(new Album(artmd,"",""/*album,albumartist*/));
+                             albumarray.push(new Album(artmd,album,albumartist));
                              //callback();
                              //console.log(songarray); 
                              //show_image(albummd);
