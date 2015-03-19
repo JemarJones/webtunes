@@ -9,14 +9,12 @@ var switchMode = function(){
 	if ($(this)[0] != $('#alb')[0]){
 		oldView = '#alb';
 		newView = '#lib';
-		$('#sort').removeClass('hide');
-		$('#sortOpt').removeClass('hide');
+		$('#sortCont').removeClass('hide');
 		$('#contentView').fadeOut();
 	}else{
 		oldView = '#lib';
 		newView = '#alb';
-		$('#sort').addClass('hide');
-		$('#sortOpt').addClass('hide');
+		$('#sortCont').addClass('hide');
 		$('#contentView').fadeIn();
 	}
 	$(oldView).removeClass('highlighted').addClass('normal');
