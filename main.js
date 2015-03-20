@@ -10,8 +10,8 @@ var xml2js = require('xml2js');
 var routes = express();
 
 //Router for the custom page
-var customRouter = require('./customRouter');
-var xmlrouter = require('./xmlparser');
+var customRouter = require('./webtunes_core/customRouter');
+var xmlrouter = require('./webtunes_core/xmlparser');
 
 
 /**
