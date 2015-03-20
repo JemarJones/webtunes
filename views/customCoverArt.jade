@@ -15,4 +15,5 @@ block content
 	each album in albums
 		.albumCont
 			img.albCover(src= album.img)
-			p.albData= album.title + ' - ' + album.artist
+			p.albTitle= album.title
+			p.albArtist= "- " + album.artist
