@@ -3,14 +3,14 @@ extends customPage
 block header
 	form#searchForm
 		input#search(placeholder="Search..")
-	#sortCont.hide.normal
+	#alb.highlighted Cover
+	#lib.normal Library
+	#sortCont.normal
 		select#sortOpt
 			option(value="Title") Title
 			option(value="Artist") Artist
 			option(value="Album") Album
 			option(value="Plays") Plays
-	#alb.highlighted Cover
-	#lib.normal Library
 block content
 	each album in albums
 		.albumCont

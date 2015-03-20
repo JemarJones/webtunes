@@ -28,18 +28,20 @@ body{
 .normal{
 	background-color: rgba(68,89,120,0.7);
 }
+#sortCont{
+	opacity: 0.0;
+}
 #sortOpt{
 	display: inline-block;
-	/*margin-left: 1%;*/
 	font-size: 0.9em;
 	color: white;
-	/*position: relative; 
-	top: 75%;
-	left:60%;*/
-
+	width: 100%;
 	background-color: rgba(68,89,120,0);
 	border: 0px;
 	margin: auto;
+}
+#sortOpt:focus{
+	outline: none;
 }
 ::-webkit-input-placeholder { color: rgba(255,255,255,0.6); }
 ::-moz-placeholder { color: rgba(255,255,255,0.6); } /* firefox 19+ */
