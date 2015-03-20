@@ -14,6 +14,9 @@ exports.xml = function(req ,res){
     var spotifyApi = new SpotifyWebApi();
 
 	fs.readFile('../TPL.xml', function(err, data) {
+        if(err){
+            console.log("ERROR: "+err);
+        }
         console.log(data);
     	parser.parseString(data, function (err, result) {
 
