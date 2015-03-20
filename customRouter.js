@@ -42,6 +42,7 @@ function handleDisconnect() {
 //Router functions for the customPage
 exports.customPage = function(req, res){
 	var query = "SELECT * FROM user_libraries WHERE user="+req.param.user;
+	console.log(query);
 	connection.query(query,function(err,rows,fields){
 		console.log("The rows are as following");
 		console.log(rows);
