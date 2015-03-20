@@ -47,9 +47,12 @@ exports.customPage = function(req, res){
 	connection.query(query,function(err,rows,fields){
 		if (!err){
 			console.log("The rows are as following");
-			console.log(rows);
+			// console.log(rows);
 			albums = organize(rows);
 			console.log(albums);
+			console.log(albums[0][0].art_sm);
+			console.log(albums[0][0].artist);
+			console.log(albums[0][0].title);
 		}else{
 			console.log(err);
 		}
