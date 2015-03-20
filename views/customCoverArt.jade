@@ -14,6 +14,6 @@ block header
 block content
 	each album in albums
 		.albumCont
-			img.albCover(src= album.img)
-			p.albTitle= album.title
-			p.albArtist= "- " + album.artist
+			img.albCover(src= album[0].art_sm)
+			p.albTitle= album[0].title
+			p.albArtist= "- " + album[0].artist
