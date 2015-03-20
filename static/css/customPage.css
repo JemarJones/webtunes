@@ -62,12 +62,12 @@ input:-moz-placeholder { color: rgba(255,255,255,0.6); }
 	background-color: rgba(145,206,207,1.0);
 	color: white;
 	border: 0px;
-	/*border-radius: 5px;*/
 	font-size: 1.7em;
 	padding: 0.2em;
 }
 #contentView{
 	display: inline-block;
+	width: 98%;
 	padding: 1%;
 	clear: both;
 	margin-top: 20px;
