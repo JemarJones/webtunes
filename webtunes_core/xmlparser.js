@@ -17,21 +17,22 @@ exports.xml = function(req ,res){
     	parser.parseString(data, function (err, result) {
 
         	extracteddata=result.plist.dict[0].dict[0].dict;
-                asyncLoop(extracteddata.length, function(loop){
-                    var i=loop.iteration();
+                /*
+                    HEY GUYS WE'RE SOFTWARE ENGINEERS! LOOK AT US USE A QUEUE!
+                */
+                var spotifyQueue = async.queue(function(task,callback){
+                    var thissong = task.thissong;
+                    var thisint = task.thisint;
+                    var keycheck = task.key;
 
-                    //for (i = 0; i < extracteddata.length; i++) { 
-                	var thissong = extracteddata[i].string;
-                    var thisint = extracteddata[i].integer;
-                    //console.log(extracteddata[i]);
-                	currentsong=['','','','','',''];
-                	keycheck=extracteddata[i].key;
+                    currentsong=['','','','','',''];
+                    keycheck=extracteddata[i].key;
                     var playcount=2;
                     //console.log(keycheck);
-        			for (k=0;k<keycheck.length;k++){
-                		if (keycheck[k]=='Name') {currentsong[0]=thissong[(k-1)];}
-                		if (keycheck[k]=='Artist') {currentsong[1]=thissong[(k-1)];}
-                		if (keycheck[k]=='Album Artist') {currentsong[2]=thissong[(k-1)];}
+                    for (k=0;k<keycheck.length;k++){
+                        if (keycheck[k]=='Name') {currentsong[0]=thissong[(k-1)];}
+                        if (keycheck[k]=='Artist') {currentsong[1]=thissong[(k-1)];}
+                        if (keycheck[k]=='Album Artist') {currentsong[2]=thissong[(k-1)];}
                         if (keycheck[k]=='Album'){currentsong[3]=thissong[(k-1)]}
                         if (keycheck[k]=='Disc Number') {playcount++;}
                         if (keycheck[k]=='Disc Count') {playcount++;}
@@ -41,7 +42,7 @@ exports.xml = function(req ,res){
                         if (keycheck[k]=='BPM') {playcount++;}
                         if (keycheck[k]=='Bit Rate') {playcount++;}
                         if (keycheck[k]=='Sample Rate') {playcount++;}
-                	}
+                    }
                     playcounter = thisint[++playcount];
                     spotifyApi.searchTracks(currentsong[0]+" - "+currentsong[1])
                         .then(function(data) {
@@ -69,19 +70,95 @@ exports.xml = function(req ,res){
                              //show_image(albummd);
                              albtest=artmd;
                             }
-                            loop.next();
+                            callback();
                         }, function(err) {
                             console.log(err);
-                            loop.break();
+                            callback();
                             //console.log(songarray);
                         });
-                        
-                    }, function(){
-                        //res.send(albumarray);
-                        res.render('customCoverArt',{css: ['./css/customPage.css'],js: ['./js/customPage.js'], albums: albumarray});
+                 },10);
 
-                        //res.render("done");
-                    });
+                for(var i=0;i<extracteddata.length;i++){
+                    //Put each item from the data into the queue to be processed by spotify
+                    spotifyQueue.push({
+                        thissong : extracteddata[i].string,
+                        thisint : extracteddata[i].integer,
+                        keycheck : extracteddata[i].key
+                    })
+                }
+
+                spotifyQueue.drain = function(){
+                    //Once the queue is empty
+                    console.log("All items processed. Loading page.");
+                    res.render('customCoverArt',{css: ['./css/customPage.css'],js: ['./js/customPage.js'], albums: albumarray});
+                }
+
+
+           //      asyncLoop(extracteddata.length, function(loop){
+           //          var i=loop.iteration();
+
+           //          //for (i = 0; i < extracteddata.length; i++) { 
+           //      	var thissong = extracteddata[i].string;
+           //          var thisint = extracteddata[i].integer;
+           //          //console.log(extracteddata[i]);
+           //      	currentsong=['','','','','',''];
+           //      	keycheck=extracteddata[i].key;
+           //          var playcount=2;
+           //          //console.log(keycheck);
+        			// for (k=0;k<keycheck.length;k++){
+           //      		if (keycheck[k]=='Name') {currentsong[0]=thissong[(k-1)];}
+           //      		if (keycheck[k]=='Artist') {currentsong[1]=thissong[(k-1)];}
+           //      		if (keycheck[k]=='Album Artist') {currentsong[2]=thissong[(k-1)];}
+           //              if (keycheck[k]=='Album'){currentsong[3]=thissong[(k-1)]}
+           //              if (keycheck[k]=='Disc Number') {playcount++;}
+           //              if (keycheck[k]=='Disc Count') {playcount++;}
+           //              if (keycheck[k]=='Track Number') {playcount++;}
+           //              if (keycheck[k]=='Track Count') {playcount++;}
+           //              if (keycheck[k]=='Year') {playcount++;}
+           //              if (keycheck[k]=='BPM') {playcount++;}
+           //              if (keycheck[k]=='Bit Rate') {playcount++;}
+           //              if (keycheck[k]=='Sample Rate') {playcount++;}
+           //      	}
+           //          playcounter = thisint[++playcount];
+           //          spotifyApi.searchTracks(currentsong[0]+" - "+currentsong[1])
+           //              .then(function(data) {
+           //              // console.log(data.body.tracks.items[0].name);
+           //                   if (data.body.tracks.items[0]!=undefined){
+           //                   var spotifysong=data.body.tracks.items[0];
+           //                   //console.log(spotifysong);
+           //                   var name = spotifysong.name;
+           //                   console.log(name);
+           //                   var artist = spotifysong.artists[0].name;
+           //                   var album = spotifysong.album.name;
+           //                   var artlg=spotifysong.album.images[0].url;
+           //                   var artmd=spotifysong.album.images[1].url;
+           //                   var artsm=spotifysong.album.images[2].url;
+           //                   var trackid=spotifysong.id;
+           //                   var albumid=spotifysong.album.id;
+           //                   var albumartist=currentsong[2];
+           //                   //console.log(name+" - "+artist);
+           //                   //console.log(name,artist,album,playcounter,artlg,artmd,artsm,trackid,albumid);
+
+           //                   songarray.push(new Song(name,artist,album,playcounter,artlg,artmd,artsm,trackid,albumid)); 
+           //                   albumarray.push(new Album(artmd,album,albumartist));
+           //                   //callback();
+           //                   //console.log(songarray); 
+           //                   //show_image(albummd);
+           //                   albtest=artmd;
+           //                  }
+           //                  loop.next();
+           //              }, function(err) {
+           //                  console.log(err);
+           //                  loop.break();
+           //                  //console.log(songarray);
+           //              });
+                        
+           //          }, function(){
+           //              //res.send(albumarray);
+           //              res.render('customCoverArt',{css: ['./css/customPage.css'],js: ['./js/customPage.js'], albums: albumarray});
+
+           //              //res.render("done");
+           //          });
                     //}
             //    }
             //    ]);
