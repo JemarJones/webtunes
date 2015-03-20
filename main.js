@@ -116,7 +116,7 @@ var xmlrouter = require('./xmlparser');
         //     res.setHeader('Content-Type', 'text/html');
         //     res.send(self.cache_get('index.html') );
         // };
-        self.routes['/custom'] = customRouter.customPage;
+        self.routes['/u/:user'] = customRouter.customPage;
         self.routes['/nalwa'] = xmlrouter.xml;
     };
 
