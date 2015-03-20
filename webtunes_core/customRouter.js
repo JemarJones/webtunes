@@ -63,7 +63,7 @@ var organize = function(rows){
 		if (position == albums.length){
 			albums[position] = [];
 		}
-		albums[position][albums[position].length] = rows[i].album;
+		albums[position][albums[position].length] = rows[i];
 	}
 	return albums;
 };
