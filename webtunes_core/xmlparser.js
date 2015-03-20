@@ -13,11 +13,7 @@ exports.xml = function(req ,res){
 	var parser = new xml2js.Parser();
     var spotifyApi = new SpotifyWebApi();
 
-	fs.readFile('../TPL.xml', function(err, data) {
-        if(err){
-            console.log("ERROR: "+err);
-        }
-        console.log(data);
+	fs.readFile(__dirname + '/TPL.xml', function(err, data) {
     	parser.parseString(data, function (err, result) {
 
         	extracteddata=result.plist.dict[0].dict[0].dict;
