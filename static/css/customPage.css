@@ -29,6 +29,7 @@ body{
 	background-color: rgba(68,89,120,0.7);
 }
 #sortCont{
+	/*Initially set to no opacity so it doesnt flash on screen before js takes care of it*/
 	opacity: 0.0;
 }
 #sortOpt{
@@ -92,11 +93,14 @@ input:-moz-placeholder { color: rgba(255,255,255,0.6); }
 	margin-bottom: 0px;
 	text-align: right;
 	color: black;
-
+	/*Truncates long text nicely*/
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
-/*.albArtist{
-	padding-top: 0px;
-}*/
+.albTitle{
+	font-size: 1.2em;
+}
+.albArtist{
+	font-size: 1.1em;
+}
