@@ -5,6 +5,7 @@ $(document).ready(function(){
 	//Assigning event handlers to switch modes
 	$('#alb').on('click',switchMode);
 	$('#lib').on('click',switchMode);
+	$('.albumCont').on('click',expandAlbum)
 });
 
 //handler to fade between modes nicely
@@ -24,4 +25,7 @@ var switchMode = function(){
 	}
 	$(oldView).removeClass('highlighted').addClass('normal');
 	$(newView).addClass('highlighted').removeClass('normal');
+};
+var expandAlbum = function(){
+	console.log(albums);
 };

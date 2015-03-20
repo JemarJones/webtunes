@@ -12,6 +12,8 @@ block header
 			option(value="Album") Album
 			option(value="Plays") Plays
 block content
+	script.
+		var albums = !{JSON.stringify(albums)};
 	each album in albums
 		.albumCont
 			img.albCover(src= album[0].art_sm)
