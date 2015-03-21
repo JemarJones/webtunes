@@ -29,6 +29,9 @@ var switchMode = function(){
 var expandAlbum = function(){
 	var elem = this;
 	$.get("../../data/" + $(elem).attr("data-user"),function(albums){
-		console.log(albums[$(elem).data("albumNum")]);
-	}); 
+		var tracks = albums[$(elem).data("albumnum")];
+		for (var i = 0; i < tracks.length; i++){
+			console.log(tracks[i].title);
+		}
+	});
 };
