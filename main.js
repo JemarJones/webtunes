@@ -117,6 +117,7 @@ var xmlrouter = require('./webtunes_core/xmlparser');
         //     res.send(self.cache_get('index.html') );
         // };
         self.routes['/u/:user'] = customRouter.customPage;
+        self.routes['/data/:user'] = customRouter.albumData;
         self.routes['/nalwa'] = xmlrouter.xml;
     };
 
