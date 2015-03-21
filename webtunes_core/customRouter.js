@@ -13,6 +13,7 @@ exports.customPage = function(req, res){
 };
 exports.albumData = function(req,res){
 	var albums = getData(req);
+	console.log(albums);
 	if (albums != -1){
 		console.log("Got through albums request");
 		res.send(albums);
