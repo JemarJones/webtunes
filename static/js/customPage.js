@@ -26,6 +26,7 @@ var switchMode = function(){
 	$(oldView).removeClass('highlighted').addClass('normal');
 	$(newView).addClass('highlighted').removeClass('normal');
 };
+//handler to expand an album when its clicked on
 var expandAlbum = function(){
 	var elem = this;
 	$.get("../../data/" + $(elem).attr("data-user"),function(albums){
