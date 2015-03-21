@@ -25,7 +25,9 @@ exports.albumData = function(req,res){
 var getData = function(req){
 	var query = "SELECT * FROM user_libraries WHERE user='"+req.params.user+"'";
 	var albums;
+	console.log("getData called");
 	sqlStarter.connection.query(query,function(err,rows,fields){
+		console.log("query running");
 		if (!err){
 			albums = organize(rows);
 			console.log("normal: " + albums);
