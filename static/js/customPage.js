@@ -30,5 +30,5 @@ var expandAlbum = function(){
 	var elem = this;
 	$.get("../../data/" + $(elem).attr("data-user"),function(albums){
 		console.log(albums[$(elem).data("albumNum")]);
-	});
+	}); 
 };
