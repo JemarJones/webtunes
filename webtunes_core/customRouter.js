@@ -5,7 +5,6 @@ var sqlStarter = require('./sqlStarter');
 exports.customPage = function(req, res){
 	var albums = getData(req);
 	console.log(albums);
-	
 	if (albums != -1){
 		console.log("Got through");
 		res.render('customCoverArt',{css: ['../css/customPage.css'],js: ['../js/customPage.js'], albums: albums});
