@@ -28,9 +28,11 @@ var getData = function(req){
 	sqlStarter.connection.query(query,function(err,rows,fields){
 		if (!err){
 			albums = organize(rows);
+			console.log("normal: " + albums);
 			return albums;
 		}else{
 			console.log(err);
+			console.log("err: " + albums);
 			return -1;
 		}
 	});
