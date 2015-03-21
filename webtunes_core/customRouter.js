@@ -5,57 +5,41 @@ var sqlStarter = require('./sqlStarter');
 exports.customPage = function(req, res){
 	var query = "SELECT * FROM user_libraries WHERE user='"+req.params.user+"'";
 	var albums;
-	console.log("getData called");
-	console.log(query);
 	sqlStarter.connection.query(query,function(err,rows,fields){
-		console.log("query running");
 		if (!err){
 			albums = organize(rows);
-			console.log("normal: " + albums);
-			return albums;
+			res.render('customCoverArt',{css: ['../css/customPage.css'],js: ['../js/customPage.js'], albums: albums});
 		}else{
 			console.log(err);
-			console.log("err: " + albums);
-			return -1;
 		}
 	});
-	// var albums = getData(req);
-	// console.log(albums);
-	// if (albums != -1){
-	// 	console.log("Got through");
-	// 	res.render('customCoverArt',{css: ['../css/customPage.css'],js: ['../js/customPage.js'], albums: albums});
-	// }else{
-	// 	console.log("oops");
-	// }
+	// res.render('customCoverArt',{css: ['../css/customPage.css'],js: ['../js/customPage.js'], albums: [{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'},{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'},{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'},{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'},{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'},{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'},{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'},{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'},{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'},{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'},{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'},{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'},{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'},{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'},{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'},{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'},{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'},{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'},{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'},{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'},{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'},{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'},{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'},{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'},{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'},{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'},{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'},{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'},{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'},{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'},{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'},{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'},{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'},{img: '../images/toPimp.jpeg', title: 'To Pimp a Butterfly', artist: 'Kendrick Lamar'}]});
 };
 exports.albumData = function(req,res){
-	var albums = getData(req);
-	console.log(albums);
-	if (albums != -1){
-		console.log("Got through albums request");
-		res.send(albums);
-	}else{
-		console.log("albums request oops");
-	}
-};
-var getData = function(req){
 	var query = "SELECT * FROM user_libraries WHERE user='"+req.params.user+"'";
 	var albums;
-	console.log("getData called");
-	console.log(query);
 	sqlStarter.connection.query(query,function(err,rows,fields){
-		console.log("query running");
 		if (!err){
 			albums = organize(rows);
-			console.log("normal: " + albums);
-			return albums;
+			res.send(albums);
 		}else{
 			console.log(err);
-			console.log("err: " + albums);
-			return -1;
 		}
 	});
 };
+// var getData = function(req){
+// 	var query = "SELECT * FROM user_libraries WHERE user='"+req.params.user+"'";
+// 	var albums;
+// 	sqlStarter.connection.query(query,function(err,rows,fields){
+// 		if (!err){
+// 			albums = organize(rows);
+// 			return albums;
+// 		}else{
+// 			console.log(err);
+// 			return err;
+// 		}
+// 	});
+// };
 var organize = function(rows){
 	var albums = [];
 	for (var i = 0; i < rows.length; i++){
