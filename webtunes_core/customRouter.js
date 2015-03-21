@@ -5,13 +5,19 @@ var sqlStarter = require('./sqlStarter');
 exports.customPage = function(req, res){
 	var albums = getData(req);
 	if (albums != -1){
+		console.log("Got through");
 		res.render('customCoverArt',{css: ['../css/customPage.css'],js: ['../js/customPage.js'], albums: albums});
+	}else{
+		console.log("oops");
 	}
 };
 exports.albumData = function(req,res){
 	var albums = getData(req);
 	if (albums != -1){
+		console.log("Got through albums request");
 		res.send(albums);
+	}else{
+		console.log("albums request oops");
 	}
 };
 var getData = function(req){
