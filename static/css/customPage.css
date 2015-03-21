@@ -60,6 +60,7 @@ input:-moz-placeholder { color: rgba(255,255,255,0.6); }
 	margin-right: 2.7%;
 }
 #search{
+	font-family: 'Roboto', sans-serif; 
 	background-color: rgba(145,206,207,1.0);
 	color: white;
 	border: 0px;

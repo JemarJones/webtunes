@@ -8,7 +8,7 @@ exports.customPage = function(req, res){
 	sqlStarter.connection.query(query,function(err,rows,fields){
 		if (!err){
 			albums = organize(rows);
-			res.render('customCoverArt',{css: ['../css/customPage.css','http://fonts.googleapis.com/css?family=Roboto'],js: ['../js/customPage.js'], albums: albums});
+			res.render('customCoverArt',{css: ['../css/customPage.css','http://fonts.googleapis.com/css?family=Roboto:100'],js: ['../js/customPage.js'], albums: albums});
 		}else{
 			console.log(err);
 		}
