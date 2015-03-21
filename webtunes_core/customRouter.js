@@ -3,14 +3,30 @@ var sqlStarter = require('./sqlStarter');
 
 //Router functions for the customPage
 exports.customPage = function(req, res){
-	var albums = getData(req);
-	console.log(albums);
-	if (albums != -1){
-		console.log("Got through");
-		res.render('customCoverArt',{css: ['../css/customPage.css'],js: ['../js/customPage.js'], albums: albums});
-	}else{
-		console.log("oops");
-	}
+	var query = "SELECT * FROM user_libraries WHERE user='"+req.params.user+"'";
+	var albums;
+	console.log("getData called");
+	console.log(query);
+	sqlStarter.connection.query(query,function(err,rows,fields){
+		console.log("query running");
+		if (!err){
+			albums = organize(rows);
+			console.log("normal: " + albums);
+			return albums;
+		}else{
+			console.log(err);
+			console.log("err: " + albums);
+			return -1;
+		}
+	});
+	// var albums = getData(req);
+	// console.log(albums);
+	// if (albums != -1){
+	// 	console.log("Got through");
+	// 	res.render('customCoverArt',{css: ['../css/customPage.css'],js: ['../js/customPage.js'], albums: albums});
+	// }else{
+	// 	console.log("oops");
+	// }
 };
 exports.albumData = function(req,res){
 	var albums = getData(req);
