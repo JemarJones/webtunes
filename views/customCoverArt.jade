@@ -13,7 +13,7 @@ block header
 			option(value="Plays") Plays
 block content 
 	each album, index in albums
-		.albumCont(data-user= album[0].user)
+		.albumCont(data-user= album[0].user, data-albumNum= index)
 			img.albCover(src= album[0].art_sm)
 			p.albTitle= album[0].album
 			p.albArtist= "- " + album[0].artist
