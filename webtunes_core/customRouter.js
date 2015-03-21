@@ -27,19 +27,6 @@ exports.albumData = function(req,res){
 		}
 	});
 };
-// var getData = function(req){
-// 	var query = "SELECT * FROM user_libraries WHERE user='"+req.params.user+"'";
-// 	var albums;
-// 	sqlStarter.connection.query(query,function(err,rows,fields){
-// 		if (!err){
-// 			albums = organize(rows);
-// 			return albums;
-// 		}else{
-// 			console.log(err);
-// 			return err;
-// 		}
-// 	});
-// };
 var organize = function(rows){
 	var albums = [];
 	for (var i = 0; i < rows.length; i++){

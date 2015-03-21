@@ -27,7 +27,7 @@ var switchMode = function(){
 	$(newView).addClass('highlighted').removeClass('normal');
 };
 var expandAlbum = function(){
-	$.get("../../data/" + $(this).data("user"),function(data){
+	$.get("../../data/" + $(this).attr("data-user"),function(data){
 		console.log(data.albums);
 	});
 };
