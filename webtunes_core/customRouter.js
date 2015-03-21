@@ -26,6 +26,7 @@ var getData = function(req){
 	var query = "SELECT * FROM user_libraries WHERE user='"+req.params.user+"'";
 	var albums;
 	console.log("getData called");
+	console.log(query);
 	sqlStarter.connection.query(query,function(err,rows,fields){
 		console.log("query running");
 		if (!err){
