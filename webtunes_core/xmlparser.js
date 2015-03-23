@@ -16,7 +16,7 @@ exports.xml = function(req ,res){
 	fs.readFile(__dirname + '/TPL.xml', function(err, data) {
     	parser.parseString(data, function (err, result) {
 
-        	extracteddata=result.plist.dict[0].dict[0].dict;
+        	var extracteddata=result.plist.dict[0].dict[0].dict;
                 /*
                     HEY GUYS WE'RE SOFTWARE ENGINEERS! LOOK AT US USE A QUEUE!
                 */
