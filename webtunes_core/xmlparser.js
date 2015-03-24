@@ -60,6 +60,7 @@ exports.xml = function(req ,res){
                              var trackid=spotifysong.id;
                              var albumid=spotifysong.album.id;
                              var albumartist=currentsong[2];
+                             var playcounter = 0;
                              //console.log(name+" - "+artist);
                              //console.log(name,artist,album,playcounter,artlg,artmd,artsm,trackid,albumid);
 
@@ -95,7 +96,7 @@ exports.xml = function(req ,res){
                     //Let's just push this to the sql db for now.
                     for(var i=0;i<songarray.length;i++){
                         var song = songarray[i];
-                        var query = "INSERT INTO user_libraries (user,title,artist,album,playcount,art_lg,art_md,art_sm,track_id,album_id) VALUES ("+song.name+","+song.artist+","+song.album+","+song.playcounter+","+song.artlg+","+song.artmd+","+song.artsm+","+song.trackid+","+song.albumid+")";
+                        var query = "INSERT INTO user_libraries (user,title,artist,album,playcount,art_lg,art_md,art_sm,track_id,album_id) VALUES ('"+song.name+"','"+song.artist+"','"+song.album+"',"+song.playcounter+",'"+song.artlg+"','"+song.artmd+"','"+song.artsm+"','"+song.trackid+"','"+song.albumid+"')";
                         sqlStarter.connection.query(query,function(err,rows,fields){
                             if (!err){
                                 console.log("Added to db.")
