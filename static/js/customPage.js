@@ -40,6 +40,10 @@ var expandAlbum = function(){
 				src += tracks[i].track_id + ",";
 			}
 		}
+		$('#header').fadeOut();
+		$('#contentView').fadeOut();
+		$('body').append('<div class="overlay"></div>');
+		$('.overlay').attr("background-image","url("+tracks[0].art_lg+")");
 		$('iframe').attr("src",src);
 	});
 };
