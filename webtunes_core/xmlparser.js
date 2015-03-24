@@ -14,7 +14,7 @@ exports.xml = function(req ,res){
 	var parser = new xml2js.Parser();
     var spotifyApi = new SpotifyWebApi();
 
-	fs.readFile(__dirname + '/TPL.xml', function(err, data) {
+	fs.readFile(__dirname + '/mixed-playlist.xml', function(err, data) {
     	parser.parseString(data, function (err, result) {
 
         	extracteddata=result.plist.dict[0].dict[0].dict;
@@ -94,7 +94,7 @@ exports.xml = function(req ,res){
                     //res.render('customCoverArt',{css: ['./css/customPage.css'],js: ['./js/customPage.js'], albums: albumarray});
                     
                     //Let's just push this to the sql db for now.
-                    /*for(var i=0;i<songarray.length;i++){
+                    for(var i=0;i<songarray.length;i++){
                         var song = songarray[i];
                         var query = "INSERT INTO user_libraries (user,title,artist,album,playcount,art_lg,art_md,art_sm,track_id,album_id) VALUES ('TestUser','"
                             +sqlStarter.escape(song.name)+"','"
@@ -114,7 +114,7 @@ exports.xml = function(req ,res){
                                 console.log(err);
                             }
                         });
-                    }*/
+                    }
 
                     res.send("Success");
                 }
