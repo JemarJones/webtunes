@@ -49,5 +49,6 @@ var expandAlbum = function(){
 		$('.overlay').css("width",$('body').width());
 		$('.overlay').css("height",$('body').height());
 		$('.overlay').append('<iframe frameborder="0" allowtransparency="true" src="'+src+'"'+'</iframe>');
+		$('.overlay').fadeIn();
 	});
 };
