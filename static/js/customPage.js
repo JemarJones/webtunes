@@ -52,9 +52,10 @@ var expandAlbum = function(){
 		$('.overlay').css("width",$('body').width());
 		$('.overlay').css("height",$('body').height());
 		$('.overlay').append('<div class="bigAlb"></div>');
-		$('.bigAlb').css("width", $('.overlay').width());
-		$('.bigAlb').css("height", $('.overlay').width());
+		$('.bigAlb').css("width", $('.overlay').width()*0.35);
+		$('.bigAlb').css("height", $('.overlay').width()*0.35);
 		$('.bigAlb').css("background-image","url("+tracks[0].art_lg+")");
+		$('.bigAlb').css("background-size","cover");
 		$('.overlay').append('<iframe frameborder="0" allowtransparency="true" src="'+src+'"'+'</iframe>');
 		$('.bg').fadeIn();
 		$('.overlay').fadeIn();
