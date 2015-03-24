@@ -106,6 +106,7 @@ exports.xml = function(req ,res){
                             +sqlStarter.escape(song.artsm)+"','"
                             +sqlStarter.escape(song.trackid)+"','"
                             +sqlStarter.escape(song.albumid)+"')";
+                        console.log(query);
                         sqlStarter.connection.query(query,function(err,rows,fields){
                             if (!err){
                                 console.log("Added to db.")
