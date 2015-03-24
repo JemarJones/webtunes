@@ -51,6 +51,7 @@ var expandAlbum = function(){
 		$('body').prepend('<div class="overlay"></div>');
 		$('.overlay').css("width",$('body').width());
 		$('.overlay').css("height",$('body').height());
+		$('.overlay').append('<div class="bigAlb"></div>');
 		$('.overlay').append('<iframe frameborder="0" allowtransparency="true" src="'+src+'"'+'</iframe>');
 		$('.bg').fadeIn();
 		$('.overlay').fadeIn();
