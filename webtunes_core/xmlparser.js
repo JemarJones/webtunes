@@ -94,7 +94,7 @@ exports.xml = function(req ,res){
                     //res.render('customCoverArt',{css: ['./css/customPage.css'],js: ['./js/customPage.js'], albums: albumarray});
                     
                     //Let's just push this to the sql db for now.
-                    for(var i=0;i<songarray.length;i++){
+                    /*for(var i=0;i<songarray.length;i++){
                         var song = songarray[i];
                         var query = "INSERT INTO user_libraries (user,title,artist,album,playcount,art_lg,art_md,art_sm,track_id,album_id) VALUES ('TestUser','"
                             +sqlStarter.escape(song.name)+"','"
@@ -107,14 +107,14 @@ exports.xml = function(req ,res){
                             +sqlStarter.escape(song.trackid)+"','"
                             +sqlStarter.escape(song.albumid)+"')";
                         console.log(query);
-                        /*sqlStarter.connection.query(query,function(err,rows,fields){
+                        sqlStarter.connection.query(query,function(err,rows,fields){
                             if (!err){
                                 console.log("Added to db.")
                             }else{
                                 console.log(err);
                             }
-                        });*
-                    }
+                        });
+                    }*/
 
                     res.send("Success");
                 }
