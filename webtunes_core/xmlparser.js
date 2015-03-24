@@ -96,7 +96,16 @@ exports.xml = function(req ,res){
                     //Let's just push this to the sql db for now.
                     for(var i=0;i<songarray.length;i++){
                         var song = songarray[i];
-                        var query = "INSERT INTO user_libraries (user,title,artist,album,playcount,art_lg,art_md,art_sm,track_id,album_id) VALUES ('"+song.name+"','"+song.artist+"','"+song.album+"',"+song.playcount+",'"+song.artlg+"','"+song.artmd+"','"+song.artsm+"','"+song.trackid+"','"+song.albumid+"')";
+                        var query = "INSERT INTO user_libraries (user,title,artist,album,playcount,art_lg,art_md,art_sm,track_id,album_id) VALUES ('TestUser',"
+                            +sqlStarter.escape(song.name)+"','"
+                            +sqlStarter.escape(song.artist)+"','"
+                            +sqlStarter.escape(song.album)+"',"
+                            +song.playcount+",'"
+                            +sqlStarter.escape(song.artlg)+"','"
+                            +sqlStarter.escape(song.artmd)+"','"
+                            +sqlStarter.escape(song.artsm)+"','"
+                            +sqlStarter.escape(song.trackid)+"','"
+                            +sqlStarter.escape(song.albumid)+"')";
                         sqlStarter.connection.query(query,function(err,rows,fields){
                             if (!err){
                                 console.log("Added to db.")
