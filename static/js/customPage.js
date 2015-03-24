@@ -31,7 +31,7 @@ var expandAlbum = function(){
 	var elem = this;
 	$.get("../../data/" + $(elem).attr("data-user"),function(albums){
 		var tracks = albums[$(elem).data("albumnum")];
-		var src = "https://embed.spotify.com/?uri=spotify:trackset:PREFEREDTITLE:";
+		var src = "https://embed.spotify.com/?uri=spotify:trackset:"+tracks[0].album+ ":";
 		for (var i = 0; i < tracks.length; i++){
 			console.log(tracks[i].title);
 			if (i == tracks.length - 1 ){
