@@ -48,6 +48,6 @@ var expandAlbum = function(){
 		$('.overlay').css("width",$('body').width());
 		$('.overlay').css("height",$('body').height());
 		// $('iframe').attr("src",src);
-		$('.overlay').append('<iframe frameborder="0" allowtransparency="true" src="'+src+'"');
+		$('.overlay').append('<iframe frameborder="0" allowtransparency="true" src="'+src+'"'+'</iframe>');
 	});
 };
