@@ -42,8 +42,12 @@ var expandAlbum = function(){
 		}
 		$('#header').fadeOut();
 		$('#contentView').fadeOut();
-		$('body').append('<div class="overlay"></div>');
-		$('.overlay').attr("background-image","url("+tracks[0].art_lg+")");
-		$('iframe').attr("src",src);
+		$('body').prepend('<div class="overlay"></div>');
+		$('.overlay').css("background-image","url("+tracks[0].art_lg+")");
+		$('.overlay').css("background-size","cover");
+		$('.overlay').css("width",$('body').width());
+		$('.overlay').css("height",$('body').height());
+		// $('iframe').attr("src",src);
+		$('.overlay').append('<iframe frameborder="0" allowtransparency="true" src="'+src+'"');
 	});
 };
