@@ -1,9 +1,9 @@
 var mysql = require('mysql');
-console.log("1:"+process.env.OPENSHIFT_MYSQL_DB_HOST);
-console.log("2:"+process.env.OPENSHIFT_MYSQL_DB_PORT);
-console.log("3:"+process.env.OPENSHIFT_MYSQL_DB_USERNAME);
-console.log("4:"+process.env.OPENSHIFT_MYSQL_DB_PASSWORD);
-console.log("5:"+process.env.OPENSHIFT_MYSQL_DB_SOCKET);
+// console.log("1:"+process.env.OPENSHIFT_MYSQL_DB_HOST);
+// console.log("2:"+process.env.OPENSHIFT_MYSQL_DB_PORT);
+// console.log("3:"+process.env.OPENSHIFT_MYSQL_DB_USERNAME);
+// console.log("4:"+process.env.OPENSHIFT_MYSQL_DB_PASSWORD);
+// console.log("5:"+process.env.OPENSHIFT_MYSQL_DB_SOCKET);
 var db_config = {
 	host     : process.env.OPENSHIFT_MYSQL_DB_HOST,
 	port     : process.env.OPENSHIFT_MYSQL_DB_PORT,

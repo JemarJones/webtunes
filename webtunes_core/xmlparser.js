@@ -2,6 +2,7 @@ var fs = require('fs'),
 xml2js = require('xml2js');
 async = require('async');
 var SpotifyWebApi = require('spotify-web-api-node');
+var sqlStarter = require('./sqlStarter');
 
 
 exports.xml = function(req ,res){
@@ -16,17 +17,16 @@ exports.xml = function(req ,res){
 	fs.readFile(__dirname + '/TPL.xml', function(err, data) {
     	parser.parseString(data, function (err, result) {
 
-        	var extracteddata=result.plist.dict[0].dict[0].dict;
+        	extracteddata=result.plist.dict[0].dict[0].dict;
                 /*
                     HEY GUYS WE'RE SOFTWARE ENGINEERS! LOOK AT US USE A QUEUE!
                 */
                 var spotifyQueue = async.queue(function(task,callback){
                     var thissong = task.thissong;
                     var thisint = task.thisint;
-                    var keycheck = task.key;
+                    var keycheck = task.keycheck;
 
                     currentsong=['','','','','',''];
-                    keycheck=extracteddata[i].key;
                     var playcount=2;
                     //console.log(keycheck);
                     for (k=0;k<keycheck.length;k++){
@@ -89,8 +89,23 @@ exports.xml = function(req ,res){
 
                 spotifyQueue.drain = function(){
                     //Once the queue is empty
-                    console.log("All items processed. Loading page.");
-                    res.render('customCoverArt',{css: ['./css/customPage.css'],js: ['./js/customPage.js'], albums: albumarray});
+                    console.log("All items processed.");
+                    //res.render('customCoverArt',{css: ['./css/customPage.css'],js: ['./js/customPage.js'], albums: albumarray});
+                    
+                    //Let's just push this to the sql db for now.
+                    for(int i=0;i<songarray.length;i++){
+                        var song = songarray[i];
+                        var query = "INSERT INTO user_libraries (user,title,artist,album,playcount,art_lg,art_md,art_sm,track_id,album_id) VALUES ("+song.name+","+song.artist+","+song.album+","+song.playcounter+","+song.artlg+","+song.artmd+","+song.artsm+","+song.trackid+","+song.albumid+")";
+                        sqlStarter.connection.query(query,function(err,rows,fields){
+                            if (!err){
+                                console.log("Added to db.")
+                            }else{
+                                console.log(err);
+                            }
+                        });
+                    }
+
+                    res.send("Success");
                 }
 
 
