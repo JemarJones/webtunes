@@ -43,11 +43,11 @@ var expandAlbum = function(){
 		$('#header').fadeOut();
 		$('#contentView').fadeOut();
 		$('body').prepend('<div class="overlay"></div>');
-		$('.overlay').css("background-image","url("+tracks[0].art_lg+")");
-		$('.overlay').css("background-size","cover");
+		$('body').css("background-image","url("+tracks[0].art_lg+")");
+		$('body').css("background-size","cover");
+		$('body').css("-webkit-filter","blur(25px)");
 		$('.overlay').css("width",$('body').width());
 		$('.overlay').css("height",$('body').height());
-		// $('iframe').attr("src",src);
 		$('.overlay').append('<iframe frameborder="0" allowtransparency="true" src="'+src+'"'+'</iframe>');
 	});
 };
