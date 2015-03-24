@@ -108,6 +108,10 @@ input:-moz-placeholder { color: rgba(255,255,255,0.6); }
 .albArtist{
 	font-size: 1.1em;
 }
+.bg{
+	display: none;
+}
 .overlay{
+	position: absolute;
 	display: none;
 }
