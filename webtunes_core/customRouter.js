@@ -31,7 +31,7 @@ exports.uploadXML = function(req,res){
                     //var thisint = task.thisint;
                     //var keycheck = task.keycheck;
 
-                    currentsong=['','','','',''];
+                    currentsong=['','','',0];
                     var playcount=0;
 
                     for (k=0;k<thissong.length-1;k++){
@@ -67,27 +67,30 @@ exports.uploadXML = function(req,res){
                              callback();
                              //console.log(songarray); 
                              //show_image(albummd);
-                             albtest=artmd;
+                             //albtest=artmd;
                             }
                         }, function(err) {
                             console.log(err);
                             callback();
                             //console.log(songarray);
                         });
-                 },10);
+                 },1);
 
+				spotifyQueue.pause();
                 for(var i=0;i<extracteddata.length;i++){
                     //Put each item from the data into are queue to be processed by spotify
                     var parseString=extracteddata[i].toString().replace(/\s<key>/g,"").replace(/<\/key>/g,"").replace(/<integer>/g,"").replace(/<\/integer>/g,"").replace(/<string>/g,"").replace(/<\/string>/g,"");
                     var parseArray=parseString.split("\n")
                     parseArray=parseArray.splice(1,parseArray.length-2)
+
                     spotifyQueue.push({
                         thissong : parseArray
                         //thissong : extracteddata[i].string,
                         //thisint : extracteddata[i].integer,
                         //keycheck : extracteddata[i].key
-                    })
+                    },function (err) {console.log(spotifyQueue.length());});
                 }
+                spotifyQueue.resume();
 
                 spotifyQueue.drain = function(){
                     //Once the queue is empty
