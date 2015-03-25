@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Major Version</key><integer>1</integer>
+	<key>Minor Version</key><integer>1</integer>
+	<key>Date</key><date>2015-03-25T18:39:27Z</date>
+	<key>Application Version</key><string>12.0.1.26</string>
+	<key>Features</key><integer>5</integer>
+	<key>Show Content Ratings</key><true/>
+	<key>Music Folder</key><string>file:///Users/Nalwa/Music/iTunes/iTunes%20Music/</string>
+	<key>Library Persistent ID</key><string>67F88CD8F1AE57BF</string>
+	<key>Tracks</key>
+	<dict>
+		<key>6623</key>
+		<dict>
+			<key>Track ID</key><integer>6623</integer>
+			<key>Name</key><string>Used To (feat. Lil Wayne)</string>
+			<key>Artist</key><string>Drake</string>
+			<key>Album Artist</key><string>Drake</string>
+			<key>Album</key><string>If You're Reading This It's Too Late</string>
+			<key>Genre</key><string>Hip-Hop/Rap</string>
+			<key>Kind</key><string>MPEG audio file</string>
+			<key>Size</key><integer>10844482</integer>
+			<key>Total Time</key><integer>268538</integer>
+			<key>Disc Number</key><integer>1</integer>
+			<key>Disc Count</key><integer>1</integer>
+			<key>Track Number</key><integer>11</integer>
+			<key>Track Count</key><integer>17</integer>
+			<key>Year</key><integer>2015</integer>
+			<key>Date Modified</key><date>2015-02-14T14:22:10Z</date>
+			<key>Date Added</key><date>2015-02-14T14:22:17Z</date>
+			<key>Bit Rate</key><integer>320</integer>
+			<key>Sample Rate</key><integer>44100</integer>
+			<key>Play Count</key><integer>11</integer>
+			<key>Play Date</key><integer>3510139150</integer>
+			<key>Play Date UTC</key><date>2015-03-25T18:39:10Z</date>
+			<key>Skip Count</key><integer>2</integer>
+			<key>Skip Date</key><date>2015-02-25T16:44:17Z</date>
+			<key>Artwork Count</key><integer>1</integer>
+			<key>Persistent ID</key><string>A14C13F38496CA4B</string>
+			<key>Track Type</key><string>File</string>
+			<key>Location</key><string>file:///Users/Nalwa/Music/iTunes/iTunes%20Music/Drake/If%20You're%20Reading%20This%20It's%20Too%20Late/11%20Used%20To%20(feat.%20Lil%20Wayne).mp3</string>
+			<key>File Folder Count</key><integer>4</integer>
+			<key>Library Folder Count</key><integer>1</integer>
+		</dict>
+		<key>6625</key>
+		<dict>
+			<key>Track ID</key><integer>6625</integer>
+			<key>Name</key><string>6 Man</string>
+			<key>Artist</key><string>Drake</string>
+			<key>Album Artist</key><string>Drake</string>
+			<key>Album</key><string>If You're Reading This It's Too Late</string>
+			<key>Genre</key><string>Hip-Hop/Rap</string>
+			<key>Kind</key><string>MPEG audio file</string>
+			<key>Size</key><integer>6811135</integer>
+			<key>Total Time</key><integer>167706</integer>
+			<key>Disc Number</key><integer>1</integer>
+			<key>Disc Count</key><integer>1</integer>
+			<key>Track Number</key><integer>12</integer>
+			<key>Track Count</key><integer>17</integer>
+			<key>Year</key><integer>2015</integer>
+			<key>Date Modified</key><date>2015-02-14T14:22:05Z</date>
+			<key>Date Added</key><date>2015-02-14T14:22:17Z</date>
+			<key>Bit Rate</key><integer>320</integer>
+			<key>Sample Rate</key><integer>44100</integer>
+			<key>Play Count</key><integer>35</integer>
+			<key>Play Date</key><integer>3510139150</integer>
+			<key>Play Date UTC</key><date>2015-03-25T18:39:10Z</date>
+			<key>Artwork Count</key><integer>1</integer>
+			<key>Persistent ID</key><string>0C90CD7B413C92CF</string>
+			<key>Track Type</key><string>File</string>
+			<key>Location</key><string>file:///Users/Nalwa/Music/iTunes/iTunes%20Music/Drake/If%20You're%20Reading%20This%20It's%20Too%20Late/12%206%20Man.mp3</string>
+			<key>File Folder Count</key><integer>4</integer>
+			<key>Library Folder Count</key><integer>1</integer>
+		</dict>
+		<key>6627</key>
+		<dict>
+			<key>Track ID</key><integer>6627</integer>
+			<key>Name</key><string>Now &#38; Forever</string>
+			<key>Artist</key><string>Drake</string>
+			<key>Album Artist</key><string>Drake</string>
+			<key>Album</key><string>If You're Reading This It's Too Late</string>
+			<key>Genre</key><string>Hip-Hop/Rap</string>
+			<key>Kind</key><string>MPEG audio file</string>
+			<key>Size</key><integer>11358547</integer>
+			<key>Total Time</key><integer>281391</integer>
+			<key>Disc Number</key><integer>1</integer>
+			<key>Disc Count</key><integer>1</integer>
+			<key>Track Number</key><integer>13</integer>
+			<key>Track Count</key><integer>17</integer>
+			<key>Year</key><integer>2015</integer>
+			<key>Date Modified</key><date>2015-02-14T14:22:10Z</date>
+			<key>Date Added</key><date>2015-02-14T14:22:17Z</date>
+			<key>Bit Rate</key><integer>320</integer>
+			<key>Sample Rate</key><integer>44100</integer>
+			<key>Play Count</key><integer>16</integer>
+			<key>Play Date</key><integer>3510139150</integer>
+			<key>Play Date UTC</key><date>2015-03-25T18:39:10Z</date>
+			<key>Skip Count</key><integer>2</integer>
+			<key>Skip Date</key><date>2015-02-26T16:59:55Z</date>
+			<key>Artwork Count</key><integer>1</integer>
+			<key>Persistent ID</key><string>4638CD0E67EBD56A</string>
+			<key>Track Type</key><string>File</string>
+			<key>Location</key><string>file:///Users/Nalwa/Music/iTunes/iTunes%20Music/Drake/If%20You're%20Reading%20This%20It's%20Too%20Late/13%20Now%20&#38;%20Forever.mp3</string>
+			<key>File Folder Count</key><integer>4</integer>
+			<key>Library Folder Count</key><integer>1</integer>
+		</dict>
+	</dict>
+	<key>Playlists</key>
+	<array>
+		<dict>
+			<key>Name</key><string>kkk</string>
+			<key>Playlist ID</key><integer>13897</integer>
+			<key>Playlist Persistent ID</key><string>57DBFC656B1CE595</string>
+			<key>All Items</key><true/>
+			<key>Playlist Items</key>
+			<array>
+				<dict>
+					<key>Track ID</key><integer>6623</integer>
+				</dict>
+				<dict>
+					<key>Track ID</key><integer>6625</integer>
+				</dict>
+				<dict>
+					<key>Track ID</key><integer>6627</integer>
+				</dict>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>

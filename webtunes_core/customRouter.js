@@ -64,12 +64,11 @@ exports.uploadXML = function(req,res){
 
                              songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
                              albumarray.push(new Album(artmd,album,albumartist));
-                             //callback();
+                             callback();
                              //console.log(songarray); 
                              //show_image(albummd);
                              albtest=artmd;
                             }
-                            callback();
                         }, function(err) {
                             console.log(err);
                             callback();
