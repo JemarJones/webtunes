@@ -39,6 +39,21 @@ exports.albumData = function(req,res){
 		}
 	});
 };
+
+exports.pingUser = function(req,res){
+	var query = "SELECT * FROM users WHERE user='"req.params"'";
+	sqlStarter.connection.query(query,function(err,rows,fields){
+		if(!err){
+			if(rows.length==0){
+				//No user by that name exists.
+				res.send("User Not Found");
+			}
+		} else {
+			console.log(err);
+		}
+	});
+}
+
 //Organizes rows into albums
 var organize = function(rows){
 	var albums = [];
