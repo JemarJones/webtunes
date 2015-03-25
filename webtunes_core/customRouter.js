@@ -11,7 +11,9 @@ exports.customPage = function(req, res){
 	sqlStarter.connection.query(query,function(err,rows,fields){
 		if (!err){
 			albums = organize(rows);
-			res.render('customCoverArt',{css: ['../css/customPage.css','http://fonts.googleapis.com/css?family=Roboto:100'],js: ['../js/customPage.js'], albums: albums});
+			user = req.params.user + " | ";
+			user = user.substr(0, 1).toUpperCase() + user.substr(1);
+			res.render('customCoverArt',{css: ['../css/customPage.css','http://fonts.googleapis.com/css?family=Roboto:100'],js: ['../js/customPage.js'], user: user , albums: albums});
 		}else{
 			console.log(err);
 		}

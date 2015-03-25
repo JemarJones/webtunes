@@ -113,17 +113,23 @@ input:-moz-placeholder { color: rgba(255,255,255,0.6); }
 }
 .overlay{
 	position: absolute;
+	text-align: center;
 	z-index: 1;
 	display: none;
 }
 .bigAlb{
 	margin-top: 5%;
-	margin-left: 15%;
 	border-radius: 5px;
+	vertical-align: middle;
 }
-.songArtist, .songTitle{
+.songInfo{
 	display: inline-block;
-	font-size: 1.7em;
+	vertical-align: middle;
+	text-align: center;
+	margin-left: 10%;
+	font-size: 5em;
+	font-weight: bold;
+	letter-spacing: 4px;
 }
 iframe{
 	position: absolute;

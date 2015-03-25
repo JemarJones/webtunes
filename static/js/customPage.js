@@ -6,6 +6,8 @@ $(document).ready(function(){
 	$('#alb').on('click',switchMode);
 	$('#lib').on('click',switchMode);
 	$('.albumCont').on('click',expandAlbum);
+	// $('.overlay').on('click',closeAlbum);
+	// $('.bg').on('click',closeAlbum);
 });
 
 //handler to fade between modes nicely
@@ -28,6 +30,7 @@ var switchMode = function(){
 };
 //handler to expand an album when its clicked on
 var expandAlbum = function(){
+	// var _window = window.open("https://play.spotify.com/trackset",'_blank');
 	var elem = this;
 	$.get("../../data/" + $(elem).attr("data-user"),function(albums){
 		var tracks = albums[$(elem).data("albumnum")];
@@ -40,6 +43,7 @@ var expandAlbum = function(){
 				src += tracks[i].track_id + ",";
 			}
 		}
+		var iframe = $('<iframe frameborder="0" allowtransparency="true" src="'+src+'"'+'</iframe>');
 		$('#header').fadeOut();
 		$('#contentView').fadeOut();
 		$('body').prepend('<div class="bg"></div>');
@@ -55,14 +59,27 @@ var expandAlbum = function(){
 		$('.bigAlb').attr("width", $('.overlay').width()*0.35);
 		$('.bigAlb').attr("height", $('.overlay').width()*0.35);
 		$('.bigAlb').attr("src",tracks[0].art_lg);
-		$('.overlay').append('<iframe frameborder="0" allowtransparency="true" src="'+src+'"'+'</iframe>');
+		$('.overlay').append('<div class="songInfo"></div>');
+		$('.overlay').append(iframe);
 		// Cant get current track info :(
-		$('.overlay').append('<p class="songTitle"></p>');
+		$('.songInfo').append('<p class="songTitle"></p>');
 		$('.songTitle').text("Title");
-		$('.overlay').append('<p class="songArtist"></p>');
+		$('.songInfo').append('<p class="songArtist"></p>');
 		// $('.songArtist').text($('.artist-name').text());
 		$('.songArtist').text("Artist");
 		$('.bg').fadeIn();
 		$('.overlay').fadeIn();
+		$('.overlay').on('click',closeAlbum);
+		$('.bg').on('click',closeAlbum);
 	});
+};
+
+var closeAlbum = function(){
+	console.log("Captured click");
+	$('.overlay').fadeOut();
+	$('.bg').fadeOut();
+	$('#header').fadeIn();
+	$('#contentView').fadeIn();
+	$('.overlay').remove();
+	$('.bg').remove();
 };
