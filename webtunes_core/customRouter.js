@@ -191,3 +191,22 @@ var posToPlace = function(albums, newTrack){
 	}
 	return albums.length;
 };
+
+//song name, album , artist , play count, album art url, track id, album id
+function Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid){
+    this.name=name;
+    this.artist=artist;
+    this.album=album;
+    this.playcount=playcount;
+    this.artlg=artlg;
+    this.artmd=artmd;
+    this.artsm=artsm;
+    this.trackid=trackid;
+    this.albumid=albumid;
+}
+
+function Album(artmd,album,artist){
+    this.img=artmd;
+    this.title=album;
+    this.artist=artist;
+}
