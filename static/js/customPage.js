@@ -51,15 +51,13 @@ var expandAlbum = function(){
 		$('body').prepend('<div class="overlay"></div>');
 		$('.overlay').css("width",$('body').width());
 		$('.overlay').css("height",$('body').height()*1.2);
-		$('.overlay').append('<div class="bigAlb"></div>');
-		$('.bigAlb').css("width", $('.overlay').width()*0.35);
-		$('.bigAlb').css("height", $('.overlay').width()*0.35);
-		$('.bigAlb').css("background-image","url("+tracks[0].art_lg+")");
-		$('.bigAlb').css("background-size","cover");
+		$('.overlay').append('<img class="bigAlb">');
+		$('.bigAlb').attr("width", $('.overlay').width()*0.35);
+		$('.bigAlb').attr("height", $('.overlay').width()*0.35);
+		$('.bigAlb').attr("src",tracks[0].art_lg);
 		$('.overlay').append('<iframe frameborder="0" allowtransparency="true" src="'+src+'"'+'</iframe>');
 		// Cant get current track info :(
 		$('.overlay').append('<p class="songTitle"></p>');
-		// $('.songTitle').text($('.track-name').text());
 		$('.songTitle').text("Title");
 		$('.overlay').append('<p class="songArtist"></p>');
 		// $('.songArtist').text($('.artist-name').text());

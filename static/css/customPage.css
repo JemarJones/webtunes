@@ -128,5 +128,6 @@ input:-moz-placeholder { color: rgba(255,255,255,0.6); }
 iframe{
 	position: absolute;
 	bottom: 0px;
+	left: 0px;
 	height: 75px;
 }
