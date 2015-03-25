@@ -7,8 +7,8 @@ var mysql = require('mysql');
 var db_config = {
 	host     : process.env.OPENSHIFT_MYSQL_DB_HOST,
 	port     : process.env.OPENSHIFT_MYSQL_DB_PORT,
-	user     : process.env.OPENSHIFT_MYSQL_DB_USERNAME,
-	password : process.env.OPENSHIFT_MYSQL_DB_PASSWORD,
+	user     : process.env.OPENSHIFT_MYSQL_DB_USERNAME || "adminaa3VEnF",
+	password : process.env.OPENSHIFT_MYSQL_DB_PASSWORD || "WVD5jG1Tz3Dx",
 	database : 'app',
 	socket   : process.env.OPENSHIFT_MYSQL_DB_SOCKET
 };
