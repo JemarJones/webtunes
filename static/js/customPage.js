@@ -59,9 +59,11 @@ var expandAlbum = function(){
 		$('.overlay').append('<iframe frameborder="0" allowtransparency="true" src="'+src+'"'+'</iframe>');
 		// Cant get current track info :(
 		$('.overlay').append('<p class="songTitle"></p>');
-		$('.songTitle').text($('.track-name').text());
+		// $('.songTitle').text($('.track-name').text());
+		$('.songTitle').text("Title");
 		$('.overlay').append('<p class="songArtist"></p>');
-		$('.songArtist').text($('.artist-name').text());
+		// $('.songArtist').text($('.artist-name').text());
+		$('.songArtist').text("Artist");
 		$('.bg').fadeIn();
 		$('.overlay').fadeIn();
 	});

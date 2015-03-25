@@ -2,7 +2,7 @@ var sqlStarter = require('./sqlStarter');
 
 exports.homePage = function(req,res){
 	res.render('homePage',{css: ['../css/customPage.css','http://fonts.googleapis.com/css?family=Roboto:100'],js: ['../js/homePage.js']});
-}
+};
 
 //Router functions for the customPage
 exports.customPage = function(req, res){
