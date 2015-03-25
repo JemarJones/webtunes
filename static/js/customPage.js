@@ -48,27 +48,17 @@ var expandAlbum = function(){
 			var iframe = $('<iframe frameborder="0" allowtransparency="true" src="'+src+'"'+'</iframe>');
 			$('#header').fadeOut();
 			$('#contentView').fadeOut();
-			// $('body').css("height",$('body').width()*0.5384)
 			$('body').prepend('<div class="bg"></div>');
 			$('.bg').css("background-image","url("+tracks[0].art_lg+")");
-			$('.bg').css("width",$('body').width());
-			$('.bg').css("height",$('body').height()*0.7);
 			$('body').prepend('<div class="overlay"></div>');
-			$('.overlay').css("width",$('body').width());
-			$('.overlay').css("height",$('body').height()*0.7);
 			$('.overlay').append('<img class="bigAlb">');
-			$('.bigAlb').attr("width", $('.overlay').width()*0.35);
-			$('.bigAlb').attr("height", $('.overlay').width()*0.35);
 			$('.bigAlb').attr("src",tracks[0].art_lg);
 			$('.overlay').append('<div class="songInfo"></div>');
 			$('.overlay').append(iframe);
-			// Cant get current track info :(
 			$('.songInfo').append('<p class="songAlbum"></p>');
 			$('.songAlbum').text(tracks[0].album);
-			// $('.songTitle').text("Title");
 			$('.songInfo').append('<p class="songArtist"></p>');
 			$('.songArtist').text(tracks[0].artist);
-			// $('.songArtist').text("Artist");
 			$('.bg').fadeIn();
 			$('.overlay').fadeIn();
 			$('.overlay').on('click',closeAlbum);
