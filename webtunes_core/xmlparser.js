@@ -8,16 +8,15 @@ var sqlStarter = require('./sqlStarter');
 exports.xml = function(req ,res){
 	var songarray=new Array();
     var albumarray=new Array();
-    var currentsong=['','','',0,'','',''];
     var playcounter;
     var albtest;
-	var parser = new xml2js.Parser();
     var spotifyApi = new SpotifyWebApi();
+
+
 
 	fs.readFile(__dirname + '/mixed-playlist.xml', function(err, data) {
           var document = new xmldoc.XmlDocument(data);
           var extracteddata = document.childrenNamed("dict")[0].childrenNamed("dict")[0].childrenNamed("dict");
-
         	//extracteddata=result.plist.dict[0].dict[0].dict;
                 /*
                     HEY GUYS WE'RE SOFTWARE ENGINEERS! LOOK AT US USE A QUEUE!
@@ -27,7 +26,7 @@ exports.xml = function(req ,res){
                     //var thisint = task.thisint;
                     //var keycheck = task.keycheck;
 
-                    currentsong=['','','','',''];
+                    var currentsong=['','','','',''];
                     var playcount=0;
                     //console.log(keycheck);
                     /*
@@ -74,8 +73,8 @@ exports.xml = function(req ,res){
                              var albumid=spotifysong.album.id;
                              var albumartist=currentsong[2];
                              var playcount = currentsong[4];
-                             //console.log(name+" - "+artist);
-                             //console.log(name,artist,album,playcounter,artlg,artmd,artsm,trackid,albumid);
+                             console.log(name+" - "+artist);
+                             console.log(name,artist,album,playcounter,artlg,artmd,artsm,trackid,albumid);
 
                              songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
                              albumarray.push(new Album(artmd,album,albumartist));
@@ -94,10 +93,10 @@ exports.xml = function(req ,res){
 
                 for(var i=0;i<extracteddata.length;i++){
                     //Put each item from the data into are queue to be processed by spotify
+                    var parseString=extracteddata[i].toString().replace(/\s<key>/g,"").replace(/<\/key>/g,"").replace(/<integer>/g,"").replace(/<\/integer>/g,"").replace(/<string>/g,"").replace(/<\/string>/g,"");
+                    var parseArray=parseString.split("\n")
+                    parseArray=parseArray.splice(1,parseArray.length-2)
                     spotifyQueue.push({
-                        var parseString = extracteddata[i].toString().replace(/\s<key>/g,"").replace(/<\/key>/g,"").replace(/<integer>/g,"").replace(/<\/integer>/g,"").replace(/<string>/g,"").replace(/<\/string>/g,"");
-                        var parseArray=parseString.split("\n")
-                        parseArray=parseArray.splice(1,parseArray.length-2)
                         thissong : parseArray
                         //thissong : extracteddata[i].string,
                         //thisint : extracteddata[i].integer,

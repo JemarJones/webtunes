@@ -1,3 +1,7 @@
+var fs = require('fs');
+var xmldoc = require('xmldoc');
+var async = require('async');
+var SpotifyWebApi = require('spotify-web-api-node');
 var sqlStarter = require('./sqlStarter');
 
 exports.homePage = function(req,res){
@@ -7,8 +11,120 @@ exports.homePage = function(req,res){
 exports.uploadXML = function(req,res){
 	console.log(req.files.xml_file.path);
 	console.log(req.body.username);
+
+	var songarray=new Array();
+	var albumarray=new Array();
+	var playcounter;
+	var albtest;
+	var spotifyApi = new SpotifyWebApi();
+    var currentsong=['','','',0,'','',''];
+
+	fs.readFile(req.files.xml_file.path, function(err, data) {
+          var document = new xmldoc.XmlDocument(data);
+          var extracteddata = document.childrenNamed("dict")[0].childrenNamed("dict")[0].childrenNamed("dict");
+        	//extracteddata=result.plist.dict[0].dict[0].dict;
+                /*
+                    HEY GUYS WE'RE SOFTWARE ENGINEERS! LOOK AT US USE A QUEUE!
+                */
+                var spotifyQueue = async.queue(function(task,callback){
+                    var thissong = task.thissong;
+                    //var thisint = task.thisint;
+                    //var keycheck = task.keycheck;
+
+                    currentsong=['','','','',''];
+                    var playcount=0;
+
+                    for (k=0;k<thissong.length-1;k++){
+                          if (parseArray[k]==" Name"){currentsong[0]=thissong[k+1].split("  ")[1];}
+                          if (parseArray[k]==" Artist"){currentsong[1]=thissong[k+1].split("  ")[1];}
+                          if (parseArray[k]==" Album Artist"){currentsong[2]=thissong[k+1].split("  ")[1];}
+                          if (parseArray[k]==" Album"){currentsong[3]=thissong[k+1].split("  ")[1];}
+                          if (parseArray[k]==" Play Count"){currentsong[4]=thissong[k+1].split("  ")[1];}
+                    }
+
+                    spotifyApi.searchTracks(currentsong[0]+" - "+currentsong[1])
+                        .then(function(data) {
+                        // console.log(data.body.tracks.items[0].name);
+                             if (data.body.tracks.items[0]!=undefined){
+                             var spotifysong=data.body.tracks.items[0];
+                             //console.log(spotifysong);
+                             var name = spotifysong.name;
+                             console.log(name);
+                             var artist = spotifysong.artists[0].name;
+                             var album = spotifysong.album.name;
+                             var artlg=spotifysong.album.images[0].url;
+                             var artmd=spotifysong.album.images[1].url;
+                             var artsm=spotifysong.album.images[2].url;
+                             var trackid=spotifysong.id;
+                             var albumid=spotifysong.album.id;
+                             var albumartist=currentsong[2];
+                             var playcount = currentsong[4];
+                             console.log(name+" - "+artist);
+                             console.log(name,artist,album,playcounter,artlg,artmd,artsm,trackid,albumid);
+
+                             songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
+                             albumarray.push(new Album(artmd,album,albumartist));
+                             //callback();
+                             //console.log(songarray); 
+                             //show_image(albummd);
+                             albtest=artmd;
+                            }
+                            callback();
+                        }, function(err) {
+                            console.log(err);
+                            callback();
+                            //console.log(songarray);
+                        });
+                 },10);
+
+                for(var i=0;i<extracteddata.length;i++){
+                    //Put each item from the data into are queue to be processed by spotify
+                    var parseString=extracteddata[i].toString().replace(/\s<key>/g,"").replace(/<\/key>/g,"").replace(/<integer>/g,"").replace(/<\/integer>/g,"").replace(/<string>/g,"").replace(/<\/string>/g,"");
+                    var parseArray=parseString.split("\n")
+                    parseArray=parseArray.splice(1,parseArray.length-2)
+                    spotifyQueue.push({
+                        thissong : parseArray
+                        //thissong : extracteddata[i].string,
+                        //thisint : extracteddata[i].integer,
+                        //keycheck : extracteddata[i].key
+                    })
+                }
+
+                spotifyQueue.drain = function(){
+                    //Once the queue is empty
+                    console.log("All items processed.");
+                    //res.render('customCoverArt',{css: ['./css/customPage.css'],js: ['./js/customPage.js'], albums: albumarray});
+                    
+                    //Let's just push this to the sql db for now.
+                    for(var i=0;i<songarray.length;i++){
+                        var song = songarray[i];
+                        var query = "INSERT INTO user_libraries (user,title,artist,album,playcount,art_lg,art_md,art_sm,track_id,album_id) VALUES (req.body.username,'"
+                            +sqlStarter.escape(song.name)+"','"
+                            +sqlStarter.escape(song.artist)+"','"
+                            +sqlStarter.escape(song.album)+"',"
+                            +song.playcount+",'"
+                            +sqlStarter.escape(song.artlg)+"','"
+                            +sqlStarter.escape(song.artmd)+"','"
+                            +sqlStarter.escape(song.artsm)+"','"
+                            +sqlStarter.escape(song.trackid)+"','"
+                            +sqlStarter.escape(song.albumid)+"')";
+                        console.log(query);
+                        sqlStarter.connection.query(query,function(err,rows,fields){
+                            if (!err){
+                                console.log("Added to db.")
+                            }else{
+                                console.log(err);
+                            }
+                        });
+                    }
+
+                    res.send("Success");
+                }                
+
+  });
+
 	res.render('waitingRoom',{css: ['../css/loader.css'],js:[]});
-}
+
 };
 
 //Router functions for the customPage
