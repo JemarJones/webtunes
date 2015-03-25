@@ -2,6 +2,8 @@ body{
 	background-color: rgb(239,239,249);
 	color: white;
 	font-family: 'Roboto', sans-serif; 
+	width:100%;
+	margin:0px;
 }
 #header{
 	width: 101.5%;
@@ -105,4 +107,22 @@ input:-moz-placeholder { color: rgba(255,255,255,0.6); }
 }
 .albArtist{
 	font-size: 1.1em;
+}
+.bg{
+	display: none;
+}
+.overlay{
+	position: absolute;
+	z-index: 1;
+	display: none;
+}
+.bigAlb{
+	margin-top: 5%;
+	margin-left: 15%;
+	border-radius: 5px;
+}
+iframe{
+	position: absolute;
+	bottom: 0px;
+	height: 75px;
 }
