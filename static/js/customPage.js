@@ -48,10 +48,9 @@ var expandAlbum = function(){
 			var iframe = $('<iframe frameborder="0" allowtransparency="true" src="'+src+'"'+'</iframe>');
 			$('#header').fadeOut();
 			$('#contentView').fadeOut();
+			// $('body').css("height",$('body').width()*0.5384)
 			$('body').prepend('<div class="bg"></div>');
 			$('.bg').css("background-image","url("+tracks[0].art_lg+")");
-			$('.bg').css("background-size","cover");
-			$('.bg').css("-webkit-filter","blur(25px)");
 			$('.bg').css("width",$('body').width());
 			$('.bg').css("height",$('body').height()*0.7);
 			$('body').prepend('<div class="overlay"></div>');
