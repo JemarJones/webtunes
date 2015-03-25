@@ -17,7 +17,7 @@ exports.uploadXML = function(req,res){
 	var playcounter;
 	var albtest;
 	var spotifyApi = new SpotifyWebApi();
-    var currentsong=['','','',0,'','',''];
+    var currentsong=['','','',0];
 
 	fs.readFile(req.files.xml_file.path, function(err, data) {
           var document = new xmldoc.XmlDocument(data);
@@ -35,7 +35,7 @@ exports.uploadXML = function(req,res){
                     var playcount=0;
 
                     for (k=0;k<thissong.length-1;k++){
-                          if (parseArray[k]==" Name"){currentsong[0]=thissong[k+1].split("  ")[1];}
+                          if (parseArray[k]==" Name"){currentsong[0]=thissong[k+1].split("  ")[1].replace(/ft\./g,"").replace(/feat\./g,"").replace(/\(/g,"").replace(/\)/g,"");}
                           if (parseArray[k]==" Artist"){currentsong[1]=thissong[k+1].split("  ")[1];}
                           if (parseArray[k]==" Album Artist"){currentsong[2]=thissong[k+1].split("  ")[1];}
                           if (parseArray[k]==" Album"){currentsong[3]=thissong[k+1].split("  ")[1];}

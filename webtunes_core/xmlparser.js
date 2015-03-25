@@ -8,16 +8,18 @@ var sqlStarter = require('./sqlStarter');
 exports.xml = function(req ,res){
 	var songarray=new Array();
     var albumarray=new Array();
+    var currentsong=['','','',0,'','',''];
     var playcounter;
     var albtest;
     var spotifyApi = new SpotifyWebApi();
+    var extracteddata;
 
 
 
-	fs.readFile(__dirname + '/mixed-playlist.xml', function(err, data) {
+	fs.readFile(__dirname + '/kkk.xml', function(err, data) {
           var document = new xmldoc.XmlDocument(data);
-          var extracteddata = document.childrenNamed("dict")[0].childrenNamed("dict")[0].childrenNamed("dict");
-        	//extracteddata=result.plist.dict[0].dict[0].dict;
+          extracteddata = document.childrenNamed("dict")[0].childrenNamed("dict")[0].childrenNamed("dict");
+          //extracteddata=result.plist.dict[0].dict[0].dict;
                 /*
                     HEY GUYS WE'RE SOFTWARE ENGINEERS! LOOK AT US USE A QUEUE!
                 */
@@ -26,7 +28,7 @@ exports.xml = function(req ,res){
                     //var thisint = task.thisint;
                     //var keycheck = task.keycheck;
 
-                    var currentsong=['','','','',''];
+                    currentsong=['','','','',''];
                     var playcount=0;
                     //console.log(keycheck);
                     /*
@@ -46,24 +48,23 @@ exports.xml = function(req ,res){
                     }*/
                     //playcounter = thisint[++playcount];
                     for (k=0;k<thissong.length-1;k++){
-                          if (parseArray[k]==" Name"){currentsong[0]=thissong[i+1].split("  ")[1];}
-                          if (parseArray[k]==" Artist"){currentsong[1]=thissong[i+1].split("  ")[1];}
-                          if (parseArray[k]==" Album Artist"){currentsong[2]=thissong[i+1].split("  ")[1];}
-                          if (parseArray[k]==" Album"){currentsong[3]=thissong[i+1].split("  ")[1];}
-                          if (parseArray[k]==" Play Count"){currentsong[4]=thissong[i+1].split("  ")[1];}
-
-
-
+                          if (parseArray[k]==" Name"){currentsong[0]=thissong[k+1].split("  ")[1].replace(/ft\./g,"").replace(/feat\./g,"").replace(/\(/g,"").replace(/\)/g,"");}
+                          if (parseArray[k]==" Artist"){currentsong[1]=thissong[k+1].split("  ")[1];}
+                          if (parseArray[k]==" Album Artist"){currentsong[2]=thissong[k+1].split("  ")[1];}
+                          if (parseArray[k]==" Album"){currentsong[3]=thissong[k+1].split("  ")[1];}
+                          if (parseArray[k]==" Play Count"){currentsong[4]=thissong[k+1].split("  ")[1];}
+                          
                     }
-
+                    console.log(currentsong);
                     spotifyApi.searchTracks(currentsong[0]+" - "+currentsong[1])
                         .then(function(data) {
                         // console.log(data.body.tracks.items[0].name);
+                             
                              if (data.body.tracks.items[0]!=undefined){
                              var spotifysong=data.body.tracks.items[0];
                              //console.log(spotifysong);
                              var name = spotifysong.name;
-                             console.log(name);
+                             //console.log(name);
                              var artist = spotifysong.artists[0].name;
                              var album = spotifysong.album.name;
                              var artlg=spotifysong.album.images[0].url;
@@ -74,7 +75,7 @@ exports.xml = function(req ,res){
                              var albumartist=currentsong[2];
                              var playcount = currentsong[4];
                              console.log(name+" - "+artist);
-                             console.log(name,artist,album,playcounter,artlg,artmd,artsm,trackid,albumid);
+                             //console.log(name,artist,album,playcounter,artlg,artmd,artsm,trackid,albumid);
 
                              songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
                              albumarray.push(new Album(artmd,album,albumartist));
@@ -90,12 +91,14 @@ exports.xml = function(req ,res){
                             //console.log(songarray);
                         });
                  },10);
-
-                for(var i=0;i<extracteddata.length;i++){
+              
+                for(i=0;i<extracteddata.length;i++){
                     //Put each item from the data into are queue to be processed by spotify
+                    //var extracteddata = document.childrenNamed("dict")[0].childrenNamed("dict")[0].childrenNamed("dict")[i];
+                    //console.log(extracteddata.toString());
                     var parseString=extracteddata[i].toString().replace(/\s<key>/g,"").replace(/<\/key>/g,"").replace(/<integer>/g,"").replace(/<\/integer>/g,"").replace(/<string>/g,"").replace(/<\/string>/g,"");
-                    var parseArray=parseString.split("\n")
-                    parseArray=parseArray.splice(1,parseArray.length-2)
+                    var parseArray=parseString.split("\n");
+                    parseArray=parseArray.splice(1,parseArray.length-2);
                     spotifyQueue.push({
                         thissong : parseArray
                         //thissong : extracteddata[i].string,
@@ -103,6 +106,7 @@ exports.xml = function(req ,res){
                         //keycheck : extracteddata[i].key
                     })
                 }
+                
 
                 spotifyQueue.drain = function(){
                     //Once the queue is empty
