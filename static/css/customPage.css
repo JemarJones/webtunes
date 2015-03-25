@@ -119,6 +119,7 @@ input:-moz-placeholder { color: rgba(255,255,255,0.6); }
 .bigAlb{
 	margin-top: 5%;
 	margin-left: 15%;
+	border-radius: 5px;
 }
 iframe{
 	position: absolute;
