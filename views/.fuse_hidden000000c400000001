@@ -2,7 +2,7 @@
 doctype html
 html
 	head
-		title= user + "WebTunes"
+		title WebTunes
 		each sheet in css
 			link(type="text/css", rel="stylesheet", href= sheet)
 	body

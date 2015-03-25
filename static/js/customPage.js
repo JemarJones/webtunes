@@ -6,6 +6,8 @@ $(document).ready(function(){
 	$('#alb').on('click',switchMode);
 	$('#lib').on('click',switchMode);
 	$('.albumCont').on('click',expandAlbum);
+	// $('.overlay').on('click',closeAlbum);
+	// $('.bg').on('click',closeAlbum);
 });
 
 //handler to fade between modes nicely
@@ -28,6 +30,7 @@ var switchMode = function(){
 };
 //handler to expand an album when its clicked on
 var expandAlbum = function(){
+	// var _window = window.open("https://play.spotify.com/trackset",'_blank');
 	var elem = this;
 	$.get("../../data/" + $(elem).attr("data-user"),function(albums){
 		var tracks = albums[$(elem).data("albumnum")];
@@ -40,6 +43,7 @@ var expandAlbum = function(){
 				src += tracks[i].track_id + ",";
 			}
 		}
+		var iframe = $('<iframe frameborder="0" allowtransparency="true" src="'+src+'"'+'</iframe>');
 		$('#header').fadeOut();
 		$('#contentView').fadeOut();
 		$('body').prepend('<div class="bg"></div>');
@@ -51,18 +55,31 @@ var expandAlbum = function(){
 		$('body').prepend('<div class="overlay"></div>');
 		$('.overlay').css("width",$('body').width());
 		$('.overlay').css("height",$('body').height()*1.2);
-		$('.overlay').append('<div class="bigAlb"></div>');
-		$('.bigAlb').css("width", $('.overlay').width()*0.35);
-		$('.bigAlb').css("height", $('.overlay').width()*0.35);
-		$('.bigAlb').css("background-image","url("+tracks[0].art_lg+")");
-		$('.bigAlb').css("background-size","cover");
-		$('.overlay').append('<iframe frameborder="0" allowtransparency="true" src="'+src+'"'+'</iframe>');
+		$('.overlay').append('<img class="bigAlb">');
+		$('.bigAlb').attr("width", $('.overlay').width()*0.35);
+		$('.bigAlb').attr("height", $('.overlay').width()*0.35);
+		$('.bigAlb').attr("src",tracks[0].art_lg);
+		$('.overlay').append('<div class="songInfo"></div>');
+		$('.overlay').append(iframe);
 		// Cant get current track info :(
-		$('.overlay').append('<p class="songTitle"></p>');
-		$('.songTitle').text($('.track-name').text());
-		$('.overlay').append('<p class="songArtist"></p>');
-		$('.songArtist').text($('.artist-name').text());
+		$('.songInfo').append('<p class="songTitle"></p>');
+		$('.songTitle').text("Title");
+		$('.songInfo').append('<p class="songArtist"></p>');
+		// $('.songArtist').text($('.artist-name').text());
+		$('.songArtist').text("Artist");
 		$('.bg').fadeIn();
 		$('.overlay').fadeIn();
+		$('.overlay').on('click',closeAlbum);
+		$('.bg').on('click',closeAlbum);
 	});
+};
+
+var closeAlbum = function(){
+	console.log("Captured click");
+	$('.overlay').fadeOut();
+	$('.bg').fadeOut();
+	$('#header').fadeIn();
+	$('#contentView').fadeIn();
+	$('.overlay').remove();
+	$('.bg').remove();
 };
