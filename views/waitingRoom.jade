@@ -1,0 +1,15 @@
+html
+	head
+		each sheet in css
+			link(type="text/css", rel="stylesheet", href=sheet)
+		each script in js
+			script(src= script)
+	body
+		.loader
+			.cubes
+				each i in new Array(64)
+					.cube
+						each i in new Array(6)
+							.side
+		#msg.
+			Your Library is currently being processed. This page will automatically update once it's done processing. Alternatively, you can close this tab now and check (url here) in the next 5 minutes or so.

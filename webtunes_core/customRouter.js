@@ -1,7 +1,13 @@
 var sqlStarter = require('./sqlStarter');
 
 exports.homePage = function(req,res){
-	res.render('homePage',{css: ['../css/customPage.css','http://fonts.googleapis.com/css?family=Roboto:100'],js: ['../js/homePage.js']});
+	res.render('homePage',{css: ['../css/homePage.css','http://fonts.googleapis.com/css?family=Roboto:300'],js: ['https://code.jquery.com/jquery-2.1.3.min.js','../js/homePage.js']});
+}
+
+exports.uploadXML = function(req,res){
+	console.log(req.files.xml_file.path);
+	console.log(req.body.username);
+	res.render('waitingRoom',{css: ['../css/loader.css'],js:[]});
 }
 
 //Router functions for the customPage
@@ -11,7 +17,7 @@ exports.customPage = function(req, res){
 	sqlStarter.connection.query(query,function(err,rows,fields){
 		if (!err){
 			albums = organize(rows);
-			res.render('customCoverArt',{css: ['../css/customPage.css','http://fonts.googleapis.com/css?family=Roboto:100'],js: ['../js/customPage.js'], albums: albums});
+			res.render('customCoverArt',{css: ['../css/homePage.css','http://fonts.googleapis.com/css?family=Roboto:100'],js: ['../js/customPage.js'], albums: albums});
 		}else{
 			console.log(err);
 		}

@@ -1,0 +1,89 @@
+body {
+	background-color: rgb(239,239,249);
+	width:100%;
+	margin:0;
+	padding:0;
+}
+
+#logo {
+	width:100%;
+}
+
+#logo img {
+	margin-left:auto;
+	margin-right:auto;
+	display:block;
+}
+
+#choose_user {
+	display:block;
+	margin-left:auto;
+	margin-right:auto;
+	margin-top:200px;
+	width:300px;
+	height:55px;
+}
+
+#upload_button {
+  font-family: "Roboto";
+  display: inline-block;
+  margin-top: 200px;
+  margin-left: auto;
+  margin-right: auto;
+  color: #fff;
+  font-size: 30px;
+  background-color: #445878;
+  height: 55px;
+  width: 300px;
+  padding-top: 15px;
+  border: 0 none;
+  text-align: center;
+  white-space:nowrap;
+  vertical-align: middle;
+  cursor:pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+}
+
+#upload_button:hover {
+	background-color:#414f63;
+	cursor: pointer;
+}
+
+#credits {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  font-family: "Roboto";
+  color: #888;
+  opacity: 0.6;
+  font-size: 25px;
+}
+/* This is copied from https://github.com/blueimp/jQuery-File-Upload/blob/master/css/jquery.fileupload.css */
+ .fileinput-button {
+    position: relative;
+    overflow: hidden;
+}
+/*Also*/
+ .fileinput-button input {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    opacity: 0;
+    -ms-filter:'alpha(opacity=0)';
+    font-size: 200px;
+    direction: ltr;
+    cursor: pointer;
+}
+
+#upload_xml_form {
+  margin-left: auto;
+  display: block;
+  margin-right: auto;
+  width: 300px;
+}

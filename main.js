@@ -12,6 +12,7 @@ var routes = express();
 //Router for the custom page
 var customRouter = require('./webtunes_core/customRouter');
 var xmlrouter = require('./webtunes_core/xmlparser');
+var multer = require('multer');
 
 
 /**
@@ -106,6 +107,7 @@ var xmlrouter = require('./webtunes_core/xmlparser');
      */
      self.createRoutes = function() {
         self.routes = { };
+        self.posts = {};
 
         // self.routes['/asciimo'] = function(req, res) {
         //     var link = "http://i.imgur.com/kmbjB.png";
@@ -120,6 +122,7 @@ var xmlrouter = require('./webtunes_core/xmlparser');
         self.routes['/data/:user'] = customRouter.albumData;
         self.routes['/nalwa'] = xmlrouter.xml;
         self.routes['/'] = customRouter.homePage;
+        self.posts['/upload_xml'] = customRouter.uploadXML;
     };
 
 
@@ -132,10 +135,20 @@ var xmlrouter = require('./webtunes_core/xmlparser');
         self.app = express();
         self.app.set('view engine', 'jade');//Used to render our pages
         self.app.use(express.static('static'));
+        self.app.use(multer({
+          dest: './uploads/',
+          rename: function (fieldname, filename) {
+            return filename.replace(/\W+/g, '-').toLowerCase() + Date.now()
+          }
+        }));
 
         //  Add handlers for the app (from the routes).
         for (var r in self.routes) {
             self.app.get(r, self.routes[r]);
+        }
+
+        for (var p in self.posts){
+            self.app.post(p,self.posts[p]);
         }
     };
 

@@ -10,3 +10,17 @@ html
 	body
 		#logo
 			img(src="../images/webtunes_logo.png")
+		form(action="../upload_xml", method="post", enctype="multipart/form-data",id="upload_xml_form")
+			#first_screen
+				span#upload_button.fileinput-button
+					span Upload My Library
+					input(type="file", name="xml_file",id="xml_file")
+			#second_screen 
+				#choose_user
+					h2 Pick a Username
+					h5.
+						Your library will show up at http://app-webtunes.rhcloud.com/u/&lt;Your Username here&gt;
+					input(type="text",id="username",name="username")
+					button(id="webtunes_submit") yo
+		#credits.
+			Created by Nikolai Savas, Jemar Jones, and Sam Nalwa
