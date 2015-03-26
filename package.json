@@ -30,7 +30,8 @@
     "async": "0.9.0",
     "mysql": "2.5.5",
     "multer": "0.1.8",
-    "xmldoc": "0.3.0"
+    "xmldoc": "0.3.0",
+    "lastfmapi": "0.0.6"
   },
   "devDependencies": {},
   "bundleDependencies": [],
