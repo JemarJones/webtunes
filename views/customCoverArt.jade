@@ -12,8 +12,31 @@ block header
 			option(value="Album") Album
 			option(value="Plays") Plays
 block content 
-	each album, index in albums
-		.albumCont(data-user= album[0].user, data-albumnum= index)
-			img.albCover(src= album[0].art_md)
-			p.albTitle= album[0].album
-			p.albArtist= "- " + album[0].artist
+	#albumView
+		each album, index in albums
+			.albumCont(data-user= album[0].user, data-albumnum= index)
+				img.albCover(src= album[0].art_md)
+				p.albTitle= album[0].album
+				p.albArtist= "- " + album[0].artist
+	table#songView
+		tr.odd
+			th Title
+			th Album
+			th Artist
+			th Playcount
+		- var index = 0//Used to count the songs so we can switch colors every other
+		each album in albums
+			each track in album
+				if (index%2!=0)
+					tr.odd.song(data-user= album[0].user, data-id= track.track_id)
+						td= track.title
+						td= track.album
+						td= track.artist
+						td= track.playcount
+				else
+					tr.even.song(data-user= album[0].user, data-id= track.track_id)
+						td= track.title
+						td= track.album
+						td= track.artist
+						td= track.playcount
+				- index = index + 1

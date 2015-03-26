@@ -6,7 +6,7 @@ var sqlStarter = require('./sqlStarter');
 
 exports.homePage = function(req,res){
 	res.render('homePage',{css: ['../css/homePage.css','http://fonts.googleapis.com/css?family=Roboto:300'],js: ['https://code.jquery.com/jquery-2.1.3.min.js','../js/homePage.js']});
-}
+};
 
 exports.uploadXML = function(req,res){
 	console.log(req.files.xml_file.path);

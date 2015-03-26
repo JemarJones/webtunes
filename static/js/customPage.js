@@ -3,12 +3,13 @@ $(document).ready(function(){
 	//A hack-y way to intially hide sorting options.. More difficult with css.
 	$('#sortCont').hide();
 	$('#sortCont').css('opacity', '1.0');
+	$('#songView').hide();
+	$('#songView').css('opacity', '1.0');
 	//Assigning event handlers to switch modes
 	$('#alb').on('click',switchMode);
 	$('#lib').on('click',switchMode);
 	$('.albumCont').on('click',expandAlbum);
-	// $('.overlay').on('click',closeAlbum);
-	// $('.bg').on('click',closeAlbum);
+	$('.song').on('click',expandSongs);
 });
 
 //handler to fade between modes nicely
@@ -18,13 +19,15 @@ var switchMode = function(){
 	if ($(this)[0] != $('#alb')[0]){
 		oldView = '#alb';
 		newView = '#lib';
+		$('#albumView').fadeOut();
 		$('#sortCont').fadeIn();
-		$('#contentView').fadeOut();
+		$('#songView').fadeIn();
 	}else{
 		oldView = '#lib';
 		newView = '#alb';
+		$('#songView').fadeOut();
 		$('#sortCont').fadeOut();
-		$('#contentView').fadeIn();
+		$('#albumView').fadeIn();
 	}
 	$(oldView).removeClass('highlighted').addClass('normal');
 	$(newView).addClass('highlighted').removeClass('normal');
@@ -47,7 +50,7 @@ var expandAlbum = function(){
 			}
 			var iframe = $('<iframe frameborder="0" allowtransparency="true" src="'+src+'"'+'</iframe>');
 			$('#header').fadeOut();
-			$('#contentView').fadeOut();
+			$('#albumView').fadeOut();
 			$('body').prepend('<div class="bg"></div>');
 			$('.bg').css("background-image","url("+tracks[0].art_lg+")");
 			$('body').prepend('<div class="overlay"></div>');
@@ -64,15 +67,40 @@ var expandAlbum = function(){
 			$('.overlay').on('click',closeAlbum);
 			$('.bg').on('click',closeAlbum);
 		});
-	}
+}
 };
 
 var closeAlbum = function(){
 	$('.overlay').fadeOut();
 	$('.bg').fadeOut();
 	$('#header').fadeIn();
-	$('#contentView').fadeIn();
+	$('#albumView').fadeIn();
 	$('.overlay').remove();
 	$('.bg').remove();
 	expanded = false;
+};
+var expandSongs = function(){
+	if (!expanded){
+		expanded = true;
+		var elem = this;
+		$.get("../../data/" + $(elem).attr("data-user"),function(albums){
+			var src = "https://embed.spotify.com/?uri=spotify:trackset:Library:";
+			var add = false;
+			for (var i = 0; i < albums.length; i++){
+				for (var j = 0; j < albums[i].length; j++){
+					if (albums[i][j].track_id == $(elem).attr("data-id")){
+						add = true;
+					}
+					if (add){
+						if (i == albums.length - 1 && j == albums[i].length - 1){
+							src += albums[i][j].track_id;
+						}else{
+							src += albums[i][j].track_id + ",";
+						}
+					}
+				}
+			}
+			$('#songView').append($('<iframe frameborder="0" allowtransparency="true" src="'+src+'"'+'</iframe>'));
+		});
+	}
 };
