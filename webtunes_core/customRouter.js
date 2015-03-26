@@ -17,7 +17,7 @@ exports.uploadXML = function(req,res){
 	var playcounter;
 	var albtest;
 	var spotifyApi = new SpotifyWebApi();
-    var currentsong=['','','',0];
+    var currentsong=['','','','',0];
 
 	fs.readFile(req.files.xml_file.path, function(err, data) {
           var document = new xmldoc.XmlDocument(data);
@@ -31,17 +31,19 @@ exports.uploadXML = function(req,res){
                     //var thisint = task.thisint;
                     //var keycheck = task.keycheck;
 
-                    currentsong=['','','',0];
-                    var playcount=0;
+                    currentsong=['','','','',0];
+                    //var playcount=0;
+                    console.log(thissong);
 
                     for (k=0;k<thissong.length-1;k++){
-                          if (parseArray[k]==" Name"){currentsong[0]=thissong[k+1].split("  ")[1].replace(/ft\./g,"").replace(/feat\./g,"").replace(/\(/g,"").replace(/\)/g,"");}
-                          if (parseArray[k]==" Artist"){currentsong[1]=thissong[k+1].split("  ")[1];}
-                          if (parseArray[k]==" Album Artist"){currentsong[2]=thissong[k+1].split("  ")[1];}
-                          if (parseArray[k]==" Album"){currentsong[3]=thissong[k+1].split("  ")[1];}
-                          if (parseArray[k]==" Play Count"){currentsong[4]=thissong[k+1].split("  ")[1];}
+                    		
+                          if (thissong[k]==" Name"){currentsong[0]=thissong[k+1].split("  ")[1].replace(/ft\./g,"").replace(/feat\./g,"").replace(/\(/g,"").replace(/\)/g,"");}
+                          if (thissong[k]==" Artist"){currentsong[1]=thissong[k+1].split("  ")[1];}
+                          if (thissong[k]==" Album Artist"){currentsong[2]=thissong[k+1].split("  ")[1];}
+                          if (thissong[k]==" Album"){currentsong[3]=thissong[k+1].split("  ")[1];}
+                          if (thissong[k]==" Play Count"){currentsong[4]=thissong[k+1].split("  ")[1];}
                     }
-
+                    console.log(currentsong);
                     spotifyApi.searchTracks(currentsong[0]+" - "+currentsong[1])
                         .then(function(data) {
                         // console.log(data.body.tracks.items[0].name);
@@ -60,23 +62,28 @@ exports.uploadXML = function(req,res){
                              var albumartist=currentsong[2];
                              var playcount = currentsong[4];
                              console.log(name+" - "+artist);
-                             console.log(name,artist,album,playcounter,artlg,artmd,artsm,trackid,albumid);
+                             console.log(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid);
 
                              songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
                              albumarray.push(new Album(artmd,album,albumartist));
                              callback();
-                             //console.log(songarray); 
+                             //console.log(songarray.length); 
                              //show_image(albummd);
                              //albtest=artmd;
+                            }
+
+                            if (data.body.tracks.items[0]==undefined){
+                            	callback();
                             }
                         }, function(err) {
                             console.log(err);
                             callback();
+
                             //console.log(songarray);
                         });
-                 },1);
+                 },10);
 
-				spotifyQueue.pause();
+				//spotifyQueue.pause();
                 for(var i=0;i<extracteddata.length;i++){
                     //Put each item from the data into are queue to be processed by spotify
                     var parseString=extracteddata[i].toString().replace(/\s<key>/g,"").replace(/<\/key>/g,"").replace(/<integer>/g,"").replace(/<\/integer>/g,"").replace(/<string>/g,"").replace(/<\/string>/g,"");
@@ -90,7 +97,7 @@ exports.uploadXML = function(req,res){
                         //keycheck : extracteddata[i].key
                     },function (err) {console.log(spotifyQueue.length());});
                 }
-                spotifyQueue.resume();
+                //spotifyQueue.resume();
 
                 spotifyQueue.drain = function(){
                     //Once the queue is empty
@@ -100,6 +107,7 @@ exports.uploadXML = function(req,res){
                     //Let's just push this to the sql db for now.
                     for(var i=0;i<songarray.length;i++){
                         var song = songarray[i];
+                        //song.name=song.name.replace(/-/g,"").replace(/\?/g,"").replace(/Interlude/g,"");
                         var query = "INSERT INTO user_libraries (user,title,artist,album,playcount,art_lg,art_md,art_sm,track_id,album_id) VALUES ('"+req.body.username+"','"
                             +sqlStarter.escape(song.name)+"','"
                             +sqlStarter.escape(song.artist)+"','"
@@ -111,17 +119,20 @@ exports.uploadXML = function(req,res){
                             +sqlStarter.escape(song.trackid)+"','"
                             +sqlStarter.escape(song.albumid)+"')";
                         console.log(query);
+                        console.log(i);
                         sqlStarter.connection.query(query,function(err,rows,fields){
                             if (!err){
                                 console.log("Added to db.")
+
                             }else{
                                 console.log(err);
                             }
                         });
                     }
-
+                    
                     res.send("Success");
-                }                
+                }   
+                console.log("Everything in Database");             
 
   });
 

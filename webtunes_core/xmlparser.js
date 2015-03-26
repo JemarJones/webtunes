@@ -48,6 +48,7 @@ exports.xml = function(req ,res){
                     }*/
                     //playcounter = thisint[++playcount];
                     for (k=0;k<thissong.length-1;k++){
+                          console.log(parseArray);
                           if (parseArray[k]==" Name"){currentsong[0]=thissong[k+1].split("  ")[1].replace(/ft\./g,"").replace(/feat\./g,"").replace(/\(/g,"").replace(/\)/g,"");}
                           if (parseArray[k]==" Artist"){currentsong[1]=thissong[k+1].split("  ")[1];}
                           if (parseArray[k]==" Album Artist"){currentsong[2]=thissong[k+1].split("  ")[1];}
