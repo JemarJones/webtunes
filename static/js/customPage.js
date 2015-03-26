@@ -1,4 +1,5 @@
 var expanded = false;
+var viewToRestore;
 $(document).ready(function(){
 	//A hack-y way to intially hide sorting options.. More difficult with css.
 	$('#sortCont').hide();
@@ -48,33 +49,17 @@ var expandAlbum = function(){
 					src += tracks[i].track_id + ",";
 				}
 			}
-			var iframe = $('<iframe frameborder="0" allowtransparency="true" src="'+src+'"'+'</iframe>');
-			$('#header').fadeOut();
-			$('#albumView').fadeOut();
-			$('body').prepend('<div class="bg"></div>');
-			$('.bg').css("background-image","url("+tracks[0].art_lg+")");
-			$('body').prepend('<div class="overlay"></div>');
-			$('.overlay').append('<img class="bigAlb">');
-			$('.bigAlb').attr("src",tracks[0].art_lg);
-			$('.overlay').append('<div class="songInfo"></div>');
-			$('.overlay').append(iframe);
-			$('.songInfo').append('<p class="songAlbum"></p>');
-			$('.songAlbum').text(tracks[0].album);
-			$('.songInfo').append('<p class="songArtist"></p>');
-			$('.songArtist').text(tracks[0].artist);
-			$('.bg').fadeIn();
-			$('.overlay').fadeIn();
-			$('.overlay').on('click',closeAlbum);
-			$('.bg').on('click',closeAlbum);
+			createPlayer(src,[tracks[0].art_lg,tracks[0].album,tracks[0].artist],$('#albumView'));
 		});
-}
+	}
 };
 
 var closeAlbum = function(){
 	$('.overlay').fadeOut();
 	$('.bg').fadeOut();
 	$('#header').fadeIn();
-	$('#albumView').fadeIn();
+	viewToRestore.fadeIn();
+	$('#songView').fadeIn();
 	$('.overlay').remove();
 	$('.bg').remove();
 	expanded = false;
@@ -84,23 +69,40 @@ var expandSongs = function(){
 		expanded = true;
 		var elem = this;
 		$.get("../../data/" + $(elem).attr("data-user"),function(albums){
-			var src = "https://embed.spotify.com/?uri=spotify:trackset:Library:";
-			var add = false;
+			var src = "https://embed.spotify.com/?uri=spotify:trackset:";
+			var index = 0;
 			for (var i = 0; i < albums.length; i++){
-				for (var j = 0; j < albums[i].length; j++){
-					if (albums[i][j].track_id == $(elem).attr("data-id")){
-						add = true;
+				for (var j = 0; j < albums[i].length;j++){
+					if (index == $(elem).attr("data-id")){
+						// console.log(album);
+						src = src + albums[i][j].title+":"+albums[i][j].track_id;
+						createPlayer(src,[albums[i][j].art_lg,albums[i][j].title,albums[i][j].artist],$('#songView'));
 					}
-					if (add){
-						if (i == albums.length - 1 && j == albums[i].length - 1){
-							src += albums[i][j].track_id;
-						}else{
-							src += albums[i][j].track_id + ",";
-						}
-					}
+					index = index + 1;
 				}
 			}
-			$('#songView').append($('<iframe frameborder="0" allowtransparency="true" src="'+src+'"'+'</iframe>'));
 		});
 	}
+};
+var createPlayer = function(src,displayData,oldView){
+	viewToRestore = oldView;
+	var iframe = $('<iframe frameborder="0" allowtransparency="true" src="'+src+'"'+'</iframe>');
+	$('#header').fadeOut();
+	$('#albumView').fadeOut();
+	$('#songView').fadeOut();
+	$('body').prepend('<div class="bg"></div>');
+	$('.bg').css("background-image","url("+displayData[0]+")");
+	$('body').prepend('<div class="overlay"></div>');
+	$('.overlay').append('<img class="bigAlb">');
+	$('.bigAlb').attr("src",displayData[0]);
+	$('.overlay').append('<div class="songInfo"></div>');
+	$('.overlay').append(iframe);
+	$('.songInfo').append('<p class="songAlbum"></p>');
+	$('.songAlbum').text(displayData[1]);
+	$('.songInfo').append('<p class="songArtist"></p>');
+	$('.songArtist').text(displayData[2]);
+	$('.bg').fadeIn();
+	$('.overlay').fadeIn();
+	$('.overlay').on('click',closeAlbum);
+	$('.bg').on('click',closeAlbum);
 };
