@@ -17,6 +17,7 @@ exports.uploadXML = function(req,res){
 	var playcounter;
 	var albtest;
 	var spotifyApi = new SpotifyWebApi();
+  var started=0;
     var currentsong=['','','','',0];
 
 	fs.readFile(req.files.xml_file.path, function(err, data) {
@@ -33,7 +34,7 @@ exports.uploadXML = function(req,res){
 
                     currentsong=['','','','',0];
                     //var playcount=0;
-                    console.log(thissong);
+                    //console.log(thissong);
 
                     for (k=0;k<thissong.length-1;k++){
                     		
@@ -43,7 +44,7 @@ exports.uploadXML = function(req,res){
                           if (thissong[k]==" Album"){currentsong[3]=thissong[k+1].split("  ")[1];}
                           if (thissong[k]==" Play Count"){currentsong[4]=thissong[k+1].split("  ")[1];}
                     }
-                    console.log(currentsong);
+                    //console.log(currentsong);
                     spotifyApi.searchTracks(currentsong[0]+" - "+currentsong[1])
                         .then(function(data) {
                         // console.log(data.body.tracks.items[0].name);
@@ -51,7 +52,7 @@ exports.uploadXML = function(req,res){
                              var spotifysong=data.body.tracks.items[0];
                              //console.log(spotifysong);
                              var name = spotifysong.name;
-                             console.log(name);
+                             //console.log(name);
                              var artist = spotifysong.artists[0].name;
                              var album = spotifysong.album.name;
                              var artlg=spotifysong.album.images[0].url;
@@ -61,7 +62,7 @@ exports.uploadXML = function(req,res){
                              var albumid=spotifysong.album.id;
                              var albumartist=currentsong[2];
                              var playcount = currentsong[4];
-                             console.log(name+" - "+artist);
+                             //console.log(name+" - "+artist);
                              console.log(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid);
 
                              songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
@@ -73,11 +74,15 @@ exports.uploadXML = function(req,res){
                             }
 
                             if (data.body.tracks.items[0]==undefined){
-                            	callback();
+                            	console.log("dis aint found");
+                              callback();
                             }
                         }, function(err) {
+                            console.log("YOLODAWG");
+                            setTimeout(callback(), 20000);
                             console.log(err);
-                            callback();
+                            
+                            //callback();
 
                             //console.log(songarray);
                         });
@@ -95,7 +100,15 @@ exports.uploadXML = function(req,res){
                         //thissong : extracteddata[i].string,
                         //thisint : extracteddata[i].integer,
                         //keycheck : extracteddata[i].key
-                    },function (err) {console.log(spotifyQueue.length());});
+                    },function (err) {
+                       if (spotifyQueue.length()==0 && started==0){
+                        spotifyQueue.drain();
+                        console.log("started");
+                      }
+                      console.log(spotifyQueue.length());
+                    });
+
+                   
                 }
                 //spotifyQueue.resume();
 
@@ -106,6 +119,7 @@ exports.uploadXML = function(req,res){
                     
                     //Let's just push this to the sql db for now.
                     for(var i=0;i<songarray.length;i++){
+                        started=1;
                         var song = songarray[i];
                         //song.name=song.name.replace(/-/g,"").replace(/\?/g,"").replace(/Interlude/g,"");
                         var query = "INSERT INTO user_libraries (user,title,artist,album,playcount,art_lg,art_md,art_sm,track_id,album_id) VALUES ('"+req.body.username+"','"
@@ -132,10 +146,8 @@ exports.uploadXML = function(req,res){
                     
                     res.send("Success");
                 }   
-                console.log("Everything in Database");             
-
   });
-
+  console.log("Everything in Database");  
 	res.render('waitingRoom',{css: ['../css/loader.css'],js:[]});
 
 };
