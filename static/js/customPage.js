@@ -2,10 +2,8 @@ var expanded = false;
 var viewToRestore;
 $(document).ready(function(){
 	//A hack-y way to intially hide sorting options.. More difficult with css.
-	$('#sortCont').hide();
-	$('#sortCont').css('opacity', '1.0');
-	$('#songView').hide();
-	$('#songView').css('opacity', '1.0');
+	$('.hide').hide();
+	$('.hide').css('opacity', '1.0');
 	//Assigning event handlers to switch modes
 	$('.navDiv').on('click',switchMode);
 	$('.albumCont').on('click',expandAlbum);
@@ -51,8 +49,8 @@ var closeAlbum = function(){
 	$('.bg').fadeOut();
 	$('#header').fadeIn();
 	viewToRestore.fadeIn();
-	$('.overlay').remove();
-	$('.bg').remove();
+	// $('.overlay').remove();
+	// $('.bg').remove();
 	expanded = false;
 };
 var expandSongs = function(){
@@ -79,18 +77,17 @@ var createPlayer = function(src,displayData,oldView){
 	viewToRestore = oldView;
 	var iframe = $('<iframe frameborder="0" allowtransparency="true" src="'+src+'"'+'</iframe>');
 	$('#header').fadeOut();
-	$('#albumView').fadeOut();
-	$('#songView').fadeOut();
-	$('body').prepend('<div class="bg"></div>');
+	viewToRestore.fadeOut();
+	// $('body').prepend('<div class="bg"></div>');
 	$('.bg').css("background-image","url("+displayData[0]+")");
-	$('body').prepend('<div class="overlay"></div>');
-	$('.overlay').append('<img class="bigAlb">');
+	// $('body').prepend('<div class="overlay"></div>');
+	// $('.overlay').append('<img class="bigAlb">');
 	$('.bigAlb').attr("src",displayData[0]);
-	$('.overlay').append('<div class="songInfo"></div>');
+	// $('.overlay').append('<div class="songInfo"></div>');
 	$('.overlay').append(iframe);
-	$('.songInfo').append('<p class="songAlbum"></p>');
+	// $('.songInfo').append('<p class="songAlbum"></p>');
 	$('.songAlbum').text(displayData[1]);
-	$('.songInfo').append('<p class="songArtist"></p>');
+	// $('.songInfo').append('<p class="songArtist"></p>');
 	$('.songArtist').text(displayData[2]);
 	$('.bg').fadeIn();
 	$('.overlay').fadeIn();

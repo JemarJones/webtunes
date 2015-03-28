@@ -6,9 +6,24 @@ html
 		each sheet in css
 			link(type="text/css", rel="stylesheet", href= sheet)
 	body
+		//- Header
 		#header
-			block header
-		block content
+			//Search box
+			form#searchForm
+				input#search(placeholder="Search..")
+			//Tab navigation
+			ul#nav
+				li.navItem
+					.navDiv.highlighted(data-cont= '#albumView') Cover
+				li.navItem
+					.navDiv.normal(data-cont= '#songView') Library
+				li.navItem
+					.navDiv.normal(data-cont= '#visView') Visualizations
+		//- Content (diff ways of displaying music)
+		include ./player.jade
+		include ./albumView.jade
+		include ./songView.jade
+		//Scripts section
 		script(src='../js/jquery-1.11.2.min.js')
 		each script in js
 			script(src= script)
