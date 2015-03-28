@@ -7,31 +7,23 @@ $(document).ready(function(){
 	$('#songView').hide();
 	$('#songView').css('opacity', '1.0');
 	//Assigning event handlers to switch modes
-	$('#alb').on('click',switchMode);
-	$('#lib').on('click',switchMode);
+	$('.navDiv').on('click',switchMode);
 	$('.albumCont').on('click',expandAlbum);
 	$('.song').on('click',expandSongs);
 });
 
 //handler to fade between modes nicely
 var switchMode = function(){
-	var oldView;
-	var newView;
-	if ($(this)[0] != $('#alb')[0]){
-		oldView = '#alb';
-		newView = '#lib';
-		$('#albumView').fadeOut();
-		$('#sortCont').fadeIn();
-		$('#songView').fadeIn();
-	}else{
-		oldView = '#lib';
-		newView = '#alb';
-		$('#songView').fadeOut();
-		$('#sortCont').fadeOut();
-		$('#albumView').fadeIn();
-	}
-	$(oldView).removeClass('highlighted').addClass('normal');
-	$(newView).addClass('highlighted').removeClass('normal');
+	var fadeIn = $(this).attr("data-cont");
+	$('.navDiv').each(function(){
+		if (fadeIn != $(this).attr("data-cont")){
+			$(this).removeClass('highlighted').addClass('normal');
+			$($(this).attr("data-cont")).fadeOut();
+		}else{
+			$(this).addClass('highlighted').removeClass('normal');
+			$($(this).attr("data-cont")).fadeIn();
+		}
+	});
 };
 //handler to expand an album when its clicked on
 var expandAlbum = function(){
@@ -59,7 +51,6 @@ var closeAlbum = function(){
 	$('.bg').fadeOut();
 	$('#header').fadeIn();
 	viewToRestore.fadeIn();
-	$('#songView').fadeIn();
 	$('.overlay').remove();
 	$('.bg').remove();
 	expanded = false;

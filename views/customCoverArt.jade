@@ -3,14 +3,20 @@ extends customPage
 block header
 	form#searchForm
 		input#search(placeholder="Search..")
-	#alb.highlighted Cover
-	#lib.normal Library
-	#sortCont.normal
-		select#sortOpt
-			option(value="Title") Title
-			option(value="Artist") Artist
-			option(value="Album") Album
-			option(value="Plays") Plays
+	ul#nav
+		li.navItem
+			.navDiv.highlighted(data-cont= '#albumView') Cover
+		li.navItem
+			.navDiv.normal(data-cont= '#songView') Library
+		li.navItem
+			.navDiv.normal(data-cont= '#visView') Visualizations
+		//- li.navItem
+		//- 	#sortCont.normal
+		//- select#sortOpt
+		//- 	option(value="Title") Title
+		//- 	option(value="Artist") Artist
+		//- 	option(value="Album") Album
+		//- 	option(value="Plays") Plays
 block content 
 	#albumView
 		each album, index in albums
