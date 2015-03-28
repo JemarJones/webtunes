@@ -1,4 +1,5 @@
-var expanded = false;
+//Client side js for customPage
+var expanded = false;//Stores whether the player is currently expanded or not
 var viewToRestore;
 $(document).ready(function(){
 	//A hack-y way to intially hide sorting options.. More difficult with css.
@@ -7,9 +8,8 @@ $(document).ready(function(){
 	//Assigning event handlers to switch modes
 	$('.navDiv').on('click',switchMode);
 	$('.albumCont').on('click',expandAlbum);
-	$('.song').on('click',expandSongs);
+	$('.song').on('click',expandSong);
 });
-
 //handler to fade between modes nicely
 var switchMode = function(){
 	var fadeIn = $(this).attr("data-cont");
@@ -39,21 +39,20 @@ var expandAlbum = function(){
 					src += tracks[i].track_id + ",";
 				}
 			}
-			createPlayer(src,[tracks[0].art_lg,tracks[0].album,tracks[0].artist],$('#albumView'));
+			displayPlayer(src,[tracks[0].art_lg,tracks[0].album,tracks[0].artist],$('#albumView'));
 		});
 	}
 };
-
-var closeAlbum = function(){
+//Code to close up the spotify player
+var closePlayer = function(){
 	$('.overlay').fadeOut();
 	$('.bg').fadeOut();
 	$('#header').fadeIn();
 	viewToRestore.fadeIn();
-	// $('.overlay').remove();
-	// $('.bg').remove();
 	expanded = false;
 };
-var expandSongs = function(){
+//Funciton to expand a chosen song
+var expandSong = function(){
 	if (!expanded){
 		expanded = true;
 		var elem = this;
@@ -65,7 +64,7 @@ var expandSongs = function(){
 					if (index == $(elem).attr("data-id")){
 						// console.log(album);
 						src = src + albums[i][j].title+":"+albums[i][j].track_id;
-						createPlayer(src,[albums[i][j].art_lg,albums[i][j].title,albums[i][j].artist],$('#songView'));
+						displayPlayer(src,[albums[i][j].art_lg,albums[i][j].title,albums[i][j].artist],$('#songView'));
 					}
 					index = index + 1;
 				}
@@ -73,24 +72,19 @@ var expandSongs = function(){
 		});
 	}
 };
-var createPlayer = function(src,displayData,oldView){
+//Loads provided data into spotify player and displays
+var displayPlayer = function(src,displayData,oldView){
 	viewToRestore = oldView;
 	var iframe = $('<iframe frameborder="0" allowtransparency="true" src="'+src+'"'+'</iframe>');
 	$('#header').fadeOut();
 	viewToRestore.fadeOut();
-	// $('body').prepend('<div class="bg"></div>');
 	$('.bg').css("background-image","url("+displayData[0]+")");
-	// $('body').prepend('<div class="overlay"></div>');
-	// $('.overlay').append('<img class="bigAlb">');
 	$('.bigAlb').attr("src",displayData[0]);
-	// $('.overlay').append('<div class="songInfo"></div>');
 	$('.overlay').append(iframe);
-	// $('.songInfo').append('<p class="songAlbum"></p>');
 	$('.songAlbum').text(displayData[1]);
-	// $('.songInfo').append('<p class="songArtist"></p>');
 	$('.songArtist').text(displayData[2]);
 	$('.bg').fadeIn();
 	$('.overlay').fadeIn();
-	$('.overlay').on('click',closeAlbum);
-	$('.bg').on('click',closeAlbum);
+	$('.overlay').on('click',closePlayer);
+	$('.bg').on('click',closePlayer);
 };
