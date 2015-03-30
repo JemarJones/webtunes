@@ -45,10 +45,11 @@ var expandAlbum = function(){
 };
 //Code to close up the spotify player
 var closePlayer = function(){
-	$('.overlay').fadeOut();
 	$('.bg').fadeOut();
-	$('#header').fadeIn();
-	viewToRestore.fadeIn();
+	$('.overlay').fadeOut(400,function(){
+		$('#header').fadeIn();
+		viewToRestore.fadeIn();
+	});
 	expanded = false;
 };
 //Funciton to expand a chosen song
@@ -76,15 +77,18 @@ var expandSong = function(){
 var displayPlayer = function(src,displayData,oldView){
 	viewToRestore = oldView;
 	var iframe = $('<iframe frameborder="0" allowtransparency="true" src="'+src+'"'+'</iframe>');
-	$('#header').fadeOut();
-	viewToRestore.fadeOut();
 	$('.bg').css("background-image","url("+displayData[0]+")");
 	$('.bigAlb').attr("src",displayData[0]);
 	$('.overlay').append(iframe);
 	$('.songAlbum').text(displayData[1]);
 	$('.songArtist').text(displayData[2]);
-	$('.bg').fadeIn();
-	$('.overlay').fadeIn();
+	$('#header').fadeOut();
+	viewToRestore.fadeOut(400,function(){
+		$('.bg').fadeIn();
+		$('.overlay').fadeIn();
+	});
+	// $('.bg').fadeIn();
+	// $('.overlay').fadeIn();
 	$('.overlay').on('click',closePlayer);
 	$('.bg').on('click',closePlayer);
 };
