@@ -149,6 +149,7 @@ exports.uploadXML = function(req,res){
                                 //console.log(spotifyQueue.length());
                                 if (databaseAddedCounter==spotifyCounter){
                                   console.log("Everything added to DB");
+                                  console.log("Number of songs where the API timed out"+errorCounter);
                                   var querydone = "INSERT INTO users (user,complete) VALUES ('"+req.body.username+"','"
                                                   +1+"')";
                                   sqlStarter.connection.query(querydone,function(err,rows,fields){
