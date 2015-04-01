@@ -16,6 +16,7 @@ exports.uploadXML = function(req,res){
 	var albumarray=new Array();
 	var playcounter;
 	var albtest;
+  var spotifyCounter=0;
 	var spotifyApi = new SpotifyWebApi();
   var started=0;
     var currentsong=['','','','',0];
@@ -74,11 +75,10 @@ exports.uploadXML = function(req,res){
                             }
 
                             if (data.body.tracks.items[0]==undefined){
-                            	console.log("dis aint found");
+                            	console.log("Not Found on Spotify");
                               callback();
                             }
                         }, function(err) {
-                            console.log("YOLODAWG");
                             setTimeout(callback(), 20000);
                             console.log(err);
                             
@@ -86,7 +86,7 @@ exports.uploadXML = function(req,res){
 
                             //console.log(songarray);
                         });
-                 },10);
+                 },1);
 
 				//spotifyQueue.pause();
                 for(var i=0;i<extracteddata.length;i++){
@@ -102,8 +102,8 @@ exports.uploadXML = function(req,res){
                         //keycheck : extracteddata[i].key
                     },function (err) {
                        if (spotifyQueue.length()==0 && started==0){
+                        console.log("qwert");
                         spotifyQueue.drain();
-                        console.log("started");
                       }
                       console.log(spotifyQueue.length());
                     });
@@ -132,23 +132,63 @@ exports.uploadXML = function(req,res){
                             +sqlStarter.escape(song.artsm)+"','"
                             +sqlStarter.escape(song.trackid)+"','"
                             +sqlStarter.escape(song.albumid)+"')";
+                        
+
                         console.log(query);
                         console.log(i);
+                        console.log(spotifyCounter);
+                        console.log(songarray.length);
+                        /*
+                        console.log(i);
+                        console.log(songarray.length);
+                        if (i==songarray.length-1){console.log("reached here");}
+                        */
 
-                        if (i==songarray.length){
-                          var querydone = "INSERT INTO user (user,complete) VALUES ('"+req.body.username+"','"
-                            +1+"')";
-                        }
                         sqlStarter.connection.query(query,function(err,rows,fields){
                             if (!err){
-                                console.log("Added to db.")
+
+                                spotifyCounter++;
+                                console.log("Added to db.");
+                                //console.log(spotifyQueue.length());
+                                if ((i*2)==spotifyCounter){
+                                  console.log("Everything added to DB");
+                                  var querydone = "INSERT INTO users (user,complete) VALUES ('"+req.body.username+"','"
+                                                  +1+"')";
+                                  sqlStarter.connection.query(querydone,function(err,rows,fields){
+                                  if (!err){
+                                  console.log("COMPLETED VALUE UPDATED TO USERS DB.")
+                                   }else{
+                                  console.log(err);
+                                  }
+                                  });
+                                }
 
                             }else{
                                 console.log(err);
                             }
                         });
+
+                        //if (i==(songarray.length-1)){}
+
+                        /*
+                        if (i==0){
+                          var querydone = "INSERT INTO user (user,complete) VALUES ('"+req.body.username+"','"
+                            +1+"')";
+                        }
+
+                        sqlStarter.connection.querydone(querydone,function(err,rows,fields){
+                            if (!err){
+                                console.log("COMPLETED VALUE UPDATED TO DB.")
+
+                            }else{
+                                console.log(err);
+                            }
+                        });
+                        */
+
                     }
                     res.send("Success");
+
                 }   
   });
 	res.render('waitingRoom',{css: ['../css/loader.css'],js:[]});
