@@ -84,7 +84,7 @@ exports.uploadXML = function(req,res){
                             errorCounter++;
                             console.log(err);
                             console.log(errorCounter);
-                            setTimeout(callback(), 20000);
+                            setTimeout(callback(), 30000);
                             
                             
                             //callback();
@@ -149,7 +149,7 @@ exports.uploadXML = function(req,res){
                                 //console.log(spotifyQueue.length());
                                 if (databaseAddedCounter==spotifyCounter){
                                   console.log("Everything added to DB");
-                                  console.log("Number of songs where the API timed out"+errorCounter);
+                                  console.log("Number of songs where the API timed out = "+errorCounter);
                                   var querydone = "INSERT INTO users (user,complete) VALUES ('"+req.body.username+"','"
                                                   +1+"')";
                                   sqlStarter.connection.query(querydone,function(err,rows,fields){
