@@ -1,37 +1,27 @@
-var expanded = false;
+//Client side js for customPage
+var expanded = false;//Stores whether the player is currently expanded or not
 var viewToRestore;
 $(document).ready(function(){
 	//A hack-y way to intially hide sorting options.. More difficult with css.
-	$('#sortCont').hide();
-	$('#sortCont').css('opacity', '1.0');
-	$('#songView').hide();
-	$('#songView').css('opacity', '1.0');
+	$('.hide').hide();
+	$('.hide').css('opacity', '1.0');
 	//Assigning event handlers to switch modes
-	$('#alb').on('click',switchMode);
-	$('#lib').on('click',switchMode);
+	$('.navDiv').on('click',switchMode);
 	$('.albumCont').on('click',expandAlbum);
-	$('.song').on('click',expandSongs);
+	$('.song').on('click',expandSong);
 });
-
 //handler to fade between modes nicely
 var switchMode = function(){
-	var oldView;
-	var newView;
-	if ($(this)[0] != $('#alb')[0]){
-		oldView = '#alb';
-		newView = '#lib';
-		$('#albumView').fadeOut();
-		$('#sortCont').fadeIn();
-		$('#songView').fadeIn();
-	}else{
-		oldView = '#lib';
-		newView = '#alb';
-		$('#songView').fadeOut();
-		$('#sortCont').fadeOut();
-		$('#albumView').fadeIn();
-	}
-	$(oldView).removeClass('highlighted').addClass('normal');
-	$(newView).addClass('highlighted').removeClass('normal');
+	var fadeIn = $(this).attr("data-cont");
+	$('.navDiv').each(function(){
+		if (fadeIn != $(this).attr("data-cont")){
+			$(this).removeClass('highlighted').addClass('normal');
+			$($(this).attr("data-cont")).fadeOut();
+		}else{
+			$(this).addClass('highlighted').removeClass('normal');
+			$($(this).attr("data-cont")).fadeIn();
+		}
+	});
 };
 //handler to expand an album when its clicked on
 var expandAlbum = function(){
@@ -49,22 +39,21 @@ var expandAlbum = function(){
 					src += tracks[i].track_id + ",";
 				}
 			}
-			createPlayer(src,[tracks[0].art_lg,tracks[0].album,tracks[0].artist],$('#albumView'));
+			displayPlayer(src,[tracks[0].art_lg,tracks[0].album,tracks[0].artist],$('#albumView'));
 		});
 	}
 };
-
-var closeAlbum = function(){
-	$('.overlay').fadeOut();
+//Code to close up the spotify player
+var closePlayer = function(){
 	$('.bg').fadeOut();
-	$('#header').fadeIn();
-	viewToRestore.fadeIn();
-	$('#songView').fadeIn();
-	$('.overlay').remove();
-	$('.bg').remove();
+	$('.overlay').fadeOut(400,function(){
+		$('#header').fadeIn();
+		viewToRestore.fadeIn();
+	});
 	expanded = false;
 };
-var expandSongs = function(){
+//Funciton to expand a chosen song
+var expandSong = function(){
 	if (!expanded){
 		expanded = true;
 		var elem = this;
@@ -76,7 +65,7 @@ var expandSongs = function(){
 					if (index == $(elem).attr("data-id")){
 						// console.log(album);
 						src = src + albums[i][j].title+":"+albums[i][j].track_id;
-						createPlayer(src,[albums[i][j].art_lg,albums[i][j].title,albums[i][j].artist],$('#songView'));
+						displayPlayer(src,[albums[i][j].art_lg,albums[i][j].title,albums[i][j].artist],$('#songView'));
 					}
 					index = index + 1;
 				}
@@ -84,25 +73,22 @@ var expandSongs = function(){
 		});
 	}
 };
-var createPlayer = function(src,displayData,oldView){
+//Loads provided data into spotify player and displays
+var displayPlayer = function(src,displayData,oldView){
 	viewToRestore = oldView;
 	var iframe = $('<iframe frameborder="0" allowtransparency="true" src="'+src+'"'+'</iframe>');
-	$('#header').fadeOut();
-	$('#albumView').fadeOut();
-	$('#songView').fadeOut();
-	$('body').prepend('<div class="bg"></div>');
 	$('.bg').css("background-image","url("+displayData[0]+")");
-	$('body').prepend('<div class="overlay"></div>');
-	$('.overlay').append('<img class="bigAlb">');
 	$('.bigAlb').attr("src",displayData[0]);
-	$('.overlay').append('<div class="songInfo"></div>');
 	$('.overlay').append(iframe);
-	$('.songInfo').append('<p class="songAlbum"></p>');
 	$('.songAlbum').text(displayData[1]);
-	$('.songInfo').append('<p class="songArtist"></p>');
 	$('.songArtist').text(displayData[2]);
-	$('.bg').fadeIn();
-	$('.overlay').fadeIn();
-	$('.overlay').on('click',closeAlbum);
-	$('.bg').on('click',closeAlbum);
+	$('#header').fadeOut();
+	viewToRestore.fadeOut(400,function(){
+		$('.bg').fadeIn();
+		$('.overlay').fadeIn();
+	});
+	// $('.bg').fadeIn();
+	// $('.overlay').fadeIn();
+	$('.overlay').on('click',closePlayer);
+	$('.bg').on('click',closePlayer);
 };

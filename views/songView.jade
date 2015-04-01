@@ -1,24 +1,5 @@
-extends customPage
-
-block header
-	form#searchForm
-		input#search(placeholder="Search..")
-	#alb.highlighted Cover
-	#lib.normal Library
-	#sortCont.normal
-		select#sortOpt
-			option(value="Title") Title
-			option(value="Artist") Artist
-			option(value="Album") Album
-			option(value="Plays") Plays
-block content 
-	#albumView
-		each album, index in albums
-			.albumCont(data-user= album[0].user, data-albumnum= index)
-				img.albCover(src= album[0].art_md)
-				p.albTitle= album[0].album
-				p.albArtist= "- " + album[0].artist
-	table#songView
+//Component for song view
+table#songView.hide
 		tr.odd
 			th Title
 			th Album
