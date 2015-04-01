@@ -5,20 +5,20 @@ var SpotifyWebApi = require('spotify-web-api-node');
 var sqlStarter = require('./sqlStarter');
 
 exports.homePage = function(req,res){
-  res.render('homePage',{css: ['../css/homePage.css','http://fonts.googleapis.com/css?family=Roboto:300'],js: ['https://code.jquery.com/jquery-2.1.3.min.js','../js/homePage.js']});
+	res.render('homePage',{css: ['../css/homePage.css','http://fonts.googleapis.com/css?family=Roboto:300'],js: ['https://code.jquery.com/jquery-2.1.3.min.js','../js/homePage.js']});
 };
 
 exports.uploadXML = function(req,res){
-  console.log(req.files.xml_file.path);
-  console.log(req.body.username);
+	console.log(req.files.xml_file.path);
+	console.log(req.body.username);
 
-  var songarray=new Array();
-  var albumarray=new Array();
-  var playcounter;
-  var albtest;
+	var songarray=new Array();
+	var albumarray=new Array();
+	var playcounter;
+	var albtest;
   var spotifyCounter=0;
   var databaseAddedCounter=0;
-  var spotifyApi = new SpotifyWebApi();
+	var spotifyApi = new SpotifyWebApi();
   var started=0;
   var currentsong=['','','','',0];
 
@@ -166,7 +166,7 @@ exports.uploadXML = function(req,res){
                     res.send("Success");
 
                 }   
-  }); res.render('waitingRoom',{css: ['../css/loader.css'],js:[]});
+  });	res.render('waitingRoom',{css: ['../css/loader.css'],js:[]});
 
 };
 
@@ -187,7 +187,7 @@ exports.customPage = function(req, res){
             albums = organize(rows);
             user = req.params.user + " | ";
             user = user.substr(0, 1).toUpperCase() + user.substr(1);
-            res.render('customPage',{css: ['../css/customPage.css','//fonts.googleapis.com/css?family=Roboto:100'],js: ['../js/customPage.js'], user: user , albums: albums});
+            res.render('customPage',{css: ['../css/customPage.css','http://fonts.googleapis.com/css?family=Roboto:100'],js: ['../js/customPage.js'], user: user , albums: albums});
           }else{
             console.log(err); 
           }
@@ -202,53 +202,53 @@ exports.customPage = function(req, res){
 };
 //A function that client js can call to get the albums array
 exports.albumData = function(req,res){
-  var query = "SELECT * FROM user_libraries WHERE user='"+req.params.user+"'";
-  var albums;
-  sqlStarter.connection.query(query,function(err,rows,fields){
-    if (!err){
-      albums = organize(rows);
-      res.send(albums);
-    }else{
-      console.log(err);
-    }
-  });
+	var query = "SELECT * FROM user_libraries WHERE user='"+req.params.user+"'";
+	var albums;
+	sqlStarter.connection.query(query,function(err,rows,fields){
+		if (!err){
+			albums = organize(rows);
+			res.send(albums);
+		}else{
+			console.log(err);
+		}
+	});
 };
 
 exports.pingUser = function(req,res){
-  var query = "SELECT * FROM users WHERE user='"+req.params+"'";
-  sqlStarter.connection.query(query,function(err,rows,fields){
-    if(!err){
-      if(rows.length==0){
-        //No user by that name exists.
-        res.send("User Not Found");
-      }
-    } else {
-      console.log(err);
-    }
-  });
+	var query = "SELECT * FROM users WHERE user='"+req.params+"'";
+	sqlStarter.connection.query(query,function(err,rows,fields){
+		if(!err){
+			if(rows.length==0){
+				//No user by that name exists.
+				res.send("User Not Found");
+			}
+		} else {
+			console.log(err);
+		}
+	});
 }
 
 //Organizes rows into albums
 var organize = function(rows){
-  var albums = [];
-  for (var i = 0; i < rows.length; i++){
-    var position = posToPlace(albums,rows[i]);
-    if (position == albums.length){
-      albums[position] = [];
-    }
-    albums[position][albums[position].length] = rows[i];
-  }
-  return albums;
+	var albums = [];
+	for (var i = 0; i < rows.length; i++){
+		var position = posToPlace(albums,rows[i]);
+		if (position == albums.length){
+			albums[position] = [];
+		}
+		albums[position][albums[position].length] = rows[i];
+	}
+	return albums;
 };
 //Finds the position that the new track should be placed
 var posToPlace = function(albums, newTrack){
-  //Todo: implement with binaryinsertionsort
-  for (var i = 0; i < albums.length; i++){
-    if (albums[i][0].album == newTrack.album){
-      return i;
-    }
-  }
-  return albums.length;
+	//Todo: implement with binaryinsertionsort
+	for (var i = 0; i < albums.length; i++){
+		if (albums[i][0].album == newTrack.album){
+			return i;
+		}
+	}
+	return albums.length;
 };
 
 //song name, album , artist , play count, album art url, track id, album id
