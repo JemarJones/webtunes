@@ -91,7 +91,7 @@ exports.uploadXML = function(req,res){
 
                             //console.log(songarray);
                         });
-                 },3);
+                 },4);
 
         //spotifyQueue.pause();
                 for(var i=0;i<extracteddata.length;i++){
