@@ -189,7 +189,7 @@ exports.customPage = function(req, res){
             user = user.substr(0, 1).toUpperCase() + user.substr(1);
             res.render('customPage',{css: ['../css/customPage.css','//fonts.googleapis.com/css?family=Roboto:100'],js: ['../js/customPage.js'], user: user , albums: albums});
           }else{
-            console.log(err);
+            console.log(err); 
           }
         });
       }
