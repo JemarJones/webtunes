@@ -84,7 +84,7 @@ exports.uploadXML = function(req,res){
                             errorCounter++;
                             console.log(err);
                             console.log(errorCounter);
-                            setTimeout(callback(), 60000);
+                            setTimeout(callback(), 100000);
                             
                             
                             //callback();
