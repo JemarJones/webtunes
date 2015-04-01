@@ -70,7 +70,7 @@ exports.uploadXML = function(req,res){
 
                              songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
                              albumarray.push(new Album(artmd,album,albumartist));
-                             setTimeout(callback(),100000);
+                             setTimeout(callback(),200000);
                              //console.log(songarray.length); 
                              //show_image(albummd);
                              //albtest=artmd;
@@ -84,7 +84,7 @@ exports.uploadXML = function(req,res){
                             errorCounter++;
                             console.log(err);
                             console.log(errorCounter);
-                            setTimeout(callback(), 100000);
+                            setTimeout(callback(), 200000);
                             
                             
                             //callback();
