@@ -9,13 +9,13 @@ table#songView.hide
 		each album in albums
 			each track in album
 				if (index%2!=0)
-					tr.odd.song(data-user= album[0].user, data-id= index)
+					tr.odd.song(data-user= album[0].user, data-num= index, data-id= track.track_id)
 						td= track.title
 						td= track.album
 						td= track.artist
 						td= track.playcount
 				else
-					tr.even.song(data-user= album[0].user, data-id= index)
+					tr.even.song(data-user= album[0].user, data-num= index, data-id= track.track_id)
 						td= track.title
 						td= track.album
 						td= track.artist
