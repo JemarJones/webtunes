@@ -17,6 +17,7 @@ exports.uploadXML = function(req,res){
 	var playcounter;
 	var albtest;
   var spotifyCounter=0;
+  var databaseAddedCounter=0;
 	var spotifyApi = new SpotifyWebApi();
   var started=0;
     var currentsong=['','','','',0];
@@ -63,7 +64,7 @@ exports.uploadXML = function(req,res){
                              var albumid=spotifysong.album.id;
                              var albumartist=currentsong[2];
                              var playcount = currentsong[4];
-                             //console.log(name+" - "+artist);
+                             console.log(name+" - "+artist);
                              console.log(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid);
 
                              songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
@@ -79,14 +80,15 @@ exports.uploadXML = function(req,res){
                               callback();
                             }
                         }, function(err) {
-                            setTimeout(callback(), 2000);
                             console.log(err);
+                            setTimeout(callback(), 2000);
+                            
                             
                             //callback();
 
                             //console.log(songarray);
                         });
-                 },1);
+                 },10);
 
 				//spotifyQueue.pause();
                 for(var i=0;i<extracteddata.length;i++){
@@ -133,24 +135,16 @@ exports.uploadXML = function(req,res){
                             +sqlStarter.escape(song.trackid)+"','"
                             +sqlStarter.escape(song.albumid)+"')";
                         
-
+                        spotifyCounter++;
                         console.log(query);
-                        console.log(i);
-                        console.log(spotifyCounter);
-                        console.log(songarray.length);
-                        /*
-                        console.log(i);
-                        console.log(songarray.length);
-                        if (i==songarray.length-1){console.log("reached here");}
-                        */
 
                         sqlStarter.connection.query(query,function(err,rows,fields){
                             if (!err){
-
-                                spotifyCounter++;
+                                databaseAddedCounter++;
                                 console.log("Added to db.");
+                                console.log("i ="+i+" databaseAddedCounter = "+ databaseAddedCounter+" spotifyCounter = "+spotifyCounter);
                                 //console.log(spotifyQueue.length());
-                                if ((i*2)==spotifyCounter){
+                                if (databaseAddedCounter==spotifyCounter){
                                   console.log("Everything added to DB");
                                   var querydone = "INSERT INTO users (user,complete) VALUES ('"+req.body.username+"','"
                                                   +1+"')";
