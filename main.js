@@ -5,7 +5,7 @@ var express = require('express');
 
 //Do we need file system access? Maybe not
 var fs      = require('fs');
-var xml2js = require('xml2js');
+var xmldoc = require('xmldoc');
 //Set up routes
 var routes = express();
 
