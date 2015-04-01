@@ -18,6 +18,7 @@ exports.uploadXML = function(req,res){
 	var albtest;
   var spotifyCounter=0;
   var databaseAddedCounter=0;
+  var errorCounter=0;
 	var spotifyApi = new SpotifyWebApi();
   var started=0;
   var currentsong=['','','','',0];
@@ -80,7 +81,9 @@ exports.uploadXML = function(req,res){
                               callback();
                             }
                         }, function(err) {
+                            errorCounter++;
                             console.log(err);
+                            console.log(errorCounter);
                             setTimeout(callback(), 20000);
                             
                             
