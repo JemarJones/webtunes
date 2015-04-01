@@ -187,7 +187,7 @@ exports.customPage = function(req, res){
             albums = organize(rows);
             user = req.params.user + " | ";
             user = user.substr(0, 1).toUpperCase() + user.substr(1);
-            res.render('customPage',{css: ['../css/customPage.css','http://fonts.googleapis.com/css?family=Roboto:100'],js: ['../js/customPage.js'], user: user , albums: albums});
+            res.render('customPage',{css: ['../css/customPage.css','//fonts.googleapis.com/css?family=Roboto:100'],js: ['../js/customPage.js'], user: user , albums: albums});
           }else{
             console.log(err);
           }
