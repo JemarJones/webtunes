@@ -5,7 +5,7 @@ var SpotifyWebApi = require('spotify-web-api-node');
 var sqlStarter = require('./sqlStarter');
 
 exports.homePage = function(req,res){
-	res.render('homePage',{css: ['../css/homePage.css','http://fonts.googleapis.com/css?family=Roboto:300'],js: ['https://code.jquery.com/jquery-2.1.3.min.js','../js/homePage.js']});
+	res.render('homePage',{css: ['../css/homePage.css','//fonts.googleapis.com/css?family=Roboto:300'],js: ['https://code.jquery.com/jquery-2.1.3.min.js','../js/homePage.js']});
 };
 
 exports.uploadXML = function(req,res){
@@ -187,7 +187,7 @@ exports.customPage = function(req, res){
             albums = organize(rows);
             user = req.params.user + " | ";
             user = user.substr(0, 1).toUpperCase() + user.substr(1);
-            res.render('customPage',{css: ['../css/customPage.css','../css/roboto.css'],js: ['../js/customPage.js'], user: user , albums: albums});
+            res.render('customPage',{css: ['../css/customPage.css','//fonts.googleapis.com/css?family=Roboto:300'],js: ['../js/customPage.js'], user: user , albums: albums});
           }else{
             console.log(err); 
           }
