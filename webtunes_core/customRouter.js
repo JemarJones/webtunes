@@ -80,8 +80,8 @@ exports.uploadXML = function(req,res){
                               callback();
                             }
                         }, function(err) {
-
-                            setTimeout(callback(), 20000);
+                            console.log(err);
+                            setTimeout(console.log("wait")/*callback()*/, 20000);
                             
                             
                             //callback();
