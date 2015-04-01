@@ -134,6 +134,11 @@ exports.uploadXML = function(req,res){
                             +sqlStarter.escape(song.albumid)+"')";
                         console.log(query);
                         console.log(i);
+
+                        if (i==songarray.length){
+                          var querydone = "INSERT INTO user (user,complete) VALUES ('"+req.body.username+"','"
+                            +1+"')";
+                        }
                         sqlStarter.connection.query(query,function(err,rows,fields){
                             if (!err){
                                 console.log("Added to db.")
@@ -143,11 +148,9 @@ exports.uploadXML = function(req,res){
                             }
                         });
                     }
-                    
                     res.send("Success");
                 }   
   });
-  console.log("Everything in Database");  
 	res.render('waitingRoom',{css: ['../css/loader.css'],js:[]});
 
 };
