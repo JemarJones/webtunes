@@ -20,6 +20,7 @@ exports.uploadXML = function(req,res){
 	var albtest;
   var spotifyCounter=0;
   var databaseAddedCounter=0;
+  var errorCounter=0;
   var spotifyApi = new SpotifyWebApi();
   var started=0;
   var currentsong=['','','','',0];
@@ -71,7 +72,7 @@ exports.uploadXML = function(req,res){
 
                              songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
                              albumarray.push(new Album(artmd,album,albumartist));
-                             callback();
+                             setTimeout(callback(),200000);
                              //console.log(songarray.length); 
                              //show_image(albummd);
                              //albtest=artmd;
@@ -82,15 +83,17 @@ exports.uploadXML = function(req,res){
                             callback();
                           }
                         }, function(err) {
-                          console.log(err);
-                          setTimeout(callback(), 10000);
-
-
+                            errorCounter++;
+                            console.log(err);
+                            console.log(errorCounter);
+                            setTimeout(callback(), 200000);
+                            
+                            
                             //callback();
 
                             //console.log(songarray);
-                          });
-},10);
+                        });
+                 },4);
 
         //spotifyQueue.pause();
         for(var i=0;i<extracteddata.length;i++){
@@ -148,6 +151,7 @@ sqlStarter.connection.query(query,function(err,rows,fields){
                                 //console.log(spotifyQueue.length());
                                 if (databaseAddedCounter==spotifyCounter){
                                   console.log("Everything added to DB");
+                                  console.log("Number of songs where the API timed out = "+errorCounter);
                                   var querydone = "INSERT INTO users (user,complete) VALUES ('"+req.body.username+"','"
                                     +1+"')";
 sqlStarter.connection.query(querydone,function(err,rows,fields){
