@@ -67,6 +67,8 @@ var search = function(){
 					}
 				}
 			}
+			$('.song').on('click', expandSong);
+			$('.song').on('click', playRemaining);
 		});
 	// }
 };
