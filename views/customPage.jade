@@ -2,6 +2,7 @@
 doctype html
 html
 	head
+		meta(name="user" content= albums[0][0].user)
 		title= user + "WebTunes"
 		each sheet in css
 			link(type="text/css", rel="stylesheet", href= sheet)
@@ -10,7 +11,7 @@ html
 		#header
 			//Search box
 			form#searchForm
-				input#search(placeholder="Search..")
+				input#search(type="search" placeholder="Search..")
 			//Tab navigation
 			ul#nav
 				li.navItem

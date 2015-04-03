@@ -120,6 +120,8 @@ var multer = require('multer');
         // };
         self.routes['/u/:user'] = customRouter.customPage;
         self.routes['/data/:user'] = customRouter.albumData;
+        self.routes['/search/:user/:key'] = customRouter.musicSearch;
+        self.routes['/search/:user/'] = customRouter.musicSearch;
         self.routes['/nalwa'] = xmlrouter.xml;
         self.routes['/'] = customRouter.homePage;
         self.posts['/upload_xml'] = customRouter.uploadXML;
