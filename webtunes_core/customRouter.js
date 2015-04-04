@@ -3,6 +3,7 @@ var xmldoc = require('xmldoc');
 var async = require('async');
 var SpotifyWebApi = require('spotify-web-api-node');
 var sqlStarter = require('./sqlStarter');
+var LastfmAPI = require('lastfmapi');
 
 exports.homePage = function(req,res){
 	res.render('homePage',{css: ['../css/homePage.css','//fonts.googleapis.com/css?family=Roboto:300'],js: ['https://code.jquery.com/jquery-2.1.3.min.js','../js/homePage.js']});
@@ -77,9 +78,10 @@ exports.uploadXML = function(req,res){
                             }
 
                             if (data.body.tracks.items[0]==undefined){
-                              console.log("Not Found on Spotify");
                               console.log("Spotify Searched for : "+currentsong[0]+" - "+currentsong[1]);
-                              
+                              console.log("Not Found on Spotify");
+
+
                               callback();
                             }
                         }, function(err) {
