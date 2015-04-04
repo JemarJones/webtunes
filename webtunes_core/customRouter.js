@@ -4,6 +4,10 @@ var async = require('async');
 var SpotifyWebApi = require('spotify-web-api-node');
 var sqlStarter = require('./sqlStarter');
 var LastfmAPI = require('lastfmapi');
+var lfm = new LastfmAPI({
+    'api_key' : 'e0d66a3b8ea5fa90bb9ab39aa51762fd',
+    'secret' : 'is 8ab78265bdc75215631380724adefbcf'
+});
 var colors = require('colors');
 // var expr = express();
 // expr.use(express.bodyParser());
@@ -59,7 +63,6 @@ exports.uploadXML = function(req,res){
                          var spotifysong=data.body.tracks.items[0];
                              //console.log(spotifysong);
                              var name = spotifysong.name;
-                             //console.log(name);
                              var artist = spotifysong.artists[0].name;
                              var album = spotifysong.album.name;
                              var artlg=spotifysong.album.images[0].url;
@@ -73,7 +76,7 @@ exports.uploadXML = function(req,res){
                              console.log(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid);
 
                              songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
-                             albumarray.push(new Album(artmd,album,albumartist));
+                             //albumarray.push(new Album(artmd,album,albumartist));
                              setTimeout(callback(),200000);
                              //console.log(songarray.length); 
                              //show_image(albummd);
@@ -83,6 +86,30 @@ exports.uploadXML = function(req,res){
                             if (data.body.tracks.items[0]==undefined){
                               console.log("Spotify Searched for : "+currentsong[0]+" - "+currentsong[1]);
                               console.log("Not Found on Spotify");
+                              lfm.album.getInfo({
+                                  'artist' : currentsong[1],
+                                  //'track' : currentsong[0]
+                                  'album' : currentsong[3]
+                              }, function (err, album) {
+                                  if (album!=undefined){
+                                    console.log("SEARCHING LAST.FM");
+                                    //console.log(typeof album.image[2]["#text"]);
+                                    var albumart=album.image;
+                                    var name = currentsong[0];
+                                    var artist = album.artist;
+                                    var album = album.name;
+                                    var artlg=albumart[4]["#text"];
+                                    var artmd=albumart[3]["#text"];
+                                    var artsm=albumart[2]["#text"];
+                                    var trackid='-';
+                                    var albumid='-';
+                                    var albumartist=currentsong[2];
+                                    var playcount = currentsong[4];
+                                    console.log(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid);
+                                    songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
+                                  }
+                                  if (err) {console.log(err);}
+                              });
                               callback();
                             }
 
@@ -144,14 +171,14 @@ exports.uploadXML = function(req,res){
                           +sqlStarter.escape(song.trackid)+"','"
                           +sqlStarter.escape(song.albumid)+"')";
 
-spotifyCounter++;
-console.log(query);
+                          spotifyCounter++;
+                          console.log(query);
 
-sqlStarter.connection.query(query,function(err,rows,fields){
-  if (!err){
-    databaseAddedCounter++;
-    console.log("Added to db.");
-    console.log("i ="+i+" databaseAddedCounter = "+ databaseAddedCounter+" spotifyCounter = "+spotifyCounter);
+                          sqlStarter.connection.query(query,function(err,rows,fields){
+                              if (!err){
+                                databaseAddedCounter++;
+                                console.log("Added to db.");
+                                console.log("i ="+i+" databaseAddedCounter = "+ databaseAddedCounter+" spotifyCounter = "+spotifyCounter);
                                 //console.log(spotifyQueue.length());
                                 if (databaseAddedCounter==spotifyCounter){
                                   console.log("Everything added to DB");
