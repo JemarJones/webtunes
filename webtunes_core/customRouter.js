@@ -81,7 +81,7 @@ exports.uploadXML = function(req,res){
                              //console.log(songarray.length); 
                              //show_image(albummd);
                              //albtest=artmd;
-                           } else {
+                        } else if (data.body.tracks.items[0]==undefined){
                               console.log("Spotify Searched for : "+currentsong[0]+" - "+currentsong[1]);
                               console.log("Not Found on Spotify");
                               lfm.album.getInfo({
