@@ -78,6 +78,8 @@ exports.uploadXML = function(req,res){
 
                             if (data.body.tracks.items[0]==undefined){
                               console.log("Not Found on Spotify");
+                              console.log("Spotify Searched for : "+currentsong[0]+" - "+currentsong[1]);
+                              
                               callback();
                             }
                         }, function(err) {
@@ -154,7 +156,7 @@ exports.uploadXML = function(req,res){
                                                   +1+"')";
                                   sqlStarter.connection.query(querydone,function(err,rows,fields){
                                   if (!err){
-                                  console.log("COMPLETED VALUE UPDATED TO USERS DB.")
+                                  console.log("COMPLETED VALUE UPDATED TO USERS DB.");
                                    }else{
                                   console.log(err);
                                   }
@@ -167,7 +169,6 @@ exports.uploadXML = function(req,res){
                         });
 
                     }
-                    res.send("Success");
 
                 }   
   });	res.render('waitingRoom',{css: ['../css/loader.css'],js:[]});
