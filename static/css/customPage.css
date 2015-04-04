@@ -114,13 +114,13 @@ input:-moz-placeholder { color: rgba(255,255,255,0.6); }
 }
 #songView{
 	width: 100%;
+	background-color: rgba(68,89,120,1.0);
 }
-/*Super ugly tbh*/
 .odd{
-	background-color: rgba(145,206,207,1.0);
+	background-color: rgba(255,255,255,0.1);
 }
 .even{
-	background-color: rgba(68,89,120,1.0);
+	background-color: rgba(0,0,0,0.3);
 }
 #bg{
 	position: absolute;
