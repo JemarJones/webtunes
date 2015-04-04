@@ -32,65 +32,50 @@ var switchMode = function(){
 		}
 	});
 };
-//
+//Searches for and displays all music matching the key in the search box
 var search = function(){
 	var key = $('#search').val();
-	console.log("../../search/" + user+"/" + key);
-	// if (key.length > 0){
-		$.get("../../search/" + user + "/" + key, function(searchMatches){
-			console.log(searchMatches.length);
-			// var last = searchMatches[0].title;
-			// for (var i = 1; i <searchMatches.length; i++){
-			// 	if (searchMatches[i].title < last){
-			// 		console.log("Bad: "+ last + " > " + searchMatches[i].title);
-			// 	}
-			// }
-			$('.song').remove();
-			var index = 0;
-			for (var i = 0; i < albums.length; i++){
-				for (var j = 0; j < albums[i].length; j++){
-					if (binarySearch(albums[i][j].title, searchMatches) > -1){
-						console.log(index);
-						var classToAdd = "";
-						if (index % 2 === 0){
-							classToAdd = "even";
-						}else{
-							classToAdd = "odd";
-						}
-						var row = $('<tr data-user="'+ user+'" data-num="' + index+ '" data-id="' + albums[i][j].track_id+'" class="song '+ classToAdd + '"></tr>');
-						row.append($('<td class="title">' + albums[i][j].title + '</td>'));
-						row.append($('<td class="album">' + albums[i][j].album + '</td>'));
-						row.append($('<td class="artist">' + albums[i][j].artist + '</td>'));
-						row.append($('<td class="playcount">' + albums[i][j].playcount + '</td>'));
-						$('#songView').append(row);
-						index++;
-					}
+	$.get("../../search/" + user + "/" + key, function(searchMatches){
+			//Populating library view with matches tracks
+			$('.song').remove();//My testing shows that removing everything and repopulating is faster and simpler than going through and removing things that don't match
+			//Adding each matched song to the song view
+			for (var i = 0; i < searchMatches[0].length; i++){
+				//Figuring out the correct class to assign for stylign purposes
+				var classToAdd = "";
+				if (i % 2 === 0){
+					classToAdd = "even";
+				}else{
+					classToAdd = "odd";
 				}
+				//Constructing table row with song data
+				var row = $('<tr data-user="'+ user+'" data-num="' + i+ '" data-id="' + searchMatches[0][i].track_id+'" class="song '+ classToAdd + '"></tr>');
+				row.append($('<td class="title">' + searchMatches[0][i].title + '</td>'));
+				row.append($('<td class="album">' + searchMatches[0][i].album + '</td>'));
+				row.append($('<td class="artist">' + searchMatches[0][i].artist + '</td>'));
+				row.append($('<td class="playcount">' + searchMatches[0][i].playcount + '</td>'));
+				//Adding row to table
+				$('#songView').append(row);
 			}
+			//Giving newly created songs their event handlers
 			$('.song').on('click', expandSong);
 			$('.song').on('click', playRemaining);
+
+			//Populating album view with matched albums
+			$('.albumCont').remove();//My testing shows that removing everything and repopulating is faster and simpler than going through and removing things that don't match
+			albums = searchMatches[1];//Updating this global variable so the code to play albums works as expected
+			//Adding each album with matched songs to album view
+			for (var i = 0; i < searchMatches[1].length; i++){
+				//Constructing album with album data
+				var alb = $('<div class="albumCont" data-user="' + searchMatches[1][i][0].user + '" data-albumnum="' + i + '"></div');
+				alb.append($('<img class="albCover"src="' + searchMatches[1][i][0].art_md + '">'));
+				alb.append($('<p class="albTitle">'+searchMatches[1][i][0].album+'</p>'));
+				alb.append($('<p class="albArtist"> -'+searchMatches[1][i][0].artist+'</p>'));
+				//Adding album to album view
+				$('#albumView').append(alb);
+			}
+			//Giving newly created albums their event handlers
+			$('.albumCont').on('click',expandAlbum);
 		});
-	// }
-};
-//A string binary search that returns -1 when the string isn't found
-var binarySearch = function(key,a){
-	//This does NOT work for all correct keys :S.. FIX IT (may be due to wonky quicksort?)
-	var lo = 0;
-	var hi = a.length - 1;
-	while (lo <= hi) {
-		var mid = (lo + (hi - lo) / 2) | 0;
-		if      (a[mid].title.toLowerCase() > key.toLowerCase()) hi = mid - 1;
-		else if (a[mid].title.toLowerCase() < key.toLowerCase()) lo = mid + 1;
-		else return mid;
-	}
-	return -1;
-	////Brute force since above won't work, use if you must
-	// for (var i = 0; i <a.length; i++){
-	// 	if (key.toLowerCase() == a[i].title.toLowerCase()){
-	// 		return 6;
-	// 	}
-	// }
-	// return -1;
 };
 //handler to expand an album when its clicked on
 var expandAlbum = function(){
@@ -98,8 +83,6 @@ var expandAlbum = function(){
 	if (!expanded){
 		expanded = true;
 		var elem = this;
-		// $.get("../../data/" + user,function(albumsReq){
-		// 	albums = albums;
 		var tracks = albums[$(elem).data("albumnum")];
 		var src = "https://embed.spotify.com/?uri=spotify:trackset:"+tracks[0].album+ ":";
 		for (var i = 0; i < tracks.length; i++){
@@ -114,7 +97,6 @@ var expandAlbum = function(){
 		displayPlayer([tracks[0].art_lg,tracks[0].album,tracks[0].artist],$('#albumView'));
 		$('#albWrapper').attr('data-ids', src);
 		$('.track').on('click', playRemaining);
-		// });
 }
 };
 //Code to close up the spotify player
@@ -133,19 +115,17 @@ var expandSong = function(){
 	if (!expanded){
 		expanded = true;
 		var elem = this;
-		// $.get("../../data/" + $(elem).attr("data-user"),function(albums){
-			var index = 0;
-			for (var i = 0; i < albums.length; i++){
-				for (var j = 0; j < albums[i].length;j++){
-					if (index == $(elem).attr("data-num")){
-						displayPlayer([albums[i][j].art_lg,$(elem).attr("data-user") +"'s Library" ,""],$('#songView'));
-					}
-					index = index + 1;
+		var index = 0;
+		for (var i = 0; i < albums.length; i++){
+			for (var j = 0; j < albums[i].length;j++){
+				if (index == $(elem).attr("data-num")){
+					displayPlayer([albums[i][j].art_lg,$(elem).attr("data-user") +"'s Library" ,""],$('#songView'));
 				}
+				index = index + 1;
 			}
-		// });
-$('#albWrapper').removeClass('hover');
-}
+		}
+		$('#albWrapper').removeClass('hover');
+	}
 };
 //Loads provided data into spotify player and displays
 var displayPlayer = function(displayData,oldView){

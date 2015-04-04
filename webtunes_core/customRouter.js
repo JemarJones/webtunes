@@ -219,35 +219,35 @@ exports.albumData = function(req,res){
 		}
 	});
 };
+//A function that finds all matching music in a users library and returns it
 exports.musicSearch = function(req, res){
+  //Getting parameters
   var user = req.params.user;
-  var key = req.params.key;
+  var key = req.params.key;//Search key
+  //This is to handle the special case of there being an empty search key
   if (key === undefined){
     key = "";
   }
+  //Starting off by querying for the users music
   var query = "SELECT * FROM user_libraries WHERE user='"+user+"'";
-  var albums;
   sqlStarter.connection.query(query,function(err,rows,fields){
     if (!err){
-      albums = organize(rows);
       //Dirty algorithm
       //TODO implement real search algo
       var matches = [];
-      console.log("======================== key: '" + key+ "'");
-      for (var i = 0; i < albums.length; i++){
-        for (var j = 0; j < albums[i].length; j++){
-          if (albums[i][j].title.toLowerCase().indexOf(key.toLowerCase()) > -1){
-            matches[matches.length] = albums[i][j];
-          }
+      for (var i = 0; i < rows.length; i++){
+        if (rows[i].title.toLowerCase().indexOf(key.toLowerCase()) > -1 || rows[i].album.toLowerCase().indexOf(key.toLowerCase()) > -1 || rows[i].artist.toLowerCase().indexOf(key.toLowerCase()) > -1){
+          matches[matches.length] = rows[i];
         }
       }
-      quickSort(matches,'title');
-      res.send(matches);
+      //Sending back an array of all songs and an array of all albums for their corresponding views
+      res.send([matches, organize(matches)]);
     }else{
       console.log(err);
     }
   });
 };
+//An implementation of 3-way partitioned quicksort for strings
 var quickSort = function(a,sortBy){
   var CUTOFF = 15;
 
@@ -262,9 +262,7 @@ var quickSort = function(a,sortBy){
       currentIndex -= 1;
 
       // And swap it with the current element.
-      temporaryValue = array[currentIndex];
-      array[currentIndex] = array[randomIndex];
-      array[randomIndex] = temporaryValue;
+      exch(array,currentIndex,randomIndex);
     }
 
     return array;
@@ -309,6 +307,7 @@ var quickSort = function(a,sortBy){
   var insertion = function(a,lo,hi,d){
     for (var i = lo; i <= hi; i++){
       for (var j = i; j > lo && less(a[j], a[j-1], d); j--){
+        // for (var j = i; j > lo && a[j] < a[j-1]; j--){
         exch(a, j, j-1);
       }
     }
@@ -331,24 +330,33 @@ var quickSort = function(a,sortBy){
     }
     return getVal(v,sortBy).length < getVal(w,sortBy).length;
   };
+  var isSorted = function(a){
+    for (var i = 1; i < a.length; i++){
+      if (a[i].title < a[i-1].title){
+        return false;
+      }
+      return true;
+    }
+  }
   var getVal = function(obj, sortBy){
     switch(sortBy){
       case 'title':
-        return obj.title;
+        return obj.title.toLowerCase();
         break;
       case 'album':
-        return obj.album;
+        return obj.album.toLowerCase();
         break;
       case 'artist':
-        return obj.artist;
+        return obj.artist.toLowerCase();
         break;
     }
   };
   if (sortBy == "playcount"){
     //Use quicksort for ints
   }
-  // a = shuffle(a);
+  a = shuffle(a);
   sort(a, 0, a.length - 1, 0);
+  console.log("Sorted? " + isSorted(a));
 };
 exports.pingUser = function(req,res){
 	var query = "SELECT * FROM users WHERE user='"+req.params+"'";
