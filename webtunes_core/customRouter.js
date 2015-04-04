@@ -3,6 +3,14 @@ var xmldoc = require('xmldoc');
 var async = require('async');
 var SpotifyWebApi = require('spotify-web-api-node');
 var sqlStarter = require('./sqlStarter');
+var LastfmAPI = require('lastfmapi');
+var lfm = new LastfmAPI({
+    'api_key' : 'e0d66a3b8ea5fa90bb9ab39aa51762fd',
+    'secret' : 'is 8ab78265bdc75215631380724adefbcf'
+});
+var colors = require('colors');
+// var expr = express();
+// expr.use(express.bodyParser());
 
 exports.homePage = function(req,res){
 	res.render('homePage',{css: ['../css/homePage.css','//fonts.googleapis.com/css?family=Roboto:100'],js: ['https://code.jquery.com/jquery-2.1.3.min.js','../js/homePage.js']});
@@ -55,7 +63,6 @@ exports.uploadXML = function(req,res){
                          var spotifysong=data.body.tracks.items[0];
                              //console.log(spotifysong);
                              var name = spotifysong.name;
-                             //console.log(name);
                              var artist = spotifysong.artists[0].name;
                              var album = spotifysong.album.name;
                              var artlg=spotifysong.album.images[0].url;
@@ -69,17 +76,43 @@ exports.uploadXML = function(req,res){
                              console.log(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid);
 
                              songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
-                             albumarray.push(new Album(artmd,album,albumartist));
+                             //albumarray.push(new Album(artmd,album,albumartist));
                              setTimeout(callback(),200000);
                              //console.log(songarray.length); 
                              //show_image(albummd);
                              //albtest=artmd;
                            }
 
-                           if (data.body.tracks.items[0]==undefined){
-                            console.log("Not Found on Spotify");
-                            callback();
-                          }
+                            if (data.body.tracks.items[0]==undefined){
+                              console.log("Spotify Searched for : "+currentsong[0]+" - "+currentsong[1]);
+                              console.log("Not Found on Spotify");
+                              lfm.album.getInfo({
+                                  'artist' : currentsong[1],
+                                  //'track' : currentsong[0]
+                                  'album' : currentsong[3]
+                              }, function (err, album) {
+                                  if (album!=undefined){
+                                    console.log("SEARCHING LAST.FM");
+                                    //console.log(typeof album.image[2]["#text"]);
+                                    var albumart=album.image;
+                                    var name = currentsong[0];
+                                    var artist = album.artist;
+                                    var album = album.name;
+                                    var artlg=albumart[4]["#text"];
+                                    var artmd=albumart[3]["#text"];
+                                    var artsm=albumart[2]["#text"];
+                                    var trackid='-';
+                                    var albumid='-';
+                                    var albumartist=currentsong[2];
+                                    var playcount = currentsong[4];
+                                    console.log(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid);
+                                    songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
+                                  }
+                                  if (err) {console.log(err);}
+                              });
+                              callback();
+                            }
+
                         }, function(err) {
                             errorCounter++;
                             console.log(err);
@@ -138,37 +171,35 @@ exports.uploadXML = function(req,res){
                           +sqlStarter.escape(song.trackid)+"','"
                           +sqlStarter.escape(song.albumid)+"')";
 
-spotifyCounter++;
-console.log(query);
+                          spotifyCounter++;
+                          console.log(query);
 
-sqlStarter.connection.query(query,function(err,rows,fields){
-  if (!err){
-    databaseAddedCounter++;
-    console.log("Added to db.");
-    console.log("i ="+i+" databaseAddedCounter = "+ databaseAddedCounter+" spotifyCounter = "+spotifyCounter);
+                          sqlStarter.connection.query(query,function(err,rows,fields){
+                              if (!err){
+                                databaseAddedCounter++;
+                                console.log("Added to db.");
+                                console.log("i ="+i+" databaseAddedCounter = "+ databaseAddedCounter+" spotifyCounter = "+spotifyCounter);
                                 //console.log(spotifyQueue.length());
                                 if (databaseAddedCounter==spotifyCounter){
                                   console.log("Everything added to DB");
                                   console.log("Number of songs where the API timed out = "+errorCounter);
                                   var querydone = "INSERT INTO users (user,complete) VALUES ('"+req.body.username+"','"
-                                    +1+"')";
-sqlStarter.connection.query(querydone,function(err,rows,fields){
-  if (!err){
-    console.log("COMPLETED VALUE UPDATED TO USERS DB.")
-  }else{
-    console.log(err);
-  }
-});
-}
+                                                  +1+"')";
+                                  sqlStarter.connection.query(querydone,function(err,rows,fields){
+                                  if (!err){
+                                  console.log("COMPLETED VALUE UPDATED TO USERS DB.");
+                                   }else{
+                                  console.log(err);
+                                  }
+                                  });
+                                }
 
-}else{
-  console.log(err);
-}
-});
+                            }else{
+                                console.log(err);
+                            }
+                        });
 
-}
-res.send("Success");
-
+                    }
 }   
 });	res.render('waitingRoom',{css: ['../css/loader.css'],js:[]});
 
@@ -178,6 +209,10 @@ res.send("Success");
 exports.customPage = function(req, res){
   var userLoadedQuery = "SELECT * FROM users WHERE user='"+req.params.user+"'";
   sqlStarter.connection.query(userLoadedQuery,function(err,rows,fields){
+    console.log("-------".red);
+    console.log(err);
+    console.log("-------".green);
+    console.log(rows);
     if (!err && rows.length > 0){
       if (rows[0].complete != 1){
         //User isnt done loading so we pull up the load screen
