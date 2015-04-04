@@ -10,7 +10,7 @@ var xmldoc = require('xmldoc');
 var routes = express();
 
 //Router for the custom page
-var customRouter = require('./webtunes_core/customRouter');
+var router = require('./webtunes_core/router');
 var xmlrouter = require('./webtunes_core/xmlparser');
 var multer = require('multer');
 
@@ -118,13 +118,13 @@ var multer = require('multer');
         //     res.setHeader('Content-Type', 'text/html');
         //     res.send(self.cache_get('index.html') );
         // };
-        self.routes['/u/:user'] = customRouter.customPage;
-        self.routes['/data/:user'] = customRouter.albumData;
-        self.routes['/search/:user/:key'] = customRouter.musicSearch;
-        self.routes['/search/:user/'] = customRouter.musicSearch;//For the special case of an empty search key
+        self.routes['/u/:user'] = router.userPage;
+        self.routes['/data/:user'] = router.albumData;
+        self.routes['/search/:user/:key'] = router.musicSearch;
+        self.routes['/search/:user/'] = router.musicSearch;//For the special case of an empty search key
         self.routes['/nalwa'] = xmlrouter.xml;
-        self.routes['/'] = customRouter.homePage;
-        self.posts['/upload_xml'] = customRouter.uploadXML;
+        self.routes['/'] = router.homePage;
+        self.posts['/upload_xml'] = router.uploadXML;
     };
 
 

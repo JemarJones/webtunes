@@ -1,8 +1,9 @@
 //Client side js for customPage
-var albums;
-var user;
+var albums;//The albums currently being displayed for this user
+var user;//Username for this user
 var expanded = false;//Stores whether the player is currently expanded or not
-var viewToRestore;
+var viewToRestore;//Keeps track of view that was being shown before player expansion
+var lastKey;//Keeps track of last search to help fend off async issues
 $(document).ready(function(){
 	initData();//Getting intial album and user data
 	$('#search').keyup(search);
@@ -35,7 +36,9 @@ var switchMode = function(){
 //Searches for and displays all music matching the key in the search box
 var search = function(){
 	var key = $('#search').val();
+	lastKey = key;
 	$.get("../../search/" + user + "/" + key, function(searchMatches){
+		if (lastKey == key){//Due to async if a new key has been requested since this one, we stop trying to do this one
 			//Populating library view with matches tracks
 			$('.song').remove();//My testing shows that removing everything and repopulating is faster and simpler than going through and removing things that don't match
 			//Adding each matched song to the song view
@@ -75,7 +78,8 @@ var search = function(){
 			}
 			//Giving newly created albums their event handlers
 			$('.albumCont').on('click',expandAlbum);
-		});
+		}
+	});
 };
 //handler to expand an album when its clicked on
 var expandAlbum = function(){
@@ -97,7 +101,7 @@ var expandAlbum = function(){
 		displayPlayer([tracks[0].art_lg,tracks[0].album,tracks[0].artist],$('#albumView'));
 		$('#albWrapper').attr('data-ids', src);
 		$('.track').on('click', playRemaining);
-}
+	}
 };
 //Code to close up the spotify player
 var closePlayer = function(){

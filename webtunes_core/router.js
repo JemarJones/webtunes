@@ -9,8 +9,6 @@ var lfm = new LastfmAPI({
     'secret' : 'is 8ab78265bdc75215631380724adefbcf'
 });
 var colors = require('colors');
-// var expr = express();
-// expr.use(express.bodyParser());
 
 exports.homePage = function(req,res){
 	res.render('homePage',{css: ['../css/homePage.css','//fonts.googleapis.com/css?family=Roboto:100'],js: ['https://code.jquery.com/jquery-2.1.3.min.js','../js/homePage.js']});
@@ -153,7 +151,7 @@ exports.uploadXML = function(req,res){
                 spotifyQueue.drain = function(){
                     //Once the queue is empty
                     console.log("All items processed.");
-                    //res.render('customCoverArt',{css: ['./css/customPage.css'],js: ['./js/customPage.js'], albums: albumarray});
+                    //res.render('customCoverArt',{css: ['./css/userPage.css'],js: ['./js/userPage.js'], albums: albumarray});
                     
                     //Let's just push this to the sql db for now.
                     for(var i=0;i<songarray.length;i++){
@@ -205,8 +203,8 @@ exports.uploadXML = function(req,res){
 
 };
 
-//Router functions for the customPage
-exports.customPage = function(req, res){
+//Router functions for the userPage
+exports.userPage = function(req, res){
   var userLoadedQuery = "SELECT * FROM users WHERE user='"+req.params.user+"'";
   sqlStarter.connection.query(userLoadedQuery,function(err,rows,fields){
     console.log("-------".red);
@@ -226,7 +224,7 @@ exports.customPage = function(req, res){
             albums = organize(rows);
             user = req.params.user + " | ";
             user = user.substr(0, 1).toUpperCase() + user.substr(1);
-            res.render('customPage',{css: ['../css/customPage.css','//fonts.googleapis.com/css?family=Roboto:100'],js: ['../js/customPage.js'], user: user , albums: albums});
+            res.render('userPage',{css: ['../css/userPage.css','//fonts.googleapis.com/css?family=Roboto:100'],js: ['../js/userPage.js'], user: user , albums: albums});
           }else{
             console.log(err); 
           }
