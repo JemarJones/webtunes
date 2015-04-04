@@ -31,7 +31,8 @@
     "mysql": "2.5.5",
     "multer": "0.1.8",
     "xmldoc": "0.3.0",
-    "lastfmapi": "0.0.6"
+    "lastfmapi": "0.0.6",
+    "colors": "1.0.3"
   },
   "devDependencies": {},
   "bundleDependencies": [],

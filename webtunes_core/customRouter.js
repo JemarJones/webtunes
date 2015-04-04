@@ -3,6 +3,7 @@ var xmldoc = require('xmldoc');
 var async = require('async');
 var SpotifyWebApi = require('spotify-web-api-node');
 var sqlStarter = require('./sqlStarter');
+var colors = require('colors');
 // var expr = express();
 // expr.use(express.bodyParser());
 
@@ -180,6 +181,10 @@ res.send("Success");
 exports.customPage = function(req, res){
   var userLoadedQuery = "SELECT * FROM users WHERE user='"+req.params.user+"'";
   sqlStarter.connection.query(userLoadedQuery,function(err,rows,fields){
+    console.log("-------".red);
+    console.log(err);
+    console.log("-------".green);
+    console.log(rows);
     if (!err && rows.length > 0){
       if (rows[0].complete != 1){
         //User isnt done loading so we pull up the load screen
