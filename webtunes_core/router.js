@@ -199,7 +199,7 @@ sqlStarter.connection.query(querydone,function(err,rows,fields){
 
 }
 }   
-});	res.render('waitingRoom',{css: ['../css/loader.css'],js:[]});
+});	res.render('waitingRoom',{css: ['../css/loader.css'],js:['https://code.jquery.com/jquery-2.1.3.min.js','../js/pinger.js'],user:req.body.username});
 
 };
 

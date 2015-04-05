@@ -1,5 +1,7 @@
 html
 	head
+		script.
+			user="#{user}";
 		each sheet in css
 			link(type="text/css", rel="stylesheet", href=sheet)
 		each script in js
