@@ -104,9 +104,11 @@ exports.uploadXML = function(req,res){
                   } else if (track==undefined || track.album==undefined || err){
                     console.log("No data found for: ".cyan + lastfmsong[0] + " - " + lastfmsong[1]);
                     callback();
+                  } else {
+                    callback();
                   }
                   if (err) {
-                    console.log(err);
+                    console.log("Error".red + err);
                   }
 
                 });
