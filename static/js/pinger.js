@@ -9,9 +9,9 @@ $(document).ready(function(){
 				console.log("We're done! Redirecting");
 				location.replace("http://app-webtunes.rhcloud.com/u/"+user);
 			} else {
-				console.log(data.progress);
+				console.log(data.progress + "/" + data.outof);
 				$(".progress_bar").animate({
-					width: 100*(parseInt(data.progress)/total)+'%'
+					width: 100*(parseInt(data.progress)/parseInt(data.outof))+'%'
 				},6000);
 			}
 		});

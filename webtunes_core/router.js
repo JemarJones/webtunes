@@ -32,24 +32,11 @@ exports.uploadXML = function(req,res){
 
   fs.readFile(req.files.xml_file.path, function(err, data) {
     if(err){
+      console.log("Error reading XML.");
       res.send("Critical Error: Failed to load file");
     }
 
-    //Check if the username is useable
-
-    //If the username isn't taken
-    if(true){
-      var querydone = "INSERT INTO users (user,complete,track_count) VALUES ('"+req.body.username+"','0','0')";
-      sqlStarter.connection.query(querydone,function(err,rows,fields){
-        if (!err){
-          console.log("Added ".green+req.body.username+" to 'users' table".green);
-        }else{
-          console.log(err);
-        }
-      });
-    } else {
-      //The username is taken. We need to return this to the request and NOT load the waiting page
-    }
+    console.log("XMl Read successfully.");
 
 
     var document = new xmldoc.XmlDocument(data);
@@ -88,20 +75,17 @@ exports.uploadXML = function(req,res){
                var albumid=spotifysong.album.id;
                var albumartist=currentsong[2];
                var playcount = currentsong[4];
-               console.log("Searching spotify for: ".cyan+name+" - "+artist);
+               console.log("Found Spotify data for: ".cyan+name+" - "+artist);
                songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
                //albumarray.push(new Album(artmd,album,albumartist));
-               setTimeout(callback(),1000);
+               callback();
           } else {
                 lastfmsong=currentsong.slice(0);
-                console.log("Spotify Searched for : "+lastfmsong[0]+" - "+lastfmsong[1]);
-                console.log("Not Found on Spotify");
-                console.log("Searching last.fm...".cyan);
+                console.log("Not found on Spotify: ".cyan +lastfmsong[0]+" - "+lastfmsong[1]);
                 lfm.track.getInfo({
                     'track' : lastfmsong[0],
                     'artist' : lastfmsong[1]
                 }, function (err, track) {
-                  //console.log(track);
                   if (track!=undefined && track.album!=undefined){
                     var name = track.name;
                     var artist = track.artist["name"];
@@ -113,11 +97,13 @@ exports.uploadXML = function(req,res){
                     var trackid='-';
                     var albumid='-';
                     var playcount = lastfmsong[4];
-                    console.log(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid);
-                    songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
-                    setTimeout(callback(),1000);
+                    //console.log(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid);
+                    console.log("Found Last.fm data for: ".cyan + name + " - " + artist);
+                    songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid));
+                    callback();
                   } else if (track==undefined || track.album==undefined || err){
-                    setTimeout(callback(),1000);
+                    console.log("No data found for: ".cyan + lastfmsong[0] + " - " + lastfmsong[1]);
+                    callback();
                   }
                   if (err) {
                     console.log(err);
@@ -148,7 +134,7 @@ exports.uploadXML = function(req,res){
                     },function (err) {
                       parsedCounter++;
                       //Every 5 or so, update the DB (or if it's the last one)
-                      if(spotifyQueuelength()==0 || parsedCounter%5 == 0){
+                      if(spotifyQueue.length()==0 || parsedCounter%5 == 0){
                         var update_trackcount = "UPDATE users SET track_count='"+parsedCounter+"' WHERE user='"+req.body.username+"'";
                         sqlStarter.connection.query(update_trackcount,function(err,rows){
                           if(err){
@@ -213,10 +199,19 @@ exports.uploadXML = function(req,res){
           }
         }   
   
+    spotifyQueue.pause();
     //Now let's render the waiting room. First update the database to include the final size of the library
-    var update_size = "UPDATE users SET total_tracks='"+spotifyQueue.length()+"' WHERE user='"+req.body.username+"'";
-    sqlStarter.connection.query(update_size,function(err,rows,fields){
-      res.render('waitingRoom',{css: ['../css/loader.css'],js:['https://code.jquery.com/jquery-2.1.3.min.js','../js/pinger.js'],user:req.body.username});
+    var add_user = "INSERT INTO users (user,complete,track_count,total_tracks) VALUES ('"+req.body.username+"','0','0','"+spotifyQueue.length()+"')";
+    console.log("Adding the user. "+add_user);
+    sqlStarter.connection.query(add_user,function(err,rows,fields){
+      if(!err){
+        console.log("User added");
+        spotifyQueue.resume();
+        res.render('waitingRoom',{css: ['../css/loader.css'],js:['https://code.jquery.com/jquery-2.1.3.min.js','../js/pinger.js'],user:req.body.username});
+      } else {
+        console.log(err);
+        res.send("Database error");
+      }
     });
   });
 };
@@ -458,6 +453,7 @@ var quickSort = function(a,sortBy){
         sentVar.user = rows[0].user;
         sentVar.complete = rows[0].complete;
         sentVar.progress = rows[0].track_count;
+        sentVar.outof = rows[0].total_tracks;
         res.send(sentVar);
       }
 		} else {
