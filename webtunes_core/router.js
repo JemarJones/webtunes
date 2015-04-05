@@ -80,8 +80,7 @@ exports.uploadXML = function(req,res){
                              //console.log(songarray.length); 
                              //show_image(albummd);
                              //albtest=artmd;
-<<<<<<< HEAD
-                           } else if (data.body.tracks.items[0]==undefined){
+                        } else if (data.body.tracks.items[0]==undefined){
                               lastfmsong=currentsong.slice(0);
                               console.log("Spotify Searched for : "+lastfmsong[0]+" - "+lastfmsong[1]);
                               console.log("Not Found on Spotify");
@@ -122,59 +121,12 @@ exports.uploadXML = function(req,res){
 
                               });
                             }
-
                         }, function(err) {
-                            errorCounter++;
-                            console.log(err);
-                            console.log(errorCounter);
-                            setTimeout(callback(), 200000);
-                            
-                            
-=======
-                           }
-
-                           if (data.body.tracks.items[0]==undefined){
-                            console.log("Spotify Searched for : "+currentsong[0]+" - "+currentsong[1]);
-                            console.log("Not Found on Spotify");
-                            lfm.album.getInfo({
-                              'artist' : currentsong[1],
-                                  //'track' : currentsong[0]
-                                  'album' : currentsong[3]
-                                }, function (err, album) {
-                                  if (album!=undefined){
-                                    console.log("SEARCHING LAST.FM");
-                                    //console.log(typeof album.image[2]["#text"]);
-                                    var albumart=album.image;
-                                    var name = currentsong[0];
-                                    var artist = album.artist;
-                                    var album = album.name;
-                                    var artlg=albumart[4]["#text"];
-                                    var artmd=albumart[3]["#text"];
-                                    var artsm=albumart[2]["#text"];
-                                    var trackid='-';
-                                    var albumid='-';
-                                    var albumartist=currentsong[2];
-                                    var playcount = currentsong[4];
-                                    console.log(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid);
-                                    songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
-                                  }
-                                  if (err) {console.log(err);}
-                                });
-callback();
-}
-
-}, function(err) {
-  errorCounter++;
-  console.log(err);
-  console.log(errorCounter);
-  setTimeout(callback(), 200000);
-
-
->>>>>>> ecd1d84d7e965d5c80c5244812fdff7450e38ff0
-                            //callback();
-
-                            //console.log(songarray);
-                          });
+                          errorCounter++;
+                          console.log(err);
+                          console.log(errorCounter);
+                          setTimeout(callback(), 200000);
+                        });
 },4);
 
         //spotifyQueue.pause();
