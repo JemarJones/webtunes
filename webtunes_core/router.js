@@ -129,7 +129,7 @@ exports.uploadXML = function(req,res){
                     songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
                     setTimeout(callback(),200000);
                   } else {
-                    callback();
+                    setTimeout(callback(),200000);
                   }
                   if (err) {
                     console.log(err);
