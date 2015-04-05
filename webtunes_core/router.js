@@ -21,6 +21,7 @@ exports.uploadXML = function(req,res){
 	var songarray=new Array();
 	var albumarray=new Array();
 	var playcounter;
+  var parsedCounter = 0;
 	var albtest;
   var spotifyCounter=0;
   var databaseAddedCounter=0;
@@ -30,6 +31,27 @@ exports.uploadXML = function(req,res){
   var currentsong=['','','','',0];
 
   fs.readFile(req.files.xml_file.path, function(err, data) {
+    if(err){
+      res.send("Critical Error: Failed to load file");
+    }
+
+    //Check if the username is useable
+
+    //If the username isn't taken
+    if(true){
+      var querydone = "INSERT INTO users (user,complete,track_count) VALUES ('"+req.body.username+"','0','0')";
+      sqlStarter.connection.query(querydone,function(err,rows,fields){
+        if (!err){
+          console.log("Added ".green+req.body.username+" to 'users' table".green);
+        }else{
+          console.log(err);
+        }
+      });
+    } else {
+      //The username is taken. We need to return this to the request and NOT load the waiting page
+    }
+
+
     var document = new xmldoc.XmlDocument(data);
     var extracteddata = document.childrenNamed("dict")[0].childrenNamed("dict")[0].childrenNamed("dict");
           //extracteddata=result.plist.dict[0].dict[0].dict;
@@ -71,8 +93,8 @@ exports.uploadXML = function(req,res){
                var albumid=spotifysong.album.id;
                var albumartist=currentsong[2];
                var playcount = currentsong[4];
-               console.log(name+" - "+artist);
-               console.log(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid);
+               console.log("Searching spotify for: ".cyan+name+" - "+artist);
+               //console.log(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid);
 
                songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
                //albumarray.push(new Album(artmd,album,albumartist));
@@ -89,7 +111,7 @@ exports.uploadXML = function(req,res){
                     'artist' : lastfmsong[1]
                 }, function (err, track) {
                   if (track!=undefined){
-                    console.log("SEARCHING LAST.FM");
+                    console.log("Searching last.fm...".cyan);
                     console.log(track.album["image"][0]["#text"]);
                     //console.log(typeof album.image[2]["#text"]);
                     //var albumart=track.album.image;
@@ -110,7 +132,6 @@ exports.uploadXML = function(req,res){
                     } else {
                       callback();
                     }
-
                   }
                   if (err) {
                     console.log(err);
@@ -127,7 +148,7 @@ exports.uploadXML = function(req,res){
         });
       },4);
 
-        //spotifyQueue.pause();
+        //Add all of the items to the queue
         for(var i=0;i<extracteddata.length;i++){
                     //Put each item from the data into are queue to be processed by spotify
                     var parseString=extracteddata[i].toString().replace(/\s<key>/g,"").replace(/<\/key>/g,"").replace(/<integer>/g,"").replace(/<\/integer>/g,"").replace(/<string>/g,"").replace(/<\/string>/g,"");
@@ -139,19 +160,32 @@ exports.uploadXML = function(req,res){
                         //thissong : extracteddata[i].string,
                         //thisint : extracteddata[i].integer,
                         //keycheck : extracteddata[i].key
-                      },function (err) {
-                       if (spotifyQueue.length()==0 && started==0){
-                        console.log("qwert");
+                    },function (err) {
+                      parsedCounter++;
+                      //Every 5 or so, update the DB
+                      if(true || parsedCounter%5 == 0){
+                        var update_trackcount = "UPDATE users SET track_count='"+parsedCounter+"' WHERE user='"+req.body.username+"'";
+                        sqlStarter.connection.query(update_trackcount,function(err,rows){
+                          if(err){
+                            console.log(err);
+                          }
+                          console.log("Updated the parsedCounter on the SQL Database".green);
+                        });
+                      }
+
+
+                      if (spotifyQueue.length()==0 && started==0){
                         spotifyQueue.drain();
                       }
-                      console.log(spotifyQueue.length());
+
+                      console.log("Queue items left: ".magenta + spotifyQueue.length());
                     });
         }
                 //spotifyQueue.resume();
 
         spotifyQueue.drain = function(){
           //Once the queue is empty
-          console.log("All items processed.");
+          console.log("All items processed.".magenta);
           //res.render('customCoverArt',{css: ['./css/userPage.css'],js: ['./js/userPage.js'], albums: albumarray});
           
           //Let's just push this to the sql db for now.
@@ -171,7 +205,7 @@ exports.uploadXML = function(req,res){
               +sqlStarter.escape(song.albumid)+"')";
 
             spotifyCounter++;
-            console.log(query);
+            //console.log(query);
 
             sqlStarter.connection.query(query,function(err,rows,fields){
               if (!err){
@@ -180,17 +214,12 @@ exports.uploadXML = function(req,res){
                 console.log("i ="+i+" databaseAddedCounter = "+ databaseAddedCounter+" spotifyCounter = "+spotifyCounter);
                         //console.log(spotifyQueue.length());
                         if (databaseAddedCounter==spotifyCounter){
-                          console.log("Everything added to DB");
-                          console.log("Number of songs where the API timed out = "+errorCounter);
-                          var querydone = "INSERT INTO users (user,complete) VALUES ('"+req.body.username+"','"
-                            +1+"')";
-                        sqlStarter.connection.query(querydone,function(err,rows,fields){
-                          if (!err){
-                            console.log("COMPLETED VALUE UPDATED TO USERS DB.");
-                          }else{
-                            console.log(err);
-                          }
-                        });
+                          //Update complete to 1
+                          var update_complete = "UPDATE users SET 'complete' = 1 WHERE user='"+req.body.username+"'";
+                          sqlStarter.connection.query(update_complete,function(err,rows,fields){
+                            console.log("Everything added to DB".green.bold);
+                            console.log("Number of songs where the API timed out = "+errorCounter);
+                          });
                         }
               } else {
                 console.log(err);

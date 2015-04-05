@@ -10,6 +10,9 @@ $(document).ready(function(){
 				//location.replace("http://app-webtunes.rhcloud.com/u/"+user);
 			} else {
 				console.log(data.progress);
+				$(".progress_bar").animate({
+					width: 100*(parseInt(data.progress)/total)+'%'
+				},6000);
 			}
 		});
 	},5000);
