@@ -80,7 +80,7 @@ exports.uploadXML = function(req,res){
                //console.log(songarray.length); 
                //show_image(albummd);
                //albtest=artmd;
-          } else if (data.body.tracks.items[0]==undefined){
+          } else {
                 lastfmsong=currentsong.slice(0);
                 console.log("Spotify Searched for : "+lastfmsong[0]+" - "+lastfmsong[1]);
                 console.log("Not Found on Spotify");
@@ -107,12 +107,12 @@ exports.uploadXML = function(req,res){
                     console.log(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid);
                     songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
                     setTimeout(callback(),200000);
-                    
+
                   }
-                    if (err) {
-                      console.log(err);
-                      setTimeout(callback(), 200000);
-                    }
+                  if (err) {
+                    console.log(err);
+                    setTimeout(callback(), 200000);
+                  }
 
                 });
               }
