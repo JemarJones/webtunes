@@ -33,101 +33,101 @@ exports.uploadXML = function(req,res){
     var document = new xmldoc.XmlDocument(data);
     var extracteddata = document.childrenNamed("dict")[0].childrenNamed("dict")[0].childrenNamed("dict");
           //extracteddata=result.plist.dict[0].dict[0].dict;
-                /*
-                    HEY GUYS WE'RE SOFTWARE ENGINEERS! LOOK AT US USE A QUEUE!
-                    */
-                    var spotifyQueue = async.queue(function(task,callback){
-                      var thissong = task.thissong;
-                    //var thisint = task.thisint;
-                    //var keycheck = task.keycheck;
+    /*
+      HEY GUYS WE'RE SOFTWARE ENGINEERS! LOOK AT US USE A QUEUE!
+    */
+    var spotifyQueue = async.queue(function(task,callback){
+      var thissong = task.thissong;
+      //var thisint = task.thisint;
+      //var keycheck = task.keycheck;
 
-                    currentsong=['','','','',0];
-                    //var playcount=0;
-                    //console.log(thissong);
+      currentsong=['','','','',0];
+      //var playcount=0;
+      //console.log(thissong);
 
-                    for (k=0;k<thissong.length-1;k++){
+      for (k=0;k<thissong.length-1;k++){
 
-                      if (thissong[k]==" Name"){currentsong[0]=thissong[k+1].split("  ")[1].replace(/ft\./g,"").replace(/feat\./g,"").replace(/\(/g,"").replace(/\)/g,"");}
-                      if (thissong[k]==" Artist"){currentsong[1]=thissong[k+1].split("  ")[1];}
-                      if (thissong[k]==" Album Artist"){currentsong[2]=thissong[k+1].split("  ")[1];}
-                      if (thissong[k]==" Album"){currentsong[3]=thissong[k+1].split("  ")[1];}
-                      if (thissong[k]==" Play Count"){currentsong[4]=thissong[k+1].split("  ")[1];}
-                      if (thissong[k].split("  ")[1]=="Podcast"){callback();}
+        if (thissong[k]==" Name"){currentsong[0]=thissong[k+1].split("  ")[1].replace(/ft\./g,"").replace(/feat\./g,"").replace(/\(/g,"").replace(/\)/g,"");}
+        if (thissong[k]==" Artist"){currentsong[1]=thissong[k+1].split("  ")[1];}
+        if (thissong[k]==" Album Artist"){currentsong[2]=thissong[k+1].split("  ")[1];}
+        if (thissong[k]==" Album"){currentsong[3]=thissong[k+1].split("  ")[1];}
+        if (thissong[k]==" Play Count"){currentsong[4]=thissong[k+1].split("  ")[1];}
+        if (thissong[k].split("  ")[1]=="Podcast"){callback();}
+      }
+      //console.log(currentsong);
+      spotifyApi.searchTracks(currentsong[0]+" - "+currentsong[1])
+        .then(function(data) {
+          // console.log(data.body.tracks.items[0].name);
+          if (data.body.tracks.items[0]!=undefined){
+           var spotifysong=data.body.tracks.items[0];
+               //console.log(spotifysong);
+               var name = spotifysong.name;
+               var artist = spotifysong.artists[0].name;
+               var album = spotifysong.album.name;
+               var artlg=spotifysong.album.images[0].url;
+               var artmd=spotifysong.album.images[1].url;
+               var artsm=spotifysong.album.images[2].url;
+               var trackid=spotifysong.id;
+               var albumid=spotifysong.album.id;
+               var albumartist=currentsong[2];
+               var playcount = currentsong[4];
+               console.log(name+" - "+artist);
+               console.log(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid);
+
+               songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
+               //albumarray.push(new Album(artmd,album,albumartist));
+               setTimeout(callback(),200000);
+               //console.log(songarray.length); 
+               //show_image(albummd);
+               //albtest=artmd;
+          } else if (data.body.tracks.items[0]==undefined){
+                lastfmsong=currentsong.slice(0);
+                console.log("Spotify Searched for : "+lastfmsong[0]+" - "+lastfmsong[1]);
+                console.log("Not Found on Spotify");
+                lfm.track.getInfo({
+                    'track' : lastfmsong[0],
+                    'artist' : lastfmsong[1]
+                }, function (err, track) {
+                  if (track!=undefined){
+                    console.log("SEARCHING LAST.FM");
+                    console.log(track.album["image"][0]["#text"]);
+                    //console.log(typeof album.image[2]["#text"]);
+                    //var albumart=track.album.image;
+
+                    var name = track.name;
+                    var artist = track.artist["name"];
+                    if (track.album!=undefined){
+                      var album = track.album["title"];
+                      var artlg=track.album["image"][1]["#text"];
+                      var artmd=track.album["image"][2]["#text"];
+                      var artsm=track.album["image"][3]["#text"];
+                      var albumartist=track.album["artist"];
+                    } else {
+                      callback(); 
                     }
-                    //console.log(currentsong);
-                    spotifyApi.searchTracks(currentsong[0]+" - "+currentsong[1])
-                    .then(function(data) {
-                        // console.log(data.body.tracks.items[0].name);
-                        if (data.body.tracks.items[0]!=undefined){
-                         var spotifysong=data.body.tracks.items[0];
-                             //console.log(spotifysong);
-                             var name = spotifysong.name;
-                             var artist = spotifysong.artists[0].name;
-                             var album = spotifysong.album.name;
-                             var artlg=spotifysong.album.images[0].url;
-                             var artmd=spotifysong.album.images[1].url;
-                             var artsm=spotifysong.album.images[2].url;
-                             var trackid=spotifysong.id;
-                             var albumid=spotifysong.album.id;
-                             var albumartist=currentsong[2];
-                             var playcount = currentsong[4];
-                             console.log(name+" - "+artist);
-                             console.log(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid);
+                    
+                    
+                    var trackid='-';
+                    var albumid='-';
+                    var playcount = lastfmsong[4];
+                    console.log(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid);
+                    songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
+                    setTimeout(callback(),200000);
+                  }
+                    if (err) {
+                      console.log(err);
+                      callback();
+                    }
 
-                             songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
-                             //albumarray.push(new Album(artmd,album,albumartist));
-                             setTimeout(callback(),200000);
-                             //console.log(songarray.length); 
-                             //show_image(albummd);
-                             //albtest=artmd;
-                        } else if (data.body.tracks.items[0]==undefined){
-                              lastfmsong=currentsong.slice(0);
-                              console.log("Spotify Searched for : "+lastfmsong[0]+" - "+lastfmsong[1]);
-                              console.log("Not Found on Spotify");
-                              lfm.track.getInfo({
-                                  'track' : lastfmsong[0],
-                                  'artist' : lastfmsong[1]
-                              }, function (err, track) {
-                                if (track!=undefined){
-                                  console.log("SEARCHING LAST.FM");
-                                  console.log(track.album["image"][0]["#text"]);
-                                  //console.log(typeof album.image[2]["#text"]);
-                                  //var albumart=track.album.image;
-
-                                  var name = track.name;
-                                  var artist = track.artist["name"];
-                                  if (track.album!=undefined){
-                                    var album = track.album["title"];
-                                    var artlg=track.album["image"][1]["#text"];
-                                    var artmd=track.album["image"][2]["#text"];
-                                    var artsm=track.album["image"][3]["#text"];
-                                    var albumartist=track.album["artist"];
-                                  } else {
-                                    callback(); 
-                                  }
-                                  
-                                  
-                                  var trackid='-';
-                                  var albumid='-';
-                                  var playcount = lastfmsong[4];
-                                  console.log(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid);
-                                  songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
-                                  setTimeout(callback(),200000);
-                                }
-                                  if (err) {
-                                    console.log(err);
-                                    callback();
-                                  }
-
-                              });
-                            }
-                        }, function(err) {
-                          errorCounter++;
-                          console.log(err);
-                          console.log(errorCounter);
-                          setTimeout(callback(), 200000);
-                        });
-        },4);
+                });
+              }
+        }, function(err) {
+            errorCounter++;
+            console.log(err);
+            console.log(errorCounter);
+            setTimeout(callback(), 200000);
+        });
+      },4);
 
         //spotifyQueue.pause();
         for(var i=0;i<extracteddata.length;i++){
@@ -148,63 +148,62 @@ exports.uploadXML = function(req,res){
                       }
                       console.log(spotifyQueue.length());
                     });
-
-
-                  }
+        }
                 //spotifyQueue.resume();
 
-                spotifyQueue.drain = function(){
-                    //Once the queue is empty
-                    console.log("All items processed.");
-                    //res.render('customCoverArt',{css: ['./css/userPage.css'],js: ['./js/userPage.js'], albums: albumarray});
-                    
-                    //Let's just push this to the sql db for now.
-                    for(var i=0;i<songarray.length;i++){
-                      started=1;
-                      var song = songarray[i];
-                        //song.name=song.name.replace(/-/g,"").replace(/\?/g,"").replace(/Interlude/g,"");
-                        var query = "INSERT INTO user_libraries (user,title,artist,album,playcount,art_lg,art_md,art_sm,track_id,album_id) VALUES ('"+req.body.username+"','"
-                          +sqlStarter.escape(song.name)+"','"
-                          +sqlStarter.escape(song.artist)+"','"
-                          +sqlStarter.escape(song.album)+"',"
-                          +song.playcount+",'"
-                          +sqlStarter.escape(song.artlg)+"','"
-                          +sqlStarter.escape(song.artmd)+"','"
-                          +sqlStarter.escape(song.artsm)+"','"
-                          +sqlStarter.escape(song.trackid)+"','"
-                          +sqlStarter.escape(song.albumid)+"')";
+        spotifyQueue.drain = function(){
+          //Once the queue is empty
+          console.log("All items processed.");
+          //res.render('customCoverArt',{css: ['./css/userPage.css'],js: ['./js/userPage.js'], albums: albumarray});
+          
+          //Let's just push this to the sql db for now.
+          for(var i=0;i<songarray.length;i++){
+            started=1;
+            var song = songarray[i];
+            //song.name=song.name.replace(/-/g,"").replace(/\?/g,"").replace(/Interlude/g,"");
+            var query = "INSERT INTO user_libraries (user,title,artist,album,playcount,art_lg,art_md,art_sm,track_id,album_id) VALUES ('"+req.body.username+"','"
+              +sqlStarter.escape(song.name)+"','"
+              +sqlStarter.escape(song.artist)+"','"
+              +sqlStarter.escape(song.album)+"',"
+              +song.playcount+",'"
+              +sqlStarter.escape(song.artlg)+"','"
+              +sqlStarter.escape(song.artmd)+"','"
+              +sqlStarter.escape(song.artsm)+"','"
+              +sqlStarter.escape(song.trackid)+"','"
+              +sqlStarter.escape(song.albumid)+"')";
 
-                    spotifyCounter++;
-                    console.log(query);
+            spotifyCounter++;
+            console.log(query);
 
-                    sqlStarter.connection.query(query,function(err,rows,fields){
-                      if (!err){
-                        databaseAddedCounter++;
-                        console.log("Added to db.");
-                        console.log("i ="+i+" databaseAddedCounter = "+ databaseAddedCounter+" spotifyCounter = "+spotifyCounter);
-                                //console.log(spotifyQueue.length());
-                                if (databaseAddedCounter==spotifyCounter){
-                                  console.log("Everything added to DB");
-                                  console.log("Number of songs where the API timed out = "+errorCounter);
-                                  var querydone = "INSERT INTO users (user,complete) VALUES ('"+req.body.username+"','"
-                                    +1+"')";
-                                sqlStarter.connection.query(querydone,function(err,rows,fields){
-                                  if (!err){
-                                    console.log("COMPLETED VALUE UPDATED TO USERS DB.");
-                                  }else{
-                                    console.log(err);
-                                  }
-                                });
-                                }
-                      }else{
-                        console.log(err);
-                      }
-                      });
-
-                    }
-            }   
-    });	res.render('waitingRoom',{css: ['../css/loader.css'],js:['https://code.jquery.com/jquery-2.1.3.min.js','../js/pinger.js'],user:req.body.username});
-  };
+            sqlStarter.connection.query(query,function(err,rows,fields){
+              if (!err){
+                databaseAddedCounter++;
+                console.log("Added to db.");
+                console.log("i ="+i+" databaseAddedCounter = "+ databaseAddedCounter+" spotifyCounter = "+spotifyCounter);
+                        //console.log(spotifyQueue.length());
+                        if (databaseAddedCounter==spotifyCounter){
+                          console.log("Everything added to DB");
+                          console.log("Number of songs where the API timed out = "+errorCounter);
+                          var querydone = "INSERT INTO users (user,complete) VALUES ('"+req.body.username+"','"
+                            +1+"')";
+                        sqlStarter.connection.query(querydone,function(err,rows,fields){
+                          if (!err){
+                            console.log("COMPLETED VALUE UPDATED TO USERS DB.");
+                          }else{
+                            console.log(err);
+                          }
+                        });
+                        }
+              } else {
+                console.log(err);
+              }
+            });
+          }
+        }   
+  
+    res.render('waitingRoom',{css: ['../css/loader.css'],js:['https://code.jquery.com/jquery-2.1.3.min.js','../js/pinger.js'],user:req.body.username,total:spotifyQueue.length()});
+  });
+};
 
 //Router functions for the userPage
 exports.userPage = function(req, res){
