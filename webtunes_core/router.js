@@ -127,7 +127,7 @@ exports.uploadXML = function(req,res){
                           console.log(errorCounter);
                           setTimeout(callback(), 200000);
                         });
-},4);
+        },4);
 
         //spotifyQueue.pause();
         for(var i=0;i<extracteddata.length;i++){
@@ -174,41 +174,37 @@ exports.uploadXML = function(req,res){
                           +sqlStarter.escape(song.trackid)+"','"
                           +sqlStarter.escape(song.albumid)+"')";
 
-spotifyCounter++;
-console.log(query);
+                    spotifyCounter++;
+                    console.log(query);
 
-sqlStarter.connection.query(query,function(err,rows,fields){
-  if (!err){
-    databaseAddedCounter++;
-    console.log("Added to db.");
-    console.log("i ="+i+" databaseAddedCounter = "+ databaseAddedCounter+" spotifyCounter = "+spotifyCounter);
+                    sqlStarter.connection.query(query,function(err,rows,fields){
+                      if (!err){
+                        databaseAddedCounter++;
+                        console.log("Added to db.");
+                        console.log("i ="+i+" databaseAddedCounter = "+ databaseAddedCounter+" spotifyCounter = "+spotifyCounter);
                                 //console.log(spotifyQueue.length());
                                 if (databaseAddedCounter==spotifyCounter){
                                   console.log("Everything added to DB");
                                   console.log("Number of songs where the API timed out = "+errorCounter);
                                   var querydone = "INSERT INTO users (user,complete) VALUES ('"+req.body.username+"','"
                                     +1+"')";
-sqlStarter.connection.query(querydone,function(err,rows,fields){
-  if (!err){
-    console.log("COMPLETED VALUE UPDATED TO USERS DB.");
-  }else{
-    console.log(err);
-  }
-});
-}
+                                sqlStarter.connection.query(querydone,function(err,rows,fields){
+                                  if (!err){
+                                    console.log("COMPLETED VALUE UPDATED TO USERS DB.");
+                                  }else{
+                                    console.log(err);
+                                  }
+                                });
+                                }
+                      }else{
+                        console.log(err);
+                      }
+                      });
 
-}else{
-  console.log(err);
-}
-});
-
-}
-}   
-});
-
-res.render('waitingRoom',{css: ['../css/loader.css','//fonts.googleapis.com/css?family=Roboto:100'],js:['https://code.jquery.com/jquery-2.1.3.min.js','../js/pinger.js'],user:req.body.username,total:spotifyQueue.length()});
-
-};
+                    }
+            }   
+    });	res.render('waitingRoom',{css: ['../css/loader.css'],js:['https://code.jquery.com/jquery-2.1.3.min.js','../js/pinger.js'],user:req.body.username});
+  };
 
 //Router functions for the userPage
 exports.userPage = function(req, res){
