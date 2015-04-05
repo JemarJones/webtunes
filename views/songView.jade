@@ -1,21 +1,20 @@
 //Component for song view
 table#songView.hide
 		tr.odd
-			th Title
+			th.highlighted Title
 			th Album
 			th Artist
 			th Playcount
 		- var index = 0//Used to count the songs so we can switch colors every other
-		each album in albums
-			each track in album
+			each track in sortedSongs
 				if (index%2!=0)
-					tr.odd.song(data-user= album[0].user, data-num= index, data-id= track.track_id)
+					tr.odd.song(data-num= index, data-id= track.track_id)
 						td.title= track.title
 						td.album= track.album
 						td.artist= track.artist
 						td.playcount= track.playcount
 				else
-					tr.even.song(data-user= album[0].user, data-num= index, data-id= track.track_id)
+					tr.even.song(data-num= index, data-id= track.track_id)
 						td.title= track.title
 						td.album= track.album
 						td.artist= track.artist

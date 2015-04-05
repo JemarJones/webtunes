@@ -120,8 +120,9 @@ var multer = require('multer');
         // };
         self.routes['/u/:user'] = router.userPage;
         self.routes['/data/:user'] = router.albumData;
-        self.routes['/search/:user/:key'] = router.musicSearch;
-        self.routes['/search/:user/'] = router.musicSearch;//For the special case of an empty search key
+        self.routes['/organize/:user/:key/:sortby'] = router.musicSearch;
+        self.routes['/organize/:user/:sortby'] = router.musicSearch;//For the special case of an empty search key
+        // self.routes['/search/:user/:key/:sortby'] = router.sortLib;
         self.routes['/nalwa'] = xmlrouter.xml;
         self.routes['/'] = router.homePage;
         self.posts['/upload_xml'] = router.uploadXML;
