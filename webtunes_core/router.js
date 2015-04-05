@@ -5,8 +5,8 @@ var SpotifyWebApi = require('spotify-web-api-node');
 var sqlStarter = require('./sqlStarter');
 var LastfmAPI = require('lastfmapi');
 var lfm = new LastfmAPI({
-    'api_key' : 'e0d66a3b8ea5fa90bb9ab39aa51762fd',
-    'secret' : 'is 8ab78265bdc75215631380724adefbcf'
+  'api_key' : 'e0d66a3b8ea5fa90bb9ab39aa51762fd',
+  'secret' : 'is 8ab78265bdc75215631380724adefbcf'
 });
 var colors = require('colors');
 
@@ -80,6 +80,7 @@ exports.uploadXML = function(req,res){
                              //console.log(songarray.length); 
                              //show_image(albummd);
                              //albtest=artmd;
+<<<<<<< HEAD
                            } else if (data.body.tracks.items[0]==undefined){
                               lastfmsong=currentsong.slice(0);
                               console.log("Spotify Searched for : "+lastfmsong[0]+" - "+lastfmsong[1]);
@@ -129,11 +130,52 @@ exports.uploadXML = function(req,res){
                             setTimeout(callback(), 200000);
                             
                             
+=======
+                           }
+
+                           if (data.body.tracks.items[0]==undefined){
+                            console.log("Spotify Searched for : "+currentsong[0]+" - "+currentsong[1]);
+                            console.log("Not Found on Spotify");
+                            lfm.album.getInfo({
+                              'artist' : currentsong[1],
+                                  //'track' : currentsong[0]
+                                  'album' : currentsong[3]
+                                }, function (err, album) {
+                                  if (album!=undefined){
+                                    console.log("SEARCHING LAST.FM");
+                                    //console.log(typeof album.image[2]["#text"]);
+                                    var albumart=album.image;
+                                    var name = currentsong[0];
+                                    var artist = album.artist;
+                                    var album = album.name;
+                                    var artlg=albumart[4]["#text"];
+                                    var artmd=albumart[3]["#text"];
+                                    var artsm=albumart[2]["#text"];
+                                    var trackid='-';
+                                    var albumid='-';
+                                    var albumartist=currentsong[2];
+                                    var playcount = currentsong[4];
+                                    console.log(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid);
+                                    songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
+                                  }
+                                  if (err) {console.log(err);}
+                                });
+callback();
+}
+
+}, function(err) {
+  errorCounter++;
+  console.log(err);
+  console.log(errorCounter);
+  setTimeout(callback(), 200000);
+
+
+>>>>>>> ecd1d84d7e965d5c80c5244812fdff7450e38ff0
                             //callback();
 
                             //console.log(songarray);
-                        });
-                 },4);
+                          });
+},4);
 
         //spotifyQueue.pause();
         for(var i=0;i<extracteddata.length;i++){
@@ -180,37 +222,37 @@ exports.uploadXML = function(req,res){
                           +sqlStarter.escape(song.trackid)+"','"
                           +sqlStarter.escape(song.albumid)+"')";
 
-                          spotifyCounter++;
-                          console.log(query);
+spotifyCounter++;
+console.log(query);
 
-                          sqlStarter.connection.query(query,function(err,rows,fields){
-                              if (!err){
-                                databaseAddedCounter++;
-                                console.log("Added to db.");
-                                console.log("i ="+i+" databaseAddedCounter = "+ databaseAddedCounter+" spotifyCounter = "+spotifyCounter);
+sqlStarter.connection.query(query,function(err,rows,fields){
+  if (!err){
+    databaseAddedCounter++;
+    console.log("Added to db.");
+    console.log("i ="+i+" databaseAddedCounter = "+ databaseAddedCounter+" spotifyCounter = "+spotifyCounter);
                                 //console.log(spotifyQueue.length());
                                 if (databaseAddedCounter==spotifyCounter){
                                   console.log("Everything added to DB");
                                   console.log("Number of songs where the API timed out = "+errorCounter);
                                   var querydone = "INSERT INTO users (user,complete) VALUES ('"+req.body.username+"','"
-                                                  +1+"')";
-                                  sqlStarter.connection.query(querydone,function(err,rows,fields){
-                                  if (!err){
-                                  console.log("COMPLETED VALUE UPDATED TO USERS DB.");
-                                   }else{
-                                  console.log(err);
-                                  }
-                                  });
-                                }
+                                    +1+"')";
+sqlStarter.connection.query(querydone,function(err,rows,fields){
+  if (!err){
+    console.log("COMPLETED VALUE UPDATED TO USERS DB.");
+  }else{
+    console.log(err);
+  }
+});
+}
 
-                            }else{
-                                console.log(err);
-                            }
-                        });
+}else{
+  console.log(err);
+}
+});
 
-                    }
+}
 }   
-});	res.render('waitingRoom',{css: ['../css/loader.css'],js:[]});
+});	res.render('waitingRoom',{css: ['../css/loader.css'],js:['https://code.jquery.com/jquery-2.1.3.min.js','../js/pinger.js'],user:req.body.username});
 
 };
 
@@ -233,9 +275,12 @@ exports.userPage = function(req, res){
         sqlStarter.connection.query(query,function(err,rows,fields){
           if (!err){
             albums = organize(rows);
+            //Giving the lib view its initial sort
+            sortedSongs = rows;
+            quickSort(sortedSongs,'title');
             user = req.params.user + " | ";
             user = user.substr(0, 1).toUpperCase() + user.substr(1);
-            res.render('userPage',{css: ['../css/userPage.css','//fonts.googleapis.com/css?family=Roboto:100'],js: ['../js/userPage.js'], user: user , albums: albums});
+            res.render('userPage',{css: ['../css/userPage.css','//fonts.googleapis.com/css?family=Roboto:100'],js: ['../js/userPage.js'], user: user , albums: albums, sortedSongs: sortedSongs});
           }else{
             console.log(err); 
           }
@@ -270,19 +315,20 @@ exports.musicSearch = function(req, res){
   if (key === undefined){
     key = "";
   }
+  var sortby = req.params.sortby;
   //Starting off by querying for the users music
   var query = "SELECT * FROM user_libraries WHERE user='"+user+"'";
   sqlStarter.connection.query(query,function(err,rows,fields){
     if (!err){
-      //Dirty algorithm
-      //TODO implement real search algo
       var matches = [];
       for (var i = 0; i < rows.length; i++){
+        //TODO MAYBE?  Do substring search instead of indexOf
         if (rows[i].title.toLowerCase().indexOf(key.toLowerCase()) > -1 || rows[i].album.toLowerCase().indexOf(key.toLowerCase()) > -1 || rows[i].artist.toLowerCase().indexOf(key.toLowerCase()) > -1){
           matches[matches.length] = rows[i];
         }
       }
       //Sending back an array of all songs and an array of all albums for their corresponding views
+      quickSort(matches,sortby);
       res.send([matches, organize(matches)]);
     }else{
       console.log(err);
@@ -316,8 +362,8 @@ var quickSort = function(a,sortBy){
       return getVal(s,sortBy)[d];
     }
   };
-  var sort = function(a,lo,hi,d){
-    //cutoff to insertion sort for small subarrays
+  var sortStr = function(a,lo,hi,d){
+    //cutoff to insertionsort for small subarrays
     if (hi <= lo + CUTOFF) {
       insertion(a, lo, hi, d);
       return;
@@ -339,80 +385,117 @@ var quickSort = function(a,sortBy){
     }
 
     // a[lo..lt-1] < v = a[lt..gt] < a[gt+1..hi]. 
-    sort(a, lo, lt-1, d);
+    sortStr(a, lo, lt-1, d);
     if (v >= 0) {
-      sort(a, lt, gt, d+1);
+      sortStr(a, lt, gt, d+1);
     }
-    sort(a, gt+1, hi, d);
+    sortStr(a, gt+1, hi, d);
   };
+  var sortInt = function(a,lo,hi){
+    if (hi <= lo + CUTOFF){
+        insertionInt(a,lo,hi);
+        return;
+    }
+    var j = partition(a,lo,hi);
+    sortInt(a,lo,j-1);
+    sortInt(a,j+1,hi);
+  };
+  var partition = function(a,lo,hi){
+    var i = lo;
+    var j = hi + 1;
+    var v = getVal(a[lo],sortBy);
+    while (true){
 
+        while(getVal(a[++i],sortBy) > v){
+            if (i == hi){
+                break;
+            }
+        }
+
+        while(v > getVal(a[--j],sortBy)){
+            if (j == lo){
+                break;
+            }
+        }
+
+        if (i >= j){
+            break;
+        }
+        exch (a,i,j);
+    }
+    exch(a,lo,j);
+
+    return j;
+  };
   var insertion = function(a,lo,hi,d){
     for (var i = lo; i <= hi; i++){
       for (var j = i; j > lo && less(a[j], a[j-1], d); j--){
-        // for (var j = i; j > lo && a[j] < a[j-1]; j--){
-        exch(a, j, j-1);
+          exch(a, j, j-1);
+        }
       }
-    }
   };
+  var insertionInt = function(a,lo,hi){
+    for (var i = lo; i <= hi; i++){
+      for (var j = i; j > lo && a[j] > a[j-1]; j--){
+          exch(a, j, j-1);
+        }
+      }
+  };
+    var exch = function(a,i,j){
+      var temp = a[i];
+      a[i] = a[j];
+      a[j] = temp;
+    };
 
-  var exch = function(a,i,j){
-    var temp = a[i];
-    a[i] = a[j];
-    a[j] = temp;
-  };
-
-  var less = function(v,w,d){
-    for (var i = d; i < Math.min(v.title.length, w.title.length); i++) {
-      if (getVal(v,sortBy)[i] < getVal(w,sortBy)[i]) {
-        return true;
+    var less = function(v,w,d){
+      for (var i = d; i < Math.min(v.title.length, w.title.length); i++) {
+        if (getVal(v,sortBy)[i] < getVal(w,sortBy)[i]) {
+          return true;
+        }
+        if (getVal(v,sortBy)[i] > getVal(w,sortBy)[i]) {
+          return false;
+        }
       }
-      if (getVal(v,sortBy)[i] > getVal(w,sortBy)[i]) {
-        return false;
+      return getVal(v,sortBy).length < getVal(w,sortBy).length;
+    };
+    var getVal = function(obj, sortBy){
+      switch(sortBy){
+        case 'title':
+          return obj.title.toLowerCase();
+          break;
+        case 'album':
+          return obj.album.toLowerCase();
+          break;
+        case 'artist':
+          return obj.artist.toLowerCase();
+          break;
+        case 'playcount':
+          return obj.playcount;
+          break;
       }
-    }
-    return getVal(v,sortBy).length < getVal(w,sortBy).length;
-  };
-  var isSorted = function(a){
-    for (var i = 1; i < a.length; i++){
-      if (a[i].title < a[i-1].title){
-        return false;
-      }
-      return true;
-    }
-  }
-  var getVal = function(obj, sortBy){
-    switch(sortBy){
-      case 'title':
-        return obj.title.toLowerCase();
-        break;
-      case 'album':
-        return obj.album.toLowerCase();
-        break;
-      case 'artist':
-        return obj.artist.toLowerCase();
-        break;
+    };
+    a = shuffle(a);
+    if (sortBy == "playcount"){
+      sortInt(a, 0, a.length - 1);
+    }else{
+      sortStr(a, 0, a.length - 1, 0);
     }
   };
-  if (sortBy == "playcount"){
-    //Use quicksort for ints
-  }
-  a = shuffle(a);
-  sort(a, 0, a.length - 1, 0);
-  console.log("Sorted? " + isSorted(a));
-};
-exports.pingUser = function(req,res){
-	var query = "SELECT * FROM users WHERE user='"+req.params+"'";
-	sqlStarter.connection.query(query,function(err,rows,fields){
-		if(!err){
-			if(rows.length==0){
+  exports.pingUser = function(req,res){
+   var query = "SELECT * FROM users WHERE user='"+req.body.user+"'";
+   sqlStarter.connection.query(query,function(err,rows,fields){
+    if(!err){
+     if(rows.length==0){
 				//No user by that name exists.
 				res.send("User Not Found");
-			}
+			} else {
+        res.send("done");
+      }
 		} else {
 			console.log(err);
 		}
 	});
-}
+ }
 
 //Organizes rows into albums
 var organize = function(rows){

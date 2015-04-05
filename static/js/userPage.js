@@ -3,7 +3,8 @@ var albums;//The albums currently being displayed for this user
 var user;//Username for this user
 var expanded = false;//Stores whether the player is currently expanded or not
 var viewToRestore;//Keeps track of view that was being shown before player expansion
-var lastKey;//Keeps track of last search to help fend off async issues
+var lastKey = "";//Keeps track of last search to help fend off async issues
+var sortBy = 'title';
 $(document).ready(function(){
 	initData();//Getting intial album and user data
 	$('#search').keyup(search);
@@ -13,6 +14,7 @@ $(document).ready(function(){
 	$('.song').on('click', playRemaining);
 	$('#closeBar').on('click',closePlayer);
 	$('#albWrapper').on('click', playFull);
+	$('th').on('click', sort);
 });
 var initData = function(){
 	user = $('meta[name="user"]').attr('content');
@@ -37,31 +39,15 @@ var switchMode = function(){
 var search = function(){
 	var key = $('#search').val();
 	lastKey = key;
-	$.get("../../search/" + user + "/" + key, function(searchMatches){
+	var keySection;
+	if (lastKey === ""){
+		keySection = "";
+	}else{
+		keySection = "/" + lastKey;
+	}
+	$.get("../../organize/" + user + keySection + "/" + sortBy , function(searchMatches){
 		if (lastKey == key){//Due to async if a new key has been requested since this one, we stop trying to do this one
-			//Populating library view with matches tracks
-			$('.song').remove();//My testing shows that removing everything and repopulating is faster and simpler than going through and removing things that don't match
-			//Adding each matched song to the song view
-			for (var i = 0; i < searchMatches[0].length; i++){
-				//Figuring out the correct class to assign for stylign purposes
-				var classToAdd = "";
-				if (i % 2 === 0){
-					classToAdd = "even";
-				}else{
-					classToAdd = "odd";
-				}
-				//Constructing table row with song data
-				var row = $('<tr data-user="'+ user+'" data-num="' + i+ '" data-id="' + searchMatches[0][i].track_id+'" class="song '+ classToAdd + '"></tr>');
-				row.append($('<td class="title">' + searchMatches[0][i].title + '</td>'));
-				row.append($('<td class="album">' + searchMatches[0][i].album + '</td>'));
-				row.append($('<td class="artist">' + searchMatches[0][i].artist + '</td>'));
-				row.append($('<td class="playcount">' + searchMatches[0][i].playcount + '</td>'));
-				//Adding row to table
-				$('#songView').append(row);
-			}
-			//Giving newly created songs their event handlers
-			$('.song').on('click', expandSong);
-			$('.song').on('click', playRemaining);
+			populateLib(searchMatches[0]);//Loading matches songs into library
 
 			//Populating album view with matched albums
 			$('.albumCont').remove();//My testing shows that removing everything and repopulating is faster and simpler than going through and removing things that don't match
@@ -69,7 +55,7 @@ var search = function(){
 			//Adding each album with matched songs to album view
 			for (var i = 0; i < searchMatches[1].length; i++){
 				//Constructing album with album data
-				var alb = $('<div class="albumCont" data-user="' + searchMatches[1][i][0].user + '" data-albumnum="' + i + '"></div');
+				var alb = $('<div class="albumCont" data-albumnum="' + i + '"></div');
 				alb.append($('<img class="albCover"src="' + searchMatches[1][i][0].art_md + '">'));
 				alb.append($('<p class="albTitle">'+searchMatches[1][i][0].album+'</p>'));
 				alb.append($('<p class="albArtist"> -'+searchMatches[1][i][0].artist+'</p>'));
@@ -80,6 +66,45 @@ var search = function(){
 			$('.albumCont').on('click',expandAlbum);
 		}
 	});
+};
+var sort = function(){
+	$('th').removeClass('highlighted');
+	$(this).addClass('highlighted');
+	sortBy = $(this).text().toLowerCase();
+	var keySection;
+	if (lastKey === ""){
+		keySection = "";
+	}else{
+		keySection = "/" + lastKey;
+	}
+	$.get("../../organize/" + user + keySection + "/" + sortBy, function(matches){
+		populateLib(matches[0]);
+	});//Loading in sorted songs into library
+};
+//Populates library view with given tracks
+var populateLib = function(songArray){
+	$('.song').remove();//My testing shows that removing everything and repopulating is faster and simpler than going through and removing things that shouldnt be there
+	//Adding each song to the song view
+	for (var i = 0; i < songArray.length; i++){
+		//Figuring out the correct class to assign for styling purposes
+		var classToAdd = "";
+		if (i % 2 === 0){
+			classToAdd = "even";
+		}else{
+			classToAdd = "odd";
+		}
+		//Constructing table row with song data
+		var row = $('<tr data-num="' + i + '" data-id="' + songArray[i].track_id+'" class="song '+ classToAdd + '"></tr>');
+		row.append($('<td class="title">' + songArray[i].title + '</td>'));
+		row.append($('<td class="album">' + songArray[i].album + '</td>'));
+		row.append($('<td class="artist">' + songArray[i].artist + '</td>'));
+		row.append($('<td class="playcount">' + songArray[i].playcount + '</td>'));
+		//Adding row to table
+		$('#songView').append(row);
+	}
+	//Giving newly created songs their event handlers
+	$('.song').on('click', expandSong);
+	$('.song').on('click', playRemaining);
 };
 //handler to expand an album when its clicked on
 var expandAlbum = function(){
@@ -123,7 +148,7 @@ var expandSong = function(){
 		for (var i = 0; i < albums.length; i++){
 			for (var j = 0; j < albums[i].length;j++){
 				if (index == $(elem).attr("data-num")){
-					displayPlayer([albums[i][j].art_lg,$(elem).attr("data-user") +"'s Library" ,""],$('#songView'));
+					displayPlayer([albums[i][j].art_lg,user +"'s Library" ,""],$('#songView'));
 				}
 				index = index + 1;
 			}
