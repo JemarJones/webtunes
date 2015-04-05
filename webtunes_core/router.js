@@ -145,7 +145,7 @@ exports.uploadXML = function(req,res){
             console.log(errorCounter);
             callback();
         });
-      },4);
+      },5);
 
         //Add all of the items to the queue
         for(var i=0;i<extracteddata.length;i++){
