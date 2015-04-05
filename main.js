@@ -126,6 +126,7 @@ var multer = require('multer');
         self.routes['/nalwa'] = xmlrouter.xml;
         self.routes['/'] = router.homePage;
         self.posts['/upload_xml'] = router.uploadXML;
+        self.posts['/ping_user'] = router.pingUser;
     };
 
 
@@ -138,6 +139,7 @@ var multer = require('multer');
         self.app = express();
         self.app.set('view engine', 'jade');//Used to render our pages
         self.app.use(express.static('static'));
+        self.app.use(express.bodyParser());
         self.app.use(multer({
           dest: './uploads/',
           rename: function (fieldname, filename) {

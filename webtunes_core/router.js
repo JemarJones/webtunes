@@ -429,13 +429,15 @@ var quickSort = function(a,sortBy){
     }
   };
   exports.pingUser = function(req,res){
-   var query = "SELECT * FROM users WHERE user='"+req.params+"'";
+   var query = "SELECT * FROM users WHERE user='"+req.body.user+"'";
    sqlStarter.connection.query(query,function(err,rows,fields){
     if(!err){
      if(rows.length==0){
 				//No user by that name exists.
 				res.send("User Not Found");
-			}
+			} else {
+        res.send("done");
+      }
 		} else {
 			console.log(err);
 		}
