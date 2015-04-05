@@ -204,7 +204,9 @@ sqlStarter.connection.query(querydone,function(err,rows,fields){
 
 }
 }   
-});	res.render('waitingRoom',{css: ['../css/loader.css'],js:['https://code.jquery.com/jquery-2.1.3.min.js','../js/pinger.js'],user:req.body.username});
+});
+
+res.render('waitingRoom',{css: ['../css/loader.css','//fonts.googleapis.com/css?family=Roboto:100'],js:['https://code.jquery.com/jquery-2.1.3.min.js','../js/pinger.js'],user:req.body.username,total:spotifyQueue.length()});
 
 };
 
@@ -441,7 +443,11 @@ var quickSort = function(a,sortBy){
 				//No user by that name exists.
 				res.send("User Not Found");
 			} else {
-        res.send("done");
+        var sentVar = {};
+        sentVar.user = rows[0].user;
+        sentVar.complete = rows[0].complete;
+        sentVar.progress = rows[0].track_count;
+        res.send(sentVar);
       }
 		} else {
 			console.log(err);

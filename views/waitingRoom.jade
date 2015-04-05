@@ -1,17 +1,28 @@
 html
 	head
+		title.
+			Preparing Your WebTunes...
 		script.
 			user="#{user}";
+			total="#{total}";
 		each sheet in css
 			link(type="text/css", rel="stylesheet", href=sheet)
 		each script in js
 			script(src= script)
 	body
+		#logo
+			img(src="../images/webtunes_logo.png")
 		.loader
 			.cubes
 				each i in new Array(64)
 					.cube
 						each i in new Array(6)
 							.side
+		.loading
+			.progress
+				.progress_bar
+				.prog_status Parsing XML...
 		#msg.
-			Your Library is currently being processed. This page will automatically update once it's done processing. Alternatively, you can close this tab now and check (url here) in the next 5 minutes or so.
+			Your Library is currently being processed. <br/><br/>
+			This page will automatically update once it's done processing.<br/><br/>
+			Alternatively, you can close this tab now and check <br/><a href="http://app-webtunes.rhcloud.com/u/#{user}">http://app-webtunes.rhcloud.com/u/#{user}</a><br/> in the next 5 minutes or so.
