@@ -110,6 +110,7 @@ exports.uploadXML = function(req,res){
                     'track' : lastfmsong[0],
                     'artist' : lastfmsong[1]
                 }, function (err, track) {
+                  console.log(track);
                   if (track!=undefined && track.album!=undefined){
                     console.log("Searching last.fm...".cyan);
                     console.log(track.album["image"][0]["#text"]);
