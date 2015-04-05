@@ -147,8 +147,8 @@ exports.uploadXML = function(req,res){
                         //keycheck : extracteddata[i].key
                     },function (err) {
                       parsedCounter++;
-                      //Every 5 or so, update the DB
-                      if(true || parsedCounter%5 == 0){
+                      //Every 5 or so, update the DB (or if it's the last one)
+                      if(spotifyQueuelength()==0 || parsedCounter%5 == 0){
                         var update_trackcount = "UPDATE users SET track_count='"+parsedCounter+"' WHERE user='"+req.body.username+"'";
                         sqlStarter.connection.query(update_trackcount,function(err,rows){
                           if(err){
@@ -200,7 +200,7 @@ exports.uploadXML = function(req,res){
                         //console.log(spotifyQueue.length());
                         if (databaseAddedCounter==spotifyCounter){
                           //Update complete to 1
-                          var update_complete = "UPDATE users SET 'complete' = 1 WHERE user='"+req.body.username+"'";
+                          var update_complete = "UPDATE users SET complete=1 WHERE user='"+req.body.username+"'";
                           sqlStarter.connection.query(update_complete,function(err,rows,fields){
                             console.log("Everything added to DB".green.bold);
                             console.log("Number of songs where the API timed out = "+errorCounter);
@@ -213,7 +213,11 @@ exports.uploadXML = function(req,res){
           }
         }   
   
-    res.render('waitingRoom',{css: ['../css/loader.css'],js:['https://code.jquery.com/jquery-2.1.3.min.js','../js/pinger.js'],user:req.body.username,total:spotifyQueue.length()});
+    //Now let's render the waiting room. First update the database to include the final size of the library
+    var update_size = "UPDATE users SET total_tracks='"+spotifyQueue.length()+"' WHERE user='"+req.body.username+"'";
+    sqlStarter.connection.query(update_size,function(err,rows,fields){
+      res.render('waitingRoom',{css: ['../css/loader.css'],js:['https://code.jquery.com/jquery-2.1.3.min.js','../js/pinger.js'],user:req.body.username});
+    });
   });
 };
 
@@ -228,7 +232,7 @@ exports.userPage = function(req, res){
     if (!err && rows.length > 0){
       if (rows[0].complete != 1){
         //User isnt done loading so we pull up the load screen
-        res.render('waitingRoom',{css: ['../css/loader.css'],js:[]});
+        res.render('waitingRoom',{css: ['../css/loader.css'],js:['https://code.jquery.com/jquery-2.1.3.min.js','../js/pinger.js'],user:req.params.user});
       }else{
         //The user exists and is done loading so he go ahead and render there page
         var query = "SELECT * FROM user_libraries WHERE user='"+req.params.user+"'";

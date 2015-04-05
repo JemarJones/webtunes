@@ -7,7 +7,7 @@ $(document).ready(function(){
 		}).done(function(data){
 			if(data.complete){
 				console.log("We're done! Redirecting");
-				//location.replace("http://app-webtunes.rhcloud.com/u/"+user);
+				location.replace("http://app-webtunes.rhcloud.com/u/"+user);
 			} else {
 				console.log(data.progress);
 				$(".progress_bar").animate({
