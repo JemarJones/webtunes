@@ -98,7 +98,7 @@ exports.uploadXML = function(req,res){
 
                songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
                //albumarray.push(new Album(artmd,album,albumartist));
-               setTimeout(callback(),200000);
+               setTimeout(callback(),1000);
                //console.log(songarray.length); 
                //show_image(albummd);
                //albtest=artmd;
@@ -128,13 +128,13 @@ exports.uploadXML = function(req,res){
                     var playcount = lastfmsong[4];
                     console.log(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid);
                     songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
-                    setTimeout(callback(),200000);
+                    setTimeout(callback(),1000);
                   } else if (track==undefined || track.album==undefined || err){
-                    setTimeout(callback(),200000);
+                    setTimeout(callback(),1000);
                   }
                   if (err) {
                     console.log(err);
-                    //setTimeout(callback(),200000);
+                    //setTimeout(callback(),1000);
                   }
 
                 });
