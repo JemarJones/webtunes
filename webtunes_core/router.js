@@ -96,26 +96,22 @@ exports.uploadXML = function(req,res){
 
                     var name = track.name;
                     var artist = track.artist["name"];
-                    if (track.album!=undefined){
-                      var album = track.album["title"];
-                      var artlg=track.album["image"][1]["#text"];
-                      var artmd=track.album["image"][2]["#text"];
-                      var artsm=track.album["image"][3]["#text"];
-                      var albumartist=track.album["artist"];
-                      var trackid='-';
-                      var albumid='-';
-                      var playcount = lastfmsong[4];
-                      console.log(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid);
-                      songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
-                      setTimeout(callback(),200000);
-                    } else {
-                      setTimeout(callback(),200000);
-                    }
-
+                    var album = track.album["title"];
+                    var artlg=track.album["image"][1]["#text"];
+                    var artmd=track.album["image"][2]["#text"];
+                    var artsm=track.album["image"][3]["#text"];
+                    var albumartist=track.album["artist"];
+                    var trackid='-';
+                    var albumid='-';
+                    var playcount = lastfmsong[4];
+                    console.log(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid);
+                    songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
+                    setTimeout(callback(),200000);
+                    
                   }
                     if (err) {
                       console.log(err);
-                      setTimeout(callback(),200000);
+                      callback();
                     }
 
                 });
