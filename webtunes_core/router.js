@@ -60,12 +60,7 @@ exports.uploadXML = function(req,res){
     */
     var spotifyQueue = async.queue(function(task,callback){
       var thissong = task.thissong;
-      //var thisint = task.thisint;
-      //var keycheck = task.keycheck;
-
       currentsong=['','','','',0];
-      //var playcount=0;
-      //console.log(thissong);
 
       for (k=0;k<thissong.length-1;k++){
 
@@ -76,7 +71,7 @@ exports.uploadXML = function(req,res){
         if (thissong[k]==" Play Count"){currentsong[4]=thissong[k+1].split("  ")[1];}
         //if (thissong[k].split("  ")[1]=="Podcast"){callback();}
       }
-      //console.log(currentsong);
+
       spotifyApi.searchTracks(currentsong[0]+" - "+currentsong[1])
         .then(function(data) {
           // console.log(data.body.tracks.items[0].name);
@@ -94,28 +89,20 @@ exports.uploadXML = function(req,res){
                var albumartist=currentsong[2];
                var playcount = currentsong[4];
                console.log("Searching spotify for: ".cyan+name+" - "+artist);
-               //console.log(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid);
-
                songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
                //albumarray.push(new Album(artmd,album,albumartist));
                setTimeout(callback(),1000);
-               //console.log(songarray.length); 
-               //show_image(albummd);
-               //albtest=artmd;
           } else {
                 lastfmsong=currentsong.slice(0);
                 console.log("Spotify Searched for : "+lastfmsong[0]+" - "+lastfmsong[1]);
                 console.log("Not Found on Spotify");
+                console.log("Searching last.fm...".cyan);
                 lfm.track.getInfo({
                     'track' : lastfmsong[0],
                     'artist' : lastfmsong[1]
                 }, function (err, track) {
-                  console.log(track);
+                  //console.log(track);
                   if (track!=undefined && track.album!=undefined){
-                    console.log("Searching last.fm...".cyan);
-                    console.log(track.album["image"][0]["#text"]);
-                    //console.log(typeof album.image[2]["#text"]);
-                    //var albumart=track.album.image;
                     var name = track.name;
                     var artist = track.artist["name"];
                     var album = track.album["title"];
@@ -134,7 +121,6 @@ exports.uploadXML = function(req,res){
                   }
                   if (err) {
                     console.log(err);
-                    //setTimeout(callback(),1000);
                   }
 
                 });
