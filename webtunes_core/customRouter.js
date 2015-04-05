@@ -30,6 +30,7 @@ exports.uploadXML = function(req,res){
   var spotifyApi = new SpotifyWebApi();
   var started=0;
   var currentsong=['','','','',0];
+  var lastfmsong=[];
 
   fs.readFile(req.files.xml_file.path, function(err, data) {
     var document = new xmldoc.XmlDocument(data);
@@ -82,35 +83,40 @@ exports.uploadXML = function(req,res){
                              //show_image(albummd);
                              //albtest=artmd;
                         } else if (data.body.tracks.items[0]==undefined){
+                              //clone the array for lag in lastfm api
+                              lastfmsong=currentsong.slice(0);
                               console.log("Spotify Searched for : "+currentsong[0]+" - "+currentsong[1]);
                               console.log("Not Found on Spotify");
-                              lfm.album.getInfo({
-                                  'artist' : currentsong[1],
-                                  //'track' : currentsong[0]
-                                  'album' : currentsong[3]
-                              }, function (err, album) {
-                                  if (album!=undefined){
+                              lfm.track.getInfo({
+                                  'track' : lastfmsong[0],
+                                  'artist' : lastfmsong[1]
+                                  //'album' : lastfmsong[3]
+                              }, function (err, track) {
                                     console.log("SEARCHING LAST.FM");
+                                    console.log(track);
                                     //console.log(typeof album.image[2]["#text"]);
-                                    var albumart=album.image;
-                                    var name = currentsong[0];
-                                    var artist = album.artist;
-                                    var album = album.name;
-                                    var artlg=albumart[4]["#text"];
-                                    var artmd=albumart[3]["#text"];
-                                    var artsm=albumart[2]["#text"];
-                                    var trackid='-';
-                                    var albumid='-';
-                                    var albumartist=currentsong[2];
-                                    var playcount = currentsong[4];
-                                    console.log(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid);
-                                    songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid));
+                                    /*
+                                    var albumartlfm=album.image;
+                                    var namelfm = lastfmsong[0];
+                                    var artistlfm = album.artist;
+                                    var albumlfm = album.name;
+                                    var artlglfm=albumart[4]["#text"];
+                                    var artmdlfm=albumart[3]["#text"];
+                                    var artsmlfm=albumart[2]["#text"];
+                                    var trackidlfm='-';
+                                    var albumidlfm='-';
+                                    var albumartistlfm=album.artist;
+                                    var playcountlfm = lastfmsong[4];
+                                    console.log(namelfm,artistlfm,albumlfm,playcountlfm,artlglfm,artmdlfm,artsmlfm,trackidlfm,albumidlfm);
+                                    songarray.push(new Song(namelfm,artistlfm,albumlfm,playcountlfm,artlglfm,artmdlfm,artsmlfm,trackidlfm,albumidlfm));
+                                    */
                                     setTimeout(callback(),200000); 
-                                  }
+                        
                                   if (err) {
                                     console.log(err);
                                     callback();
                                   }
+                              }
                               });
                               
                             }
