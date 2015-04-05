@@ -102,14 +102,13 @@ exports.uploadXML = function(req,res){
                     songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid));
                     callback();
                   } else if (track==undefined || track.album==undefined || err){
-                    console.log("No data found for: ".cyan + lastfmsong[0] + " - " + lastfmsong[1]);
+                    console.log("No data found for: ".yellow + lastfmsong[0] + " - " + lastfmsong[1]);
                     callback();
                   } else {
                     callback();
                   }
                   if (err) {
-                    console.log("Error".red);
-                    console.log(err);
+                    console.log("Error: ".red,err);
                   }
 
                 });
@@ -223,9 +222,6 @@ exports.uploadXML = function(req,res){
 exports.userPage = function(req, res){
   var userLoadedQuery = "SELECT * FROM users WHERE user='"+req.params.user+"'";
   sqlStarter.connection.query(userLoadedQuery,function(err,rows,fields){
-    console.log("-------".red);
-    console.log(err);
-    console.log("-------".green);
     console.log(rows);
     if (!err && rows.length > 0){
       if (rows[0].complete != 1){
