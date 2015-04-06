@@ -80,57 +80,6 @@ exports.uploadXML = function(req,res){
                              //console.log(songarray.length); 
                              //show_image(albummd);
                              //albtest=artmd;
-<<<<<<< HEAD
-                           } else if (data.body.tracks.items[0]==undefined){
-                              lastfmsong=currentsong.slice(0);
-                              console.log("Spotify Searched for : "+lastfmsong[0]+" - "+lastfmsong[1]);
-                              console.log("Not Found on Spotify");
-                              lfm.track.getInfo({
-                                  'track' : lastfmsong[0],
-                                  'artist' : lastfmsong[1]
-                              }, function (err, track) {
-                                if (track!=undefined){
-                                  console.log("SEARCHING LAST.FM");
-                                  console.log(track.album["image"][0]["#text"]);
-                                  //console.log(typeof album.image[2]["#text"]);
-                                  //var albumart=track.album.image;
-
-                                  var name = track.name;
-                                  var artist = track.artist["name"];
-                                  if (track.album!=undefined){
-                                    var album = track.album["title"];
-                                    var artlg=track.album["image"][1]["#text"];
-                                    var artmd=track.album["image"][2]["#text"];
-                                    var artsm=track.album["image"][3]["#text"];
-                                    var albumartist=track.album["artist"];
-                                  } else {
-                                    callback(); 
-                                  }
-                                  
-                                  
-                                  var trackid='-';
-                                  var albumid='-';
-                                  var playcount = lastfmsong[4];
-                                  console.log(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid);
-                                  songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
-                                  setTimeout(callback(),200000);
-                                }
-                                  if (err) {
-                                    console.log(err);
-                                    callback();
-                                  }
-
-                              });
-                            }
-
-                        }, function(err) {
-                            errorCounter++;
-                            console.log(err);
-                            console.log(errorCounter);
-                            setTimeout(callback(), 200000);
-                            
-                            
-=======
                            }
 
                            if (data.body.tracks.items[0]==undefined){
@@ -170,7 +119,6 @@ callback();
   setTimeout(callback(), 200000);
 
 
->>>>>>> ecd1d84d7e965d5c80c5244812fdff7450e38ff0
                             //callback();
 
                             //console.log(songarray);
@@ -300,7 +248,9 @@ exports.albumData = function(req,res){
 	sqlStarter.connection.query(query,function(err,rows,fields){
 		if (!err){
 			albums = organize(rows);
-			res.send(albums);
+      sortedSongs = rows;
+      quickSort(sortedSongs,'title');
+			res.send([albums, sortedSongs]);
 		}else{
 			console.log(err);
 		}

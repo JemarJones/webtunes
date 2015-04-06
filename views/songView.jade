@@ -1,10 +1,11 @@
 //Component for song view
 table#songView.hide
 		tr.odd
-			th.highlighted Title
-			th Album
-			th Artist
-			th Playcount
+			th.sorter.highlighted Title
+			th.sorter Album
+			th.sorter Artist
+			th.sorter Playcount
+			th.playCol Playable?
 		- var index = 0//Used to count the songs so we can switch colors every other
 			each track in sortedSongs
 				if (index%2!=0)
@@ -13,10 +14,18 @@ table#songView.hide
 						td.album= track.album
 						td.artist= track.artist
 						td.playcount= track.playcount
+						if (track.track_id == "-")
+							td.notplayable
+						else
+							td.playable
 				else
 					tr.even.song(data-num= index, data-id= track.track_id)
 						td.title= track.title
 						td.album= track.album
 						td.artist= track.artist
 						td.playcount= track.playcount
+						if (track.track_id == "-")
+							td.notplayable
+						else
+							td.playable
 				- index = index + 1

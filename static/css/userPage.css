@@ -122,6 +122,12 @@ input:-moz-placeholder { color: rgba(255,255,255,0.6); }
 .even{
 	background-color: rgba(0,0,0,0.3);
 }
+.notplayable{
+	background-color: red;
+}
+.playable{
+	background-color: green;
+}
 #bg{
 	position: absolute;
 	display: none;
