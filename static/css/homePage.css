@@ -52,6 +52,12 @@ body {
   font-size: 30px;
 }
 
+#first_screen {
+  width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 #upload_button {
   font-family: "Roboto";
   display: inline-block;
@@ -113,5 +119,4 @@ body {
   margin-left: auto;
   display: block;
   margin-right: auto;
-  width: 300px;
 }

@@ -26,7 +26,10 @@ exports.uploadXML = function(req,res){
   var spotifyCounter=0;
   var databaseAddedCounter=0;
   var errorCounter=0;
-  var spotifyApi = new SpotifyWebApi();
+  var spotifyApi = new SpotifyWebApi({
+  clientId : '228486b3feaf411586151d99d358c135',
+  clientSecret : '4c9d49e596ac40809c1a4ac90c5fa0d3'
+});
   var started=0;
   var currentsong=['','','','',0];
 
