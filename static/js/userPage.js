@@ -10,10 +10,14 @@ var playableOnly = false;
 $(document).ready(function(){
 	initData();//Getting intial album and user data
 	$('#search').keyup(search);
+	$('#search').on('search',search);
+	$('#searchForm').submit(function(e){
+		e.preventDefault();
+		return false;
+	});
 	$('.navDiv').on('click',switchMode);
 	$('.albumCont').on('click',expandAlbum);
 	$('.song').on('click', expandSong);
-	$('.song').on('click', playRemaining);
 	$('#closeBar').on('click',closePlayer);
 	$('#albWrapper').on('click', playFull);
 	$('.sorter').on('click', sort);
@@ -125,7 +129,6 @@ var populateLib = function(songArray,showPlayableOnly){
 	}
 	//Giving newly created songs their event handlers
 	$('.song').on('click', expandSong);
-	$('.song').on('click', playRemaining);
 };
 //handler to expand an album when its clicked on
 var expandAlbum = function(){
@@ -164,17 +167,15 @@ var closePlayer = function(){
 var expandSong = function(){
 	if (!expanded){
 		expanded = true;
-		var elem = this;
-		var index = 0;
-		for (var i = 0; i < albums.length; i++){
-			for (var j = 0; j < albums[i].length;j++){
-				if (index == $(elem).attr("data-num")){
-					displayPlayer([albums[i][j].art_lg,albums[i][j].title ,albums[i][j].artist],$('#songView'));
-				}
-				index = index + 1;
-			}
-		}
+		var index = parseInt($(this).attr("data-num"),10);
+		displayPlayer([songs[index].art_lg,songs[index].title ,songs[index].artist],$('#songView'));
 		$('#albWrapper').removeClass('hover');
+		if ($(this).attr("data-id") !== "-"){
+			var src = "https://embed.spotify.com/?uri=spotify:trackset:"+$('#songAlbum').text()+ ":" + $(this).attr('data-id');
+			$('iframe').remove();
+			var iframe = $('<iframe frameborder="0" allowtransparency="true" src="'+src+'">'+'</iframe>');
+			$('#overlay').append(iframe);
+		}
 	}
 };
 //Loads provided data into spotify player and displays
@@ -202,22 +203,6 @@ var playTrack = function(){
 		$('#overlay').append(iframe);
 	}
 	$('#albWrapper').removeClass('hover');
-};
-//Plays up to around 70 songs after a clicked song (for library and inside album)
-var playRemaining = function(){
-	// var num = parseInt($(this).attr('data-num'),10);
-	var src = "https://embed.spotify.com/?uri=spotify:trackset:"+$('#songAlbum').text()+ ":" + $(this).attr('data-id');
-	// var elemClass = $(this).hasClass("track") ? ".track" : ".song";
-	// $(elemClass).each(function(){
-	// 	// if (parseInt($(this).attr('data-num'),10) >= num && (parseInt($(this).attr('data-num'),10) - num) <= 70){
-	// 	if (parseInt($(this).attr('data-num'),10) == num){
-	// 		src += $(this).attr('data-id');
-	// 	}
-	// });
-	// src = src.substring(0,src.length-1);
-	$('iframe').remove();
-	var iframe = $('<iframe frameborder="0" allowtransparency="true" src="'+src+'">'+'</iframe>');
-	$('#overlay').append(iframe);
 };
 //Plays a full album
 var playFull = function(){

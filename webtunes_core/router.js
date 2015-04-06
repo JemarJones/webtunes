@@ -287,7 +287,15 @@ exports.musicSearch = function(req, res){
       var matches = [];
       for (var i = 0; i < rows.length; i++){
         //TODO MAYBE?  Do substring search instead of indexOf
-        if (rows[i].title.toLowerCase().indexOf(key.toLowerCase()) > -1 || rows[i].album.toLowerCase().indexOf(key.toLowerCase()) > -1 || rows[i].artist.toLowerCase().indexOf(key.toLowerCase()) > -1){
+        //Here we check if all words in the key match song data from this song
+        var matched = true;
+        var keyParts = key.split(" ");
+        for (var k = 0; k < keyParts.length; k++){
+          if (!(rows[i].title.toLowerCase().indexOf(keyParts[k].toLowerCase()) > -1 || rows[i].album.toLowerCase().indexOf(keyParts[k].toLowerCase()) > -1 || rows[i].artist.toLowerCase().indexOf(keyParts[k].toLowerCase()) > -1)){
+            matched = false;
+          }
+        }
+        if (matched){
           matches[matches.length] = rows[i];
         }
       }
@@ -335,10 +343,10 @@ var quickSort = function(a,sortBy){
 
     var lt = lo;
     var gt = hi;
-    var v = charAt(a[lo], d);
+    var v = getVal(a[lo],sortBy)[d];
     var i = lo + 1;
     while (i <= gt) {
-      var t = charAt(a[i], d);
+      var t = getVal(a[i],sortBy)[d];
       if (t < v){
         exch(a, lt++, i++);
       } else if (t > v) {
@@ -350,7 +358,10 @@ var quickSort = function(a,sortBy){
 
     // a[lo..lt-1] < v = a[lt..gt] < a[gt+1..hi]. 
     sortStr(a, lo, lt-1, d);
-    if (v >= 0) {
+    // if (v >= 0) {
+    //   sortStr(a, lt, gt, d+1);
+    // }
+    if (v !== undefined) {
       sortStr(a, lt, gt, d+1);
     }
     sortStr(a, gt+1, hi, d);
