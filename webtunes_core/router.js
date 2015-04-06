@@ -64,7 +64,7 @@ exports.uploadXML = function(req,res){
           // console.log(data.body.tracks.items[0].name);
           if (data.body.tracks.items[0]!=undefined){
            var spotifysong=data.body.tracks.items[0];
-               //console.log(spotifysong);
+               console.log(spotifysong);
                var name = spotifysong.name;
                var artist = spotifysong.artists[0].name;
                var album = spotifysong.album.name;
@@ -78,7 +78,7 @@ exports.uploadXML = function(req,res){
                console.log("Found Spotify data for: ".cyan+name+" - "+artist);
                songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
                //albumarray.push(new Album(artmd,album,albumartist));
-               setTimeout(callback(),1000);
+               callback();
           } else {
                 lastfmsong=currentsong.slice(0);
                 console.log("Not found on Spotify: ".cyan +lastfmsong[0]+" - "+lastfmsong[1]);
@@ -108,16 +108,16 @@ exports.uploadXML = function(req,res){
                   if (err) {
                     console.log("Error: ".red,err);
                   }
-
+                }
                 });
-              }
+          }
         }, function(err) {
             errorCounter++;
             console.log(err);
             console.log(errorCounter);
             callback();
         });
-      },10);
+      },5);
 
         //Add all of the items to the queue
         for(var i=0;i<extracteddata.length;i++){
