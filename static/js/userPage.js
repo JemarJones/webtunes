@@ -52,7 +52,7 @@ var search = function(){
 	$.get("../../organize/" + user + keySection + "/" + sortBy , function(searchMatches){
 		if (lastKey == key){//Due to async if a new key has been requested since this one, we stop trying to do this one
 			populateLib(searchMatches[0],playableOnly);//Loading matches songs into library
-			songs = searchMatches[1];
+			songs = searchMatches[0];
 			//Populating album view with matched albums
 			$('.albumCont').remove();//My testing shows that removing everything and repopulating is faster and simpler than going through and removing things that don't match
 			albums = searchMatches[1];//Updating this global variable so the code to play albums works as expected
