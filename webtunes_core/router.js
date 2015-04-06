@@ -21,6 +21,7 @@ exports.uploadXML = function(req,res){
 	var songarray=new Array();
 	var albumarray=new Array();
 	var playcounter;
+  var parsedCounter = 0;
 	var albtest;
   var spotifyCounter=0;
   var databaseAddedCounter=0;
@@ -30,102 +31,100 @@ exports.uploadXML = function(req,res){
   var currentsong=['','','','',0];
 
   fs.readFile(req.files.xml_file.path, function(err, data) {
+    if(err){
+      console.log("Error reading XML.");
+      res.send("Critical Error: Failed to load file");
+    }
+
+    console.log("XMl Read successfully.");
+
+
     var document = new xmldoc.XmlDocument(data);
     var extracteddata = document.childrenNamed("dict")[0].childrenNamed("dict")[0].childrenNamed("dict");
           //extracteddata=result.plist.dict[0].dict[0].dict;
-                /*
-                    HEY GUYS WE'RE SOFTWARE ENGINEERS! LOOK AT US USE A QUEUE!
-                    */
-                    var spotifyQueue = async.queue(function(task,callback){
-                      var thissong = task.thissong;
-                    //var thisint = task.thisint;
-                    //var keycheck = task.keycheck;
+    /*
+      HEY GUYS WE'RE SOFTWARE ENGINEERS! LOOK AT US USE A QUEUE!
+    */
+    var spotifyQueue = async.queue(function(task,callback){
+      var thissong = task.thissong;
+      currentsong=['','','','',0];
 
-                    currentsong=['','','','',0];
-                    //var playcount=0;
-                    //console.log(thissong);
+      for (k=0;k<thissong.length-1;k++){
 
-                    for (k=0;k<thissong.length-1;k++){
+        if (thissong[k]==" Name"){currentsong[0]=thissong[k+1].split("  ")[1].replace(/ft\./g,"").replace(/feat\./g,"").replace(/\(/g,"").replace(/\)/g,"").replace(/Feat\./g,"").replace(/Ft\./g,"");}
+        if (thissong[k]==" Artist"){currentsong[1]=thissong[k+1].split("  ")[1];}
+        if (thissong[k]==" Album Artist"){currentsong[2]=thissong[k+1].split("  ")[1];}
+        if (thissong[k]==" Album"){currentsong[3]=thissong[k+1].split("  ")[1];}
+        if (thissong[k]==" Play Count"){currentsong[4]=thissong[k+1].split("  ")[1];}
+        //if (thissong[k].split("  ")[1]=="Podcast"){setTimeout(callback(),1000);}
+      }
 
-                      if (thissong[k]==" Name"){currentsong[0]=thissong[k+1].split("  ")[1].replace(/ft\./g,"").replace(/feat\./g,"").replace(/\(/g,"").replace(/\)/g,"");}
-                      if (thissong[k]==" Artist"){currentsong[1]=thissong[k+1].split("  ")[1];}
-                      if (thissong[k]==" Album Artist"){currentsong[2]=thissong[k+1].split("  ")[1];}
-                      if (thissong[k]==" Album"){currentsong[3]=thissong[k+1].split("  ")[1];}
-                      if (thissong[k]==" Play Count"){currentsong[4]=thissong[k+1].split("  ")[1];}
-                      if (thissong[k].split("  ")[1]=="Podcast"){callback();}
-                    }
-                    //console.log(currentsong);
-                    spotifyApi.searchTracks(currentsong[0]+" - "+currentsong[1])
-                    .then(function(data) {
-                        // console.log(data.body.tracks.items[0].name);
-                        if (data.body.tracks.items[0]!=undefined){
-                         var spotifysong=data.body.tracks.items[0];
-                             //console.log(spotifysong);
-                             var name = spotifysong.name;
-                             var artist = spotifysong.artists[0].name;
-                             var album = spotifysong.album.name;
-                             var artlg=spotifysong.album.images[0].url;
-                             var artmd=spotifysong.album.images[1].url;
-                             var artsm=spotifysong.album.images[2].url;
-                             var trackid=spotifysong.id;
-                             var albumid=spotifysong.album.id;
-                             var albumartist=currentsong[2];
-                             var playcount = currentsong[4];
-                             console.log(name+" - "+artist);
-                             console.log(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid);
+      spotifyApi.searchTracks(currentsong[0]+" - "+currentsong[1])
+        .then(function(data) {
+          // console.log(data.body.tracks.items[0].name);
+          if (data.body.tracks.items[0]!=undefined){
+           var spotifysong=data.body.tracks.items[0];
+               //console.log(spotifysong.album.images);
+               if (spotifysong.album.images.length!=0){
+                 var name = spotifysong.name;
+                 var artist = spotifysong.artists[0].name;
+                 var album = spotifysong.album.name;
+                 var artlg=spotifysong.album.images[0].url;
+                 var artmd=spotifysong.album.images[1].url;
+                 var artsm=spotifysong.album.images[2].url;
+                 var trackid=spotifysong.id;
+                 var albumid=spotifysong.album.id;
+                 var albumartist=currentsong[2];
+                 var playcount = currentsong[4];
+                 console.log("Found Spotify data for: ".cyan+name+" - "+artist);
+                 songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
+                 //albumarray.push(new Album(artmd,album,albumartist));
+                 callback();
+               } else {
+                 console.log("No Album Art");
+                 callback();
+               }
 
-                             songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
-                             //albumarray.push(new Album(artmd,album,albumartist));
-                             setTimeout(callback(),200000);
-                             //console.log(songarray.length); 
-                             //show_image(albummd);
-                             //albtest=artmd;
-                           }
+          } else {
+                lastfmsong=currentsong.slice(0);
+                console.log("Not found on Spotify: ".cyan +lastfmsong[0]+" - "+lastfmsong[1]);
+                lfm.track.getInfo({
+                    'track' : lastfmsong[0],
+                    'artist' : lastfmsong[1]
+                }, function (err, track) {
+                  if (track!=undefined && track.album!=undefined){
+                    var name = track.name;
+                    var artist = track.artist["name"];
+                    var album = track.album["title"];
+                    var artlg=track.album["image"][1]["#text"];
+                    var artmd=track.album["image"][2]["#text"];
+                    var artsm=track.album["image"][3]["#text"];
+                    var albumartist=track.album["artist"];
+                    var trackid='-';
+                    var albumid='-';
+                    var playcount = lastfmsong[4];
+                    //console.log(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid);
+                    console.log("Found Last.fm data for: ".cyan + name + " - " + artist);
+                    songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid));
+                    callback();
+                  } else if (track==undefined || track.album==undefined || err){
+                    console.log("No data found for: ".yellow + lastfmsong[0] + " - " + lastfmsong[1]);
+                    callback();
+                  }
+                  if (err) {
+                    console.log("Error: ".red,err);
+                  }
+                });
+          }
+        }, function(err) {
+            errorCounter++;
+            console.log(err);
+            console.log(errorCounter);
+            callback();
+        });
+      },5);
 
-                           if (data.body.tracks.items[0]==undefined){
-                            console.log("Spotify Searched for : "+currentsong[0]+" - "+currentsong[1]);
-                            console.log("Not Found on Spotify");
-                            lfm.album.getInfo({
-                              'artist' : currentsong[1],
-                                  //'track' : currentsong[0]
-                                  'album' : currentsong[3]
-                                }, function (err, album) {
-                                  if (album!=undefined){
-                                    console.log("SEARCHING LAST.FM");
-                                    //console.log(typeof album.image[2]["#text"]);
-                                    var albumart=album.image;
-                                    var name = currentsong[0];
-                                    var artist = album.artist;
-                                    var album = album.name;
-                                    var artlg=albumart[4]["#text"];
-                                    var artmd=albumart[3]["#text"];
-                                    var artsm=albumart[2]["#text"];
-                                    var trackid='-';
-                                    var albumid='-';
-                                    var albumartist=currentsong[2];
-                                    var playcount = currentsong[4];
-                                    console.log(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid);
-                                    songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
-                                  }
-                                  if (err) {console.log(err);}
-                                });
-callback();
-}
-
-}, function(err) {
-  errorCounter++;
-  console.log(err);
-  console.log(errorCounter);
-  setTimeout(callback(), 200000);
-
-
-                            //callback();
-
-                            //console.log(songarray);
-                          });
-},4);
-
-        //spotifyQueue.pause();
+        //Add all of the items to the queue
         for(var i=0;i<extracteddata.length;i++){
                     //Put each item from the data into are queue to be processed by spotify
                     var parseString=extracteddata[i].toString().replace(/\s<key>/g,"").replace(/<\/key>/g,"").replace(/<integer>/g,"").replace(/<\/integer>/g,"").replace(/<string>/g,"").replace(/<\/string>/g,"");
@@ -137,85 +136,100 @@ callback();
                         //thissong : extracteddata[i].string,
                         //thisint : extracteddata[i].integer,
                         //keycheck : extracteddata[i].key
-                      },function (err) {
-                       if (spotifyQueue.length()==0 && started==0){
-                        console.log("qwert");
+                    },function (err) {
+                      parsedCounter++;
+                      //Every 5 or so, update the DB (or if it's the last one)
+                      if(spotifyQueue.length()==0 || parsedCounter%5 == 0){
+                        var update_trackcount = "UPDATE users SET track_count='"+parsedCounter+"' WHERE user='"+req.body.username+"'";
+                        sqlStarter.connection.query(update_trackcount,function(err,rows){
+                          if(err){
+                            console.log(err);
+                          }
+                          console.log("Updated the parsedCounter on the SQL Database".green);
+                        });
+                      }
+
+
+                      if (spotifyQueue.length()==0 && started==0){
                         spotifyQueue.drain();
                       }
-                      console.log(spotifyQueue.length());
+
+                      console.log("Queue items left: ".magenta + spotifyQueue.length());
                     });
-
-
-                  }
+        }
                 //spotifyQueue.resume();
 
-                spotifyQueue.drain = function(){
-                    //Once the queue is empty
-                    console.log("All items processed.");
-                    //res.render('customCoverArt',{css: ['./css/userPage.css'],js: ['./js/userPage.js'], albums: albumarray});
-                    
-                    //Let's just push this to the sql db for now.
-                    for(var i=0;i<songarray.length;i++){
-                      started=1;
-                      var song = songarray[i];
-                        //song.name=song.name.replace(/-/g,"").replace(/\?/g,"").replace(/Interlude/g,"");
-                        var query = "INSERT INTO user_libraries (user,title,artist,album,playcount,art_lg,art_md,art_sm,track_id,album_id) VALUES ('"+req.body.username+"','"
-                          +sqlStarter.escape(song.name)+"','"
-                          +sqlStarter.escape(song.artist)+"','"
-                          +sqlStarter.escape(song.album)+"',"
-                          +song.playcount+",'"
-                          +sqlStarter.escape(song.artlg)+"','"
-                          +sqlStarter.escape(song.artmd)+"','"
-                          +sqlStarter.escape(song.artsm)+"','"
-                          +sqlStarter.escape(song.trackid)+"','"
-                          +sqlStarter.escape(song.albumid)+"')";
+        spotifyQueue.drain = function(){
+          //Once the queue is empty
+          console.log("All items processed.".magenta);
+          //res.render('customCoverArt',{css: ['./css/userPage.css'],js: ['./js/userPage.js'], albums: albumarray});
+          
+          //Let's just push this to the sql db for now.
+          for(var i=0;i<songarray.length;i++){
+            started=1;
+            var song = songarray[i];
+            //song.name=song.name.replace(/-/g,"").replace(/\?/g,"").replace(/Interlude/g,"");
+            var query = "INSERT INTO user_libraries (user,title,artist,album,playcount,art_lg,art_md,art_sm,track_id,album_id) VALUES ('"+req.body.username+"','"
+              +sqlStarter.escape(song.name)+"','"
+              +sqlStarter.escape(song.artist)+"','"
+              +sqlStarter.escape(song.album)+"',"
+              +song.playcount+",'"
+              +sqlStarter.escape(song.artlg)+"','"
+              +sqlStarter.escape(song.artmd)+"','"
+              +sqlStarter.escape(song.artsm)+"','"
+              +sqlStarter.escape(song.trackid)+"','"
+              +sqlStarter.escape(song.albumid)+"')";
 
-spotifyCounter++;
-console.log(query);
+            spotifyCounter++;
+            //console.log(query);
 
-sqlStarter.connection.query(query,function(err,rows,fields){
-  if (!err){
-    databaseAddedCounter++;
-    console.log("Added to db.");
-    console.log("i ="+i+" databaseAddedCounter = "+ databaseAddedCounter+" spotifyCounter = "+spotifyCounter);
-                                //console.log(spotifyQueue.length());
-                                if (databaseAddedCounter==spotifyCounter){
-                                  console.log("Everything added to DB");
-                                  console.log("Number of songs where the API timed out = "+errorCounter);
-                                  var querydone = "INSERT INTO users (user,complete) VALUES ('"+req.body.username+"','"
-                                    +1+"')";
-sqlStarter.connection.query(querydone,function(err,rows,fields){
-  if (!err){
-    console.log("COMPLETED VALUE UPDATED TO USERS DB.");
-  }else{
-    console.log(err);
-  }
-});
-}
-
-}else{
-  console.log(err);
-}
-});
-
-}
-}   
-});	res.render('waitingRoom',{css: ['../css/loader.css'],js:['https://code.jquery.com/jquery-2.1.3.min.js','../js/pinger.js'],user:req.body.username});
-
+            sqlStarter.connection.query(query,function(err,rows,fields){
+              if (!err){
+                databaseAddedCounter++;
+                console.log("Added to db.");
+                console.log("i ="+i+" databaseAddedCounter = "+ databaseAddedCounter+" spotifyCounter = "+spotifyCounter);
+                        //console.log(spotifyQueue.length());
+                        if (databaseAddedCounter==spotifyCounter){
+                          //Update complete to 1
+                          var update_complete = "UPDATE users SET complete=1 WHERE user='"+req.body.username+"'";
+                          sqlStarter.connection.query(update_complete,function(err,rows,fields){
+                            console.log("Everything added to DB".green.bold);
+                            console.log("Number of songs where the API timed out = "+errorCounter);
+                          });
+                        }
+              } else {
+                console.log(err);
+              }
+            });
+          }
+        }   
+  
+    spotifyQueue.pause();
+    //Now let's render the waiting room. First update the database to include the final size of the library
+    var add_user = "INSERT INTO users (user,complete,track_count,total_tracks) VALUES ('"+req.body.username+"','0','0','"+spotifyQueue.length()+"')";
+    console.log("Adding the user. "+add_user);
+    sqlStarter.connection.query(add_user,function(err,rows,fields){
+      if(!err){
+        console.log("User added");
+        spotifyQueue.resume();
+        res.render('waitingRoom',{css: ['../css/loader.css','//fonts.googleapis.com/css?family=Roboto:100'],js:['https://code.jquery.com/jquery-2.1.3.min.js','../js/pinger.js'],user:req.body.username});
+      } else {
+        console.log(err);
+        res.send("Database error");
+      }
+    });
+  });
 };
 
 //Router functions for the userPage
 exports.userPage = function(req, res){
   var userLoadedQuery = "SELECT * FROM users WHERE user='"+req.params.user+"'";
   sqlStarter.connection.query(userLoadedQuery,function(err,rows,fields){
-    console.log("-------".red);
-    console.log(err);
-    console.log("-------".green);
     console.log(rows);
     if (!err && rows.length > 0){
       if (rows[0].complete != 1){
         //User isnt done loading so we pull up the load screen
-        res.render('waitingRoom',{css: ['../css/loader.css'],js:[]});
+        res.render('waitingRoom',{css: ['../css/loader.css','//fonts.googleapis.com/css?family=Roboto:100'],js:['https://code.jquery.com/jquery-2.1.3.min.js','../js/pinger.js'],user:req.params.user});
       }else{
         //The user exists and is done loading so he go ahead and render there page
         var query = "SELECT * FROM user_libraries WHERE user='"+req.params.user+"'";
@@ -439,7 +453,12 @@ var quickSort = function(a,sortBy){
 				//No user by that name exists.
 				res.send("User Not Found");
 			} else {
-        res.send("done");
+        var sentVar = {};
+        sentVar.user = rows[0].user;
+        sentVar.complete = rows[0].complete;
+        sentVar.progress = rows[0].track_count;
+        sentVar.outof = rows[0].total_tracks;
+        res.send(sentVar);
       }
 		} else {
 			console.log(err);
