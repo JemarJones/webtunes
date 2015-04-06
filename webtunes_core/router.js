@@ -100,10 +100,10 @@ exports.uploadXML = function(req,res){
                     //console.log(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid);
                     console.log("Found Last.fm data for: ".cyan + name + " - " + artist);
                     songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid));
-                    setTimeout(callback(),1000);
+                    callback();
                   } else if (track==undefined || track.album==undefined || err){
                     console.log("No data found for: ".yellow + lastfmsong[0] + " - " + lastfmsong[1]);
-                    setTimeout(callback(),1000);
+                    callback();
                   }
                   if (err) {
                     console.log("Error: ".red,err);
