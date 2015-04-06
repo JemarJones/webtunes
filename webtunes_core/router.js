@@ -51,7 +51,7 @@ exports.uploadXML = function(req,res){
 
       for (k=0;k<thissong.length-1;k++){
 
-        if (thissong[k]==" Name"){currentsong[0]=thissong[k+1].split("  ")[1].replace(/ft\./g,"").replace(/feat\./g,"").replace(/\(/g,"").replace(/\)/g,"");}
+        if (thissong[k]==" Name"){currentsong[0]=thissong[k+1].split("  ")[1].replace(/ft\./g,"").replace(/feat\./g,"").replace(/\(/g,"").replace(/\)/g,"").replace(/Feat\./g,"").replace(/Ft\./g,"");}
         if (thissong[k]==" Artist"){currentsong[1]=thissong[k+1].split("  ")[1];}
         if (thissong[k]==" Album Artist"){currentsong[2]=thissong[k+1].split("  ")[1];}
         if (thissong[k]==" Album"){currentsong[3]=thissong[k+1].split("  ")[1];}
