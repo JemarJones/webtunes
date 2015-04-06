@@ -64,8 +64,8 @@ exports.uploadXML = function(req,res){
       console.log(currentsong);
       spotifyApi.searchTracks(currentsong[0]+" - "+currentsong[1])
         .then(function(data) {
-          console.log(data.body.tracks.items[0]);
-          console.log(data.body.tracks.items[0].album.images);
+          //console.log(data.body.tracks.items[0]);
+          //console.log(data.body.tracks.items[0].album.images);
           if (data.body.tracks.items[0]!=undefined){
                var spotifysong=data.body.tracks.items[0];
                console.log(spotifysong);
