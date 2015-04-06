@@ -155,9 +155,9 @@ exports.uploadXML = function(req,res){
                       }
 
 
-                      if (spotifyQueue.length()==0 && started==0){
-                        spotifyQueue.drain();
-                      }
+                      //if (spotifyQueue.length()==0 && started==0){
+                      //  spotifyQueue.drain();
+                      //}
 
                       console.log("Queue items left: ".magenta + spotifyQueue.length());
                     });
