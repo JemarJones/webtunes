@@ -209,7 +209,7 @@ exports.uploadXML = function(req,res){
       if(!err){
         console.log("User added");
         spotifyQueue.resume();
-        res.render('waitingRoom',{css: ['../css/loader.css'],js:['https://code.jquery.com/jquery-2.1.3.min.js','../js/pinger.js'],user:req.body.username});
+        res.render('waitingRoom',{css: ['../css/loader.css','//fonts.googleapis.com/css?family=Roboto:100'],js:['https://code.jquery.com/jquery-2.1.3.min.js','../js/pinger.js'],user:req.body.username});
       } else {
         console.log(err);
         res.send("Database error");
@@ -226,7 +226,7 @@ exports.userPage = function(req, res){
     if (!err && rows.length > 0){
       if (rows[0].complete != 1){
         //User isnt done loading so we pull up the load screen
-        res.render('waitingRoom',{css: ['../css/loader.css'],js:['https://code.jquery.com/jquery-2.1.3.min.js','../js/pinger.js'],user:req.params.user});
+        res.render('waitingRoom',{css: ['../css/loader.css','//fonts.googleapis.com/css?family=Roboto:100'],js:['https://code.jquery.com/jquery-2.1.3.min.js','../js/pinger.js'],user:req.params.user});
       }else{
         //The user exists and is done loading so he go ahead and render there page
         var query = "SELECT * FROM user_libraries WHERE user='"+req.params.user+"'";

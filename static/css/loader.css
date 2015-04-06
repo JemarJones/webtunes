@@ -118,7 +118,7 @@ body {
 /* The loader container */
 .loader {
   position: absolute;
-  top: 50%;
+  top: 450px;
   left: 50%;
 
   width: 160px;
