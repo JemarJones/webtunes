@@ -20,7 +20,7 @@ body {
 	margin-left:auto;
 	margin-right:auto;
 	margin-top:200px;
-	width:300px;
+	width:600px;
 	height:55px;
   text-align:center;
   font-family:"Roboto";
@@ -31,7 +31,25 @@ body {
 }
 
 .username_desc {
-  font-size:16px;
+  font-size:20px;
+  font-weight:bold;
+}
+
+#choose_user input {
+  height:30px;
+  border: 1px solid #92cdcf;
+  font-size:20px;
+  margin-left:5px;
+  padding-top:8px;
+}
+
+#webtunes_submit {
+  height: 50px;
+  width: 200px;
+  background-color: #445878;
+  border: none;
+  color: #fff;
+  font-size: 30px;
 }
 
 #upload_button {
