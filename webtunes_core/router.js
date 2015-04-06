@@ -61,24 +61,30 @@ exports.uploadXML = function(req,res){
 
       spotifyApi.searchTracks(currentsong[0]+" - "+currentsong[1])
         .then(function(data) {
-          // console.log(data.body.tracks.items[0].name);
+          console.log(data.body.tracks.items[0].album.images);
           if (data.body.tracks.items[0]!=undefined){
            var spotifysong=data.body.tracks.items[0];
-               //console.log(spotifysong);
-               var name = spotifysong.name;
-               var artist = spotifysong.artists[0].name;
-               var album = spotifysong.album.name;
-               var artlg=spotifysong.album.images[0].url;
-               var artmd=spotifysong.album.images[1].url;
-               var artsm=spotifysong.album.images[2].url;
-               var trackid=spotifysong.id;
-               var albumid=spotifysong.album.id;
-               var albumartist=currentsong[2];
-               var playcount = currentsong[4];
-               console.log("Found Spotify data for: ".cyan+name+" - "+artist);
-               songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
-               //albumarray.push(new Album(artmd,album,albumartist));
-               setTimeout(callback(),1000);
+               //console.log(spotifysong.album.images);
+               if (spotifysong.album.images.length!=0){
+                 var name = spotifysong.name;
+                 var artist = spotifysong.artists[0].name;
+                 var album = spotifysong.album.name;
+                 var artlg=spotifysong.album.images[0].url;
+                 var artmd=spotifysong.album.images[1].url;
+                 var artsm=spotifysong.album.images[2].url;
+                 var trackid=spotifysong.id;
+                 var albumid=spotifysong.album.id;
+                 var albumartist=currentsong[2];
+                 var playcount = currentsong[4];
+                 console.log("Found Spotify data for: ".cyan+name+" - "+artist);
+                 songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
+                 //albumarray.push(new Album(artmd,album,albumartist));
+                 callback();
+               } else {
+                 console.log("No Album Art");
+                 callback();
+               }
+
           } else {
                 lastfmsong=currentsong.slice(0);
                 console.log("Not found on Spotify: ".cyan +lastfmsong[0]+" - "+lastfmsong[1]);
@@ -100,24 +106,21 @@ exports.uploadXML = function(req,res){
                     //console.log(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid);
                     console.log("Found Last.fm data for: ".cyan + name + " - " + artist);
                     songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid));
-                    setTimeout(callback(),1000);
+                    callback();
                   } else if (track==undefined || track.album==undefined || err){
                     console.log("No data found for: ".yellow + lastfmsong[0] + " - " + lastfmsong[1]);
-                    setTimeout(callback(),1000);
-                  } else {
-                    setTimeout(callback(),1000);
+                    callback();
                   }
                   if (err) {
                     console.log("Error: ".red,err);
                   }
-
                 });
-              }
+          }
         }, function(err) {
             errorCounter++;
             console.log(err);
             console.log(errorCounter);
-            setTimeout(callback(),1000);
+            callback();
         });
       },5);
 
@@ -259,7 +262,9 @@ exports.albumData = function(req,res){
 	sqlStarter.connection.query(query,function(err,rows,fields){
 		if (!err){
 			albums = organize(rows);
-			res.send(albums);
+      sortedSongs = rows;
+      quickSort(sortedSongs,'title');
+			res.send([albums, sortedSongs]);
 		}else{
 			console.log(err);
 		}
