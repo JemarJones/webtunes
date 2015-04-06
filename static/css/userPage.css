@@ -14,6 +14,12 @@ body{
 	margin-left: -10px;
 	border-bottom: 7px solid rgb(68,89,120);
 }
+#logo img {
+	height:50px;
+	position:absolute;
+	left:0px;
+	top:0px;
+}
 #nav{
 	position: relative;
 	top: 75%;
