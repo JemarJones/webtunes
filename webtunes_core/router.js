@@ -262,7 +262,9 @@ exports.albumData = function(req,res){
 	sqlStarter.connection.query(query,function(err,rows,fields){
 		if (!err){
 			albums = organize(rows);
-			res.send(albums);
+      sortedSongs = rows;
+      quickSort(sortedSongs,'title');
+			res.send([albums, sortedSongs]);
 		}else{
 			console.log(err);
 		}
