@@ -108,7 +108,6 @@ exports.uploadXML = function(req,res){
                   if (err) {
                     console.log("Error: ".red,err);
                   }
-                }
                 });
           }
         }, function(err) {
