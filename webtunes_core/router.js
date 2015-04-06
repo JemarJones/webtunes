@@ -361,11 +361,7 @@ var quickSort = function(a,sortBy){
       }
     }
 
-    // a[lo..lt-1] < v = a[lt..gt] < a[gt+1..hi]. 
     sortStr(a, lo, lt-1, d);
-    // if (v >= 0) {
-    //   sortStr(a, lt, gt, d+1);
-    // }
     if (v !== undefined) {
       sortStr(a, lt, gt, d+1);
     }
@@ -416,7 +412,7 @@ var quickSort = function(a,sortBy){
   };
   var insertionInt = function(a,lo,hi){
     for (var i = lo; i <= hi; i++){
-      for (var j = i; j > lo && a[j] > a[j-1]; j--){
+      for (var j = i; j > lo && a[j].playcount > a[j-1].playcount; j--){
           exch(a, j, j-1);
         }
       }
