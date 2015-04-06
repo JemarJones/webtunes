@@ -56,7 +56,7 @@ exports.uploadXML = function(req,res){
         if (thissong[k]==" Album Artist"){currentsong[2]=thissong[k+1].split("  ")[1];}
         if (thissong[k]==" Album"){currentsong[3]=thissong[k+1].split("  ")[1];}
         if (thissong[k]==" Play Count"){currentsong[4]=thissong[k+1].split("  ")[1];}
-        //if (thissong[k].split("  ")[1]=="Podcast"){setTimeout(callback(),1000);}
+        //if (thissong[k].split("  ")[1]=="Podcast"){setTimeout(callback(),2000);;}
       }
 
       spotifyApi.searchTracks(currentsong[0]+" - "+currentsong[1])
@@ -78,7 +78,7 @@ exports.uploadXML = function(req,res){
                console.log("Found Spotify data for: ".cyan+name+" - "+artist);
                songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
                //albumarray.push(new Album(artmd,album,albumartist));
-               setTimeout(callback(),1000);
+               setTimeout(callback(),2000);;
           } else {
                 lastfmsong=currentsong.slice(0);
                 console.log("Not found on Spotify: ".cyan +lastfmsong[0]+" - "+lastfmsong[1]);
@@ -100,12 +100,12 @@ exports.uploadXML = function(req,res){
                     //console.log(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid);
                     console.log("Found Last.fm data for: ".cyan + name + " - " + artist);
                     songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid));
-                    setTimeout(callback(),1000);
+                    setTimeout(callback(),2000);;
                   } else if (track==undefined || track.album==undefined || err){
                     console.log("No data found for: ".yellow + lastfmsong[0] + " - " + lastfmsong[1]);
-                    setTimeout(callback(),1000);
+                    setTimeout(callback(),2000);;
                   } else {
-                    setTimeout(callback(),1000);
+                    setTimeout(callback(),2000);;
                   }
                   if (err) {
                     console.log("Error: ".red,err);
@@ -117,7 +117,7 @@ exports.uploadXML = function(req,res){
             errorCounter++;
             console.log(err);
             console.log(errorCounter);
-            setTimeout(callback(),1000);
+            setTimeout(callback(),2000);;
         });
       },5);
 
