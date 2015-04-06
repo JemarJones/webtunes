@@ -65,20 +65,26 @@ exports.uploadXML = function(req,res){
           if (data.body.tracks.items[0]!=undefined){
            var spotifysong=data.body.tracks.items[0];
                console.log(spotifysong.album.images);
-               var name = spotifysong.name;
-               var artist = spotifysong.artists[0].name;
-               var album = spotifysong.album.name;
-               var artlg=spotifysong.album.images[0].url;
-               var artmd=spotifysong.album.images[1].url;
-               var artsm=spotifysong.album.images[2].url;
-               var trackid=spotifysong.id;
-               var albumid=spotifysong.album.id;
-               var albumartist=currentsong[2];
-               var playcount = currentsong[4];
-               console.log("Found Spotify data for: ".cyan+name+" - "+artist);
-               songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
-               //albumarray.push(new Album(artmd,album,albumartist));
-               callback();
+               if (spotifysong.album.images.length!=0){
+                 var name = spotifysong.name;
+                 var artist = spotifysong.artists[0].name;
+                 var album = spotifysong.album.name;
+                 var artlg=spotifysong.album.images[0].url;
+                 var artmd=spotifysong.album.images[1].url;
+                 var artsm=spotifysong.album.images[2].url;
+                 var trackid=spotifysong.id;
+                 var albumid=spotifysong.album.id;
+                 var albumartist=currentsong[2];
+                 var playcount = currentsong[4];
+                 console.log("Found Spotify data for: ".cyan+name+" - "+artist);
+                 songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
+                 //albumarray.push(new Album(artmd,album,albumartist));
+                 callback();
+               } else {
+                 console.log("No Album Art");
+                 callback();
+               }
+
           } else {
                 lastfmsong=currentsong.slice(0);
                 console.log("Not found on Spotify: ".cyan +lastfmsong[0]+" - "+lastfmsong[1]);
