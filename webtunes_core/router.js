@@ -85,7 +85,7 @@ exports.uploadXML = function(req,res){
                  songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
                  //albumarray.push(new Album(artmd,album,albumartist));
                  callback();
-               } else {
+               } else if (spotifysong.album.images.length==0) {
                  console.log("No Album Art");
                  callback();
                }
