@@ -64,7 +64,7 @@ exports.uploadXML = function(req,res){
           // console.log(data.body.tracks.items[0].name);
           if (data.body.tracks.items[0]!=undefined){
            var spotifysong=data.body.tracks.items[0];
-               console.log(spotifysong.album.images);
+               //console.log(spotifysong.album.images);
                if (spotifysong.album.images.length!=0){
                  var name = spotifysong.name;
                  var artist = spotifysong.artists[0].name;
