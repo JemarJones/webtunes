@@ -26,7 +26,10 @@ exports.uploadXML = function(req,res){
   var spotifyCounter=0;
   var databaseAddedCounter=0;
   var errorCounter=0;
-  var spotifyApi = new SpotifyWebApi();
+  var spotifyApi = new SpotifyWebApi({
+  clientId : '228486b3feaf411586151d99d358c135',
+  clientSecret : '4c9d49e596ac40809c1a4ac90c5fa0d3'
+});
   var started=0;
   var currentsong=['','','','',0];
 
@@ -58,13 +61,15 @@ exports.uploadXML = function(req,res){
         if (thissong[k]==" Play Count"){currentsong[4]=thissong[k+1].split("  ")[1];}
         //if (thissong[k].split("  ")[1]=="Podcast"){setTimeout(callback(),1000);}
       }
-
+      console.log(currentsong);
       spotifyApi.searchTracks(currentsong[0]+" - "+currentsong[1])
         .then(function(data) {
-          // console.log(data.body.tracks.items[0].name);
+          //console.log(data.body.tracks.items[0]);
+          //console.log(data.body.tracks.items[0].album.images);
           if (data.body.tracks.items[0]!=undefined){
-           var spotifysong=data.body.tracks.items[0];
-               //console.log(spotifysong.album.images);
+               var spotifysong=data.body.tracks.items[0];
+               console.log(spotifysong);
+               console.log(spotifysong.album.images);
                if (spotifysong.album.images.length!=0){
                  var name = spotifysong.name;
                  var artist = spotifysong.artists[0].name;
