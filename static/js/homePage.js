@@ -23,7 +23,7 @@ $(document).ready(function(){
 					$('#usernameStatus').text('Username good!');
 					$('#usernameStatus').css('color', 'green');
 					$('#webtunes_submit').attr('disabled',false);//Letting them submit
-					$('#webtunes_submit').css('background-color', '#445878')
+					$('#webtunes_submit').css('background-color', '#445878');
 				}
 			});
 		}else{
