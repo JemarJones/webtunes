@@ -13,10 +13,46 @@ var colors = require('colors');
 exports.homePage = function(req,res){
 	res.render('homePage',{css: ['../css/homePage.css','//fonts.googleapis.com/css?family=Roboto:100'],js: ['https://code.jquery.com/jquery-2.1.3.min.js','../js/homePage.js']});
 };
-
+//Check used by page to preemptively check that the username isnt taken
+exports.checkuser = function(req,res){
+  //We just make a query for the user and check if one with that name exists
+  var userLoadedQuery = "SELECT * FROM users WHERE user='"+req.params.user+"'";
+  sqlStarter.connection.query(userLoadedQuery,function(err,rows,fields){
+    if (!err){
+      var taken;
+      if (rows.length !== 0){
+        taken = true;
+      }else{
+        taken = false;
+      }
+      res.send(taken);
+    }else{
+      console.log(err);
+    }
+  });
+};
 exports.uploadXML = function(req,res){
 	console.log(req.files.xml_file.path);
 	console.log(req.body.username);
+  //This check is just to make sure that a taken username isnt submitted, 
+  //even though the client side should take care of it (Because really all they have to do is change the "disabled" attr on the button anyway..)
+  var userLoadedQuery = "SELECT * FROM users WHERE user='"+req.params.username+"'";
+  var taken;
+  sqlStarter.connection.query(userLoadedQuery,function(err,rows,fields){
+    if (!err){
+      if (rows.length !== 0){
+        taken = true;
+      }else{
+        taken = false;
+      }
+    }else{
+      console.log(err);
+    }
+  });
+  if (taken){
+    return;//Because i have no earthly idea how to wrap that mess down there..
+  }
+  //Please clean this up and then do that ^ if statement correctly..
   var tagarray=new Array();
 	var songarray=new Array();
 	var albumarray=new Array();
@@ -196,7 +232,7 @@ exports.uploadXML = function(req,res){
 }
                 //spotifyQueue.resume();
 
-                spotifyQueue.drain = function(){
+spotifyQueue.drain = function(){
           //Once the queue is empty
           console.log("All items processed.".magenta);
           //res.render('customCoverArt',{css: ['./css/userPage.css'],js: ['./js/userPage.js'], albums: albumarray});
@@ -241,7 +277,7 @@ exports.uploadXML = function(req,res){
                       }
                     });
 }
-}   
+}  
 
 spotifyQueue.pause();
     //Now let's render the waiting room. First update the database to include the final size of the library
