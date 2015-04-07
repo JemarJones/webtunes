@@ -95,17 +95,19 @@ exports.uploadXML = function(req,res){
                           tagarray=tagarray.slice(0,4);
                         }
                         console.log("Found Spotify data and tags for: ".cyan+name+" - "+artist);
-                        songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid,tagarray.toString())); 
+                        songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid,tagarray.toString()));
+                        callback(); 
                      } else {
                         console.log("Found Spotify data and no tags for: ".cyan+name+" - "+artist);
                         songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid,"")); 
+                        callback();
                      }
                   });
 
                  //console.log("Found Spotify data for: ".cyan+name+" - "+artist);
                  //songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid,tagarray.toString())); 
                  //albumarray.push(new Album(artmd,album,albumartist));
-                 callback();
+                 
                } else if (spotifysong.album.images.length==0) {
                  console.log("No Album Art");
                  callback();
@@ -215,9 +217,9 @@ exports.uploadXML = function(req,res){
               +sqlStarter.escape(song.trackid)+"','"
               +sqlStarter.escape(song.albumid)+"','"
               +sqlStarter.escape(song.tags)+"')";
-              console.log(song.tags);
+              //console.log(song.tags);
 
-spotifyCounter++;
+            spotifyCounter++;
             //console.log(query);
 
             sqlStarter.connection.query(query,function(err,rows,fields){
