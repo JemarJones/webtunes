@@ -17,7 +17,7 @@ exports.homePage = function(req,res){
 exports.uploadXML = function(req,res){
 	console.log(req.files.xml_file.path);
 	console.log(req.body.username);
-
+  var tagarray=new Array();
 	var songarray=new Array();
 	var albumarray=new Array();
 	var playcounter;
@@ -81,9 +81,29 @@ exports.uploadXML = function(req,res){
                  var albumid=spotifysong.album.id;
                  var albumartist=currentsong[2];
                  var playcount = currentsong[4];
-                 
-                 console.log("Found Spotify data for: ".cyan+name+" - "+artist);
-                 songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
+                 var tagarray=[];
+                  lfm.track.getInfo({
+                      'track' : currentsong[0],
+                      'artist' : currentsong[1]
+                  }, function (err, track) {
+                     if (track!=undefined){
+                        for (t=0;t<track.toptags.tag.length-1;t++){
+                          tagarray.push(track.toptags.tag[t].name)
+                        }
+                        if (tagarray.length>5){
+                          console.log("Truncated tag array");
+                          tagarray=tagarray.slice(0,4);
+                        }
+                        console.log("Found Spotify data and tags for: ".cyan+name+" - "+artist);
+                        songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid,tagarray.toString())); 
+                     } else {
+                        console.log("Found Spotify data and no tags for: ".cyan+name+" - "+artist);
+                        songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid,"")); 
+                     }
+                  });
+
+                 //console.log("Found Spotify data for: ".cyan+name+" - "+artist);
+                 //songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid,tagarray.toString())); 
                  //albumarray.push(new Album(artmd,album,albumartist));
                  callback();
                } else if (spotifysong.album.images.length==0) {
@@ -109,9 +129,18 @@ exports.uploadXML = function(req,res){
                     var trackid='-';
                     var albumid='-';
                     var playcount = lastfmsong[4];
+                    var tagarray=[];
+                    for (t=0;t<track.toptags.tag.length-1;t++){
+                        tagarray.push(track.toptags.tag[t].name)
+                    }
+                    if (tagarray.length>5){
+                      console.log("Truncated tag array");
+                      tagarray=tagarray.slice(0,4);
+                    }
+                    console.log(tagarray.toString());
                     //console.log(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid);
                     console.log("Found Last.fm data for: ".cyan + name + " - " + artist);
-                    songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid));
+                    songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid,tagarray.toString()));
                     callback();
                   } else if (track==undefined || track.album==undefined || err){
                     console.log("No data found for: ".yellow + lastfmsong[0] + " - " + lastfmsong[1]);
@@ -175,7 +204,7 @@ exports.uploadXML = function(req,res){
             started=1;
             var song = songarray[i];
             //song.name=song.name.replace(/-/g,"").replace(/\?/g,"").replace(/Interlude/g,"");
-            var query = "INSERT INTO user_libraries (user,title,artist,album,playcount,art_lg,art_md,art_sm,track_id,album_id) VALUES ('"+req.body.username+"','"
+            var query = "INSERT INTO user_libraries (user,title,artist,album,playcount,art_lg,art_md,art_sm,track_id,album_id,tags) VALUES ('"+req.body.username+"','"
               +sqlStarter.escape(song.name)+"','"
               +sqlStarter.escape(song.artist)+"','"
               +sqlStarter.escape(song.album)+"',"
@@ -184,7 +213,9 @@ exports.uploadXML = function(req,res){
               +sqlStarter.escape(song.artmd)+"','"
               +sqlStarter.escape(song.artsm)+"','"
               +sqlStarter.escape(song.trackid)+"','"
-              +sqlStarter.escape(song.albumid)+"')";
+              +sqlStarter.escape(song.albumid)+"','"
+              +sqlStarter.escape(song.tags)+"')";
+              console.log(song.tags);
 
             spotifyCounter++;
             //console.log(query);
@@ -503,7 +534,7 @@ var posToPlace = function(albums, newTrack){
 };
 
 //song name, album , artist , play count, album art url, track id, album id
-function Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid){
+function Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid,tags){
   this.name=name;
   this.artist=artist;
   this.album=album;
@@ -513,6 +544,7 @@ function Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid){
   this.artsm=artsm;
   this.trackid=trackid;
   this.albumid=albumid;
+  this.tags=tags;
 }
 
 function Album(artmd,album,artist){
