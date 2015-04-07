@@ -81,6 +81,7 @@ exports.uploadXML = function(req,res){
                  var albumid=spotifysong.album.id;
                  var albumartist=currentsong[2];
                  var playcount = currentsong[4];
+                 
                  console.log("Found Spotify data for: ".cyan+name+" - "+artist);
                  songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
                  //albumarray.push(new Album(artmd,album,albumartist));
