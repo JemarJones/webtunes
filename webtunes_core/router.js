@@ -22,14 +22,14 @@ exports.uploadXML = function(req,res){
 	var albumarray=new Array();
 	var playcounter;
   var parsedCounter = 0;
-	var albtest;
+  var albtest;
   var spotifyCounter=0;
   var databaseAddedCounter=0;
   var errorCounter=0;
   var spotifyApi = new SpotifyWebApi({
-  clientId : '228486b3feaf411586151d99d358c135',
-  clientSecret : '4c9d49e596ac40809c1a4ac90c5fa0d3'
-});
+    clientId : '228486b3feaf411586151d99d358c135',
+    clientSecret : '4c9d49e596ac40809c1a4ac90c5fa0d3'
+  });
   var started=0;
   var currentsong=['','','','',0];
 
@@ -47,18 +47,18 @@ exports.uploadXML = function(req,res){
           //extracteddata=result.plist.dict[0].dict[0].dict;
     /*
       HEY GUYS WE'RE SOFTWARE ENGINEERS! LOOK AT US USE A QUEUE!
-    */
-    var spotifyQueue = async.queue(function(task,callback){
-      var thissong = task.thissong;
-      currentsong=['','','','',0];
+      */
+      var spotifyQueue = async.queue(function(task,callback){
+        var thissong = task.thissong;
+        currentsong=['','','','',0];
 
-      for (k=0;k<thissong.length-1;k++){
+        for (k=0;k<thissong.length-1;k++){
 
-        if (thissong[k]==" Name"){currentsong[0]=thissong[k+1].split("  ")[1].replace(/ft\./g,"").replace(/feat\./g,"").replace(/\(/g,"").replace(/\)/g,"").replace(/Feat\./g,"").replace(/Ft\./g,"");}
-        if (thissong[k]==" Artist"){currentsong[1]=thissong[k+1].split("  ")[1];}
-        if (thissong[k]==" Album Artist"){currentsong[2]=thissong[k+1].split("  ")[1];}
-        if (thissong[k]==" Album"){currentsong[3]=thissong[k+1].split("  ")[1];}
-        if (thissong[k]==" Play Count"){currentsong[4]=thissong[k+1].split("  ")[1];}
+          if (thissong[k]==" Name"){currentsong[0]=thissong[k+1].split("  ")[1].replace(/ft\./g,"").replace(/feat\./g,"").replace(/\(/g,"").replace(/\)/g,"").replace(/Feat\./g,"").replace(/Ft\./g,"");}
+          if (thissong[k]==" Artist"){currentsong[1]=thissong[k+1].split("  ")[1];}
+          if (thissong[k]==" Album Artist"){currentsong[2]=thissong[k+1].split("  ")[1];}
+          if (thissong[k]==" Album"){currentsong[3]=thissong[k+1].split("  ")[1];}
+          if (thissong[k]==" Play Count"){currentsong[4]=thissong[k+1].split("  ")[1];}
         //if (thissong[k].split("  ")[1]=="Podcast"){setTimeout(callback(),1000);}
       }
       //console.log(currentsong);
@@ -171,8 +171,8 @@ exports.uploadXML = function(req,res){
                         //thissong : extracteddata[i].string,
                         //thisint : extracteddata[i].integer,
                         //keycheck : extracteddata[i].key
-                    },function (err) {
-                      parsedCounter++;
+                      },function (err) {
+                        parsedCounter++;
                       //Every 5 or so, update the DB (or if it's the last one)
                       if(spotifyQueue.length()==0 || parsedCounter%5 == 0){
                         var update_trackcount = "UPDATE users SET track_count='"+parsedCounter+"' WHERE user='"+req.body.username+"'";
@@ -191,10 +191,10 @@ exports.uploadXML = function(req,res){
 
                       console.log("Queue items left: ".magenta + spotifyQueue.length());
                     });
-        }
+}
                 //spotifyQueue.resume();
 
-        spotifyQueue.drain = function(){
+                spotifyQueue.drain = function(){
           //Once the queue is empty
           console.log("All items processed.".magenta);
           //res.render('customCoverArt',{css: ['./css/userPage.css'],js: ['./js/userPage.js'], albums: albumarray});
@@ -217,7 +217,7 @@ exports.uploadXML = function(req,res){
               +sqlStarter.escape(song.tags)+"')";
               console.log(song.tags);
 
-            spotifyCounter++;
+spotifyCounter++;
             //console.log(query);
 
             sqlStarter.connection.query(query,function(err,rows,fields){
@@ -234,14 +234,14 @@ exports.uploadXML = function(req,res){
                             console.log("Number of songs where the API timed out = "+errorCounter);
                           });
                         }
-              } else {
-                console.log(err);
-              }
-            });
-          }
-        }   
-  
-    spotifyQueue.pause();
+                      } else {
+                        console.log(err);
+                      }
+                    });
+}
+}   
+
+spotifyQueue.pause();
     //Now let's render the waiting room. First update the database to include the final size of the library
     var add_user = "INSERT INTO users (user,complete,track_count,total_tracks) VALUES ('"+req.body.username+"','0','0','"+spotifyQueue.length()+"')";
     console.log("Adding the user. "+add_user);
@@ -301,11 +301,11 @@ exports.albumData = function(req,res){
 			albums = organize(rows);
       sortedSongs = rows;
       quickSort(sortedSongs,'title');
-			res.send([albums, sortedSongs]);
-		}else{
-			console.log(err);
-		}
-	});
+      res.send([albums, sortedSongs]);
+    }else{
+     console.log(err);
+   }
+ });
 };
 //A function that finds all matching music in a users library and returns it
 exports.musicSearch = function(req, res){
@@ -323,12 +323,11 @@ exports.musicSearch = function(req, res){
     if (!err){
       var matches = [];
       for (var i = 0; i < rows.length; i++){
-        //TODO MAYBE?  Do substring search instead of indexOf
         //Here we check if all words in the key match song data from this song
         var matched = true;
         var keyParts = key.split(" ");
         for (var k = 0; k < keyParts.length; k++){
-          if (!(rows[i].title.toLowerCase().indexOf(keyParts[k].toLowerCase()) > -1 || rows[i].album.toLowerCase().indexOf(keyParts[k].toLowerCase()) > -1 || rows[i].artist.toLowerCase().indexOf(keyParts[k].toLowerCase()) > -1)){
+          if (!(keyWithin(rows[i].title.toLowerCase(),keyParts[k].toLowerCase()) || keyWithin(rows[i].album.toLowerCase(),keyParts[k].toLowerCase()) || keyWithin(rows[i].artist.toLowerCase(),keyParts[k].toLowerCase()))){
             matched = false;
           }
         }
@@ -344,44 +343,55 @@ exports.musicSearch = function(req, res){
     }
   });
 };
-//An implementation of 3-way partitioned quicksort for strings
+//A function that uses boyer-moore to check for a key in a chunk of text, returns true if found and false if not
+var keyWithin = function(text,keyPat){
+  //Implementation of Boyer-moore substring search
+    var R = 256;//Radix value
+    //Array for mapping the bad and good characters, helps with skipping
+    var charSkip = [];
+    for (var c = 0; c < R; c++){
+      charSkip[c] = -1;
+    }
+    for (var j = 0; j < keyPat.length; j++){
+      charSkip[keyPat.charCodeAt(j)] = j;
+    }
+    //Performing boyer-moore search, boolean return value will indicate if the key was found
+    var M = keyPat.length;
+    var N = text.length;
+    var skip;
+    for (var i = 0; i <= N - M; i += skip){
+      skip = 0;
+      for (var j = M-1; j >= 0; j--){
+            //If theres a mismatch we calculate the skip and break out
+            if (keyPat[j] != text[i+j]){
+              skip = Math.max(1, j-charSkip[text.charCodeAt(i+j)]);
+              break;
+            }
+          }
+        //Returning true if the pattern has been found
+        if (skip === 0) return true;
+      }
+    //Pattern wasnt found so we indicate so with a value of false
+    return false;
+  };
+//Collection of some quicksort varaitions for sorting songs
 var quickSort = function(a,sortBy){
-  var CUTOFF = 15;
+  var CUTOFF = 15;//The amount at which we will switch to insertion sort due to overhead
 
-  var shuffle = function(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex ;
-
-    // While there remain elements to shuffle...
-    while (0 !== currentIndex) {
-
-      // Pick a remaining element...
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex -= 1;
-
-      // And swap it with the current element.
-      exch(array,currentIndex,randomIndex);
-    }
-
-    return array;
-  };
-  var charAt = function(s,d){
-    if (d == getVal(s,sortBy).length){
-      return -1;
-    }else{
-      return getVal(s,sortBy)[d];
-    }
-  };
+  //An implementation of 3-way quicksort for strings
   var sortStr = function(a,lo,hi,d){
     //cutoff to insertionsort for small subarrays
     if (hi <= lo + CUTOFF) {
-      insertion(a, lo, hi, d);
+      insertionStr(a, lo, hi, d);
       return;
     }
 
+    //Some setup for this step
     var lt = lo;
     var gt = hi;
     var v = getVal(a[lo],sortBy)[d];
     var i = lo + 1;
+    //Partitioning this section
     while (i <= gt) {
       var t = getVal(a[i],sortBy)[d];
       if (t < v){
@@ -392,108 +402,118 @@ var quickSort = function(a,sortBy){
         i++;
       }
     }
-
+    //Recursevly continuing the quicksort on each partition as necesary
     sortStr(a, lo, lt-1, d);
     if (v !== undefined) {
       sortStr(a, lt, gt, d+1);
     }
     sortStr(a, gt+1, hi, d);
   };
+  //Simple string insertion sort for the cutoff
+  var insertionStr = function(a,lo,hi,d){
+    for (var i = lo; i <= hi; i++){
+      for (var j = i; j > lo && less(a[j], a[j-1], d); j--){
+        exch(a, j, j-1);
+      }
+    }
+  };
+  //Quick comparision function
+  var less = function(v,w,d){
+    for (var i = d; i < Math.min(v.title.length, w.title.length); i++) {
+      if (getVal(v,sortBy)[i] < getVal(w,sortBy)[i]) {
+        return true;
+      }
+      if (getVal(v,sortBy)[i] > getVal(w,sortBy)[i]) {
+        return false;
+      }
+    }
+    return getVal(v,sortBy).length < getVal(w,sortBy).length;
+  };
+  //An implementation of quicksort for ints
   var sortInt = function(a,lo,hi){
     if (hi <= lo + CUTOFF){
-        insertionInt(a,lo,hi);
-        return;
+      insertionInt(a,lo,hi);
+      return;
     }
-    var j = partition(a,lo,hi);
-    sortInt(a,lo,j-1);
-    sortInt(a,j+1,hi);
-  };
-  var partition = function(a,lo,hi){
+    //Partitioning this section
     var i = lo;
     var j = hi + 1;
     var v = getVal(a[lo],sortBy);
     while (true){
-
-        while(getVal(a[++i],sortBy) > v){
-            if (i == hi){
-                break;
-            }
-        }
-
-        while(v > getVal(a[--j],sortBy)){
-            if (j == lo){
-                break;
-            }
-        }
-
-        if (i >= j){
-            break;
-        }
-        exch (a,i,j);
-    }
-    exch(a,lo,j);
-
-    return j;
-  };
-  var insertion = function(a,lo,hi,d){
-    for (var i = lo; i <= hi; i++){
-      for (var j = i; j > lo && less(a[j], a[j-1], d); j--){
-          exch(a, j, j-1);
+      while(getVal(a[++i],sortBy) > v){
+        if (i == hi){
+          break;
         }
       }
+      while(v > getVal(a[--j],sortBy)){
+        if (j == lo){
+          break;
+        }
+      }
+      if (i >= j){
+        break;
+      }
+      exch (a,i,j);
+    }
+    exch(a,lo,j);
+    //Recursevly continuing the quicksort on each partition as necesary
+    sortInt(a,lo,j-1);
+    sortInt(a,j+1,hi);
   };
+  //Simple int insertion sort for the cutoff
   var insertionInt = function(a,lo,hi){
     for (var i = lo; i <= hi; i++){
       for (var j = i; j > lo && a[j].playcount > a[j-1].playcount; j--){
-          exch(a, j, j-1);
-        }
+        exch(a, j, j-1);
       }
-  };
-    var exch = function(a,i,j){
-      var temp = a[i];
-      a[i] = a[j];
-      a[j] = temp;
-    };
-
-    var less = function(v,w,d){
-      for (var i = d; i < Math.min(v.title.length, w.title.length); i++) {
-        if (getVal(v,sortBy)[i] < getVal(w,sortBy)[i]) {
-          return true;
-        }
-        if (getVal(v,sortBy)[i] > getVal(w,sortBy)[i]) {
-          return false;
-        }
-      }
-      return getVal(v,sortBy).length < getVal(w,sortBy).length;
-    };
-    var getVal = function(obj, sortBy){
-      switch(sortBy){
-        case 'title':
-          return obj.title.toLowerCase();
-          break;
-        case 'album':
-          return obj.album.toLowerCase();
-          break;
-        case 'artist':
-          return obj.artist.toLowerCase();
-          break;
-        case 'playcount':
-          return obj.playcount;
-          break;
-      }
-    };
-    a = shuffle(a);
-    if (sortBy == "playcount"){
-      sortInt(a, 0, a.length - 1);
-    }else{
-      sortStr(a, 0, a.length - 1, 0);
     }
   };
-  exports.pingUser = function(req,res){
-   var query = "SELECT * FROM users WHERE user='"+req.body.user+"'";
-   sqlStarter.connection.query(query,function(err,rows,fields){
-    if(!err){
-     if(rows.length==0){
+  //A implementation of the knuth shuffle algorithm
+  var shuffle = function(array) {
+    for (var i = 0; i < array.length; i++){
+      //Choosng random index
+      var r = Math.floor(Math.random() * i);
+      //Exchanging with random index
+      exch(array,i,r);
+    }
+  };
+  //Straightforward exchange function
+  var exch = function(a,i,j){
+    var temp = a[i];
+    a[i] = a[j];
+    a[j] = temp;
+  };
+  //This function gets the approprieve value to be used for sorting according to what is requested to sort by
+  var getVal = function(obj, sortBy){
+    switch(sortBy){
+      case 'title':
+      return obj.title.toLowerCase();
+      break;
+      case 'album':
+      return obj.album.toLowerCase();
+      break;
+      case 'artist':
+      return obj.artist.toLowerCase();
+      break;
+      case 'playcount':
+      return obj.playcount;
+      break;
+    }
+  };
+  shuffle(a);//Shuffle to mitigate the worst case input
+  //Calling the sort appropriate for the type of our sortBy 
+  if (sortBy == "playcount"){
+    sortInt(a, 0, a.length - 1);
+  }else{
+    sortStr(a, 0, a.length - 1, 0);
+  }
+};
+
+exports.pingUser = function(req,res){
+ var query = "SELECT * FROM users WHERE user='"+req.body.user+"'";
+ sqlStarter.connection.query(query,function(err,rows,fields){
+  if(!err){
+   if(rows.length==0){
 				//No user by that name exists.
 				res.send("User Not Found");
 			} else {
@@ -504,12 +524,11 @@ var quickSort = function(a,sortBy){
         sentVar.outof = rows[0].total_tracks;
         res.send(sentVar);
       }
-		} else {
-			console.log(err);
-		}
-	});
- }
-
+    } else {
+     console.log(err);
+   }
+ });
+}
 //Organizes rows into albums
 var organize = function(rows){
 	var albums = [];
@@ -524,6 +543,20 @@ var organize = function(rows){
 };
 //Finds the position that the new track should be placed
 var posToPlace = function(albums, newTrack){
+  // var lo = 0;
+  // var hi = albums.length - 1;
+  // var mid;
+  // while(hi >= lo){
+  //   mid = lo + (hi - lo)/2;
+  //   if (albums[mid][0].album == newTrack.album){
+  //     return mid;
+  //   }else if (albums[mid][0].album < newTrack.album) {
+  //     lo = mid + 1;
+  //   }else{
+  //     hi = mid - 1;
+  //   }
+  // }
+  // return mid;
 	//Todo: implement with binaryinsertionsort
 	for (var i = 0; i < albums.length; i++){
 		if (albums[i][0].album == newTrack.album){
