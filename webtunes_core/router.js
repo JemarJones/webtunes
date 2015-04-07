@@ -81,6 +81,19 @@ exports.uploadXML = function(req,res){
                  var albumid=spotifysong.album.id;
                  var albumartist=currentsong[2];
                  var playcount = currentsong[4];
+                lfm.track.getInfo({
+                    'track' : lastfmsong[0],
+                    'artist' : lastfmsong[1]
+                }, function (err, track) {
+                  if (track!=undefined && track.album!=undefined){
+                    console.log(track.toptags);
+                    var tags=track.toptags;
+                  }
+                  if (err) {
+                    console.log("Error: ".red,err);
+                  }
+                });
+
                  console.log("Found Spotify data for: ".cyan+name+" - "+artist);
                  songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid)); 
                  //albumarray.push(new Album(artmd,album,albumartist));
@@ -502,7 +515,7 @@ var posToPlace = function(albums, newTrack){
 };
 
 //song name, album , artist , play count, album art url, track id, album id
-function Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid){
+function Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid,tags){
   this.name=name;
   this.artist=artist;
   this.album=album;
@@ -512,6 +525,7 @@ function Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid){
   this.artsm=artsm;
   this.trackid=trackid;
   this.albumid=albumid;
+  this.tags=tags;
 }
 
 function Album(artmd,album,artist){
