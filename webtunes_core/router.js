@@ -100,14 +100,15 @@ exports.uploadXML = function(req,res){
       //console.log(currentsong);
         spotifyApi.searchTracks(currentsong[0]+" - "+currentsong[1])
         .then(function(data) {
+          //console.log("spotify search done");
           //console.log(data.body.tracks.items[0]);
           //console.log(data.body.tracks.items[0].album.images);
           if (data.body.tracks.items[0]!=undefined){
             var spotifysong=data.body.tracks.items[0];
-            console.log("spotify search done");
+            //console.log("spotify search done and info found");
             //console.log(spotifysong);
             //console.log(spotifysong.album.images);
-            if (spotifysong.album.images.length!=0){
+            if (spotifysong.album.images.length>=3 && spotifysong.album.images!=undefined){
               var name = spotifysong.name;
               var artist = spotifysong.artists[0].name;
               var album = spotifysong.album.name;
@@ -119,15 +120,15 @@ exports.uploadXML = function(req,res){
               var albumartist=currentsong[2];
               var playcount = currentsong[4];
               var tagarray=[];
-              console.log("got all info from spotify");
+              //console.log("got all info from spotify");
               lfm.track.getInfo({
                    'track' : currentsong[0],
                    'artist' : currentsong[1]
               }, function (err, track) {
-                  if (track!=undefined && track.toptags.tag.length!=0){
-                    console.log("tryna get da tags");
+                  if (track!=undefined && track.toptags.tag!=undefined){
+                    //console.log("tryna get da tags");
                     for (t=0;t<track.toptags.tag.length-1;t++){
-                      console.log("tag found after spotify search");
+                      //console.log("tag found after spotify search");
                       tagarray.push(track.toptags.tag[t].name)
                     }
                     if (tagarray.length>5){
@@ -147,7 +148,7 @@ exports.uploadXML = function(req,res){
               //console.log("Found Spotify data for: ".cyan+name+" - "+artist);
               //songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid,tagarray.toString())); 
               //albumarray.push(new Album(artmd,album,albumartist)); 
-            } else if (spotifysong.album.images.length==0) {
+            } else {
               console.log("No Album Art");
               callback();
             }
@@ -158,8 +159,8 @@ exports.uploadXML = function(req,res){
               'track' : lastfmsong[0],
               'artist' : lastfmsong[1]
             }, function (err, track) {
+              //console.log("last fm searchd");
               if (track!=undefined && track.album!=undefined){
-                console.log("last fm searchd");
                 var name = track.name;
                 var artist = track.artist["name"];
                 var album = track.album["title"];
@@ -171,18 +172,19 @@ exports.uploadXML = function(req,res){
                 var albumid='-';
                 var playcount = lastfmsong[4];
                 var tagarray=[];
-                if (track.toptags.tag.length!=0){
+                if (track.toptags.tag!=undefined){
                   console.log("tags found after lastfm search");
                   for (t=0;t<track.toptags.tag.length-1;t++){
-                    tagarray.push(track.toptags.tag[t].name)
+                    console.log(track.toptags.tag[t].name);
+                    tagarray.push(track.toptags.tag[t].name);
                   }
                 }
-
+                //console.log("Tag array length is ="+tagarray.length)
                 if (tagarray.length>5){
                   console.log("Truncated tag array");
                   tagarray=tagarray.slice(0,4);
                 }
-                console.log(tagarray.toString());
+                //console.log(tagarray.toString());
                 //console.log(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid);
                 console.log("Found Last.fm data for: ".cyan + name + " - " + artist);
                 songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid,tagarray.toString()));
