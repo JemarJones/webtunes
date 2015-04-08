@@ -24,12 +24,13 @@ body{
 	position: relative;
 	top: 75%;
 	left: 56.5%;
+	width: 40%;
 }
 .navItem{
 	display: inline-block;
 	font-size: 1.3em;
 	height: 20%;
-	width: 13%;
+	width: 31.5%;
 	text-align: center;
 }
 .navItem > div{
