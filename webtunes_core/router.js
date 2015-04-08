@@ -119,11 +119,13 @@ exports.uploadXML = function(req,res){
               var albumartist=currentsong[2];
               var playcount = currentsong[4];
               var tagarray=[];
+              console.log("got all info from spotify");
               lfm.track.getInfo({
                    'track' : currentsong[0],
                    'artist' : currentsong[1]
               }, function (err, track) {
                   if (track!=undefined && track.toptags.tag.length!=0){
+                    console.log("tryna get da tags");
                     for (t=0;t<track.toptags.tag.length-1;t++){
                       console.log("tag found after spotify search");
                       tagarray.push(track.toptags.tag[t].name)
