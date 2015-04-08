@@ -104,6 +104,7 @@ exports.uploadXML = function(req,res){
           //console.log(data.body.tracks.items[0].album.images);
           if (data.body.tracks.items[0]!=undefined){
             var spotifysong=data.body.tracks.items[0];
+            console.log("spotify search done");
             //console.log(spotifysong);
             //console.log(spotifysong.album.images);
             if (spotifysong.album.images.length!=0){
@@ -124,6 +125,7 @@ exports.uploadXML = function(req,res){
               }, function (err, track) {
                   if (track!=undefined && track.toptags.tag.length!=0){
                     for (t=0;t<track.toptags.tag.length-1;t++){
+                      console.log("tag found after spotify search");
                       tagarray.push(track.toptags.tag[t].name)
                     }
                     if (tagarray.length>5){
@@ -155,6 +157,7 @@ exports.uploadXML = function(req,res){
               'artist' : lastfmsong[1]
             }, function (err, track) {
               if (track!=undefined && track.album!=undefined){
+                console.log("last fm searchd");
                 var name = track.name;
                 var artist = track.artist["name"];
                 var album = track.album["title"];
@@ -167,6 +170,7 @@ exports.uploadXML = function(req,res){
                 var playcount = lastfmsong[4];
                 var tagarray=[];
                 if (track.toptags.tag.length!=0){
+                  console.log("tags found after lastfm search");
                   for (t=0;t<track.toptags.tag.length-1;t++){
                     tagarray.push(track.toptags.tag[t].name)
                   }
