@@ -46,7 +46,7 @@ body {
 #webtunes_submit {
   height: 50px;
   width: 200px;
-  background-color: #445878;
+  background-color: rgba(0,0,0,0.5);
   border: none;
   color: #fff;
   font-size: 30px;
