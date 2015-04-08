@@ -765,6 +765,41 @@ exports.getTagData = function(req,res){
     }
   });
 }
+
+exports.getTrackData = function(req,res){
+  var user = req.body.user;
+  //Query DB for data for the cloud. Let's try artists first
+  var query = "SELECT * FROM user_libraries WHERE user='"+user+"'";
+  sqlStarter.connection.query(query,function(err,rows,fields){
+    if(err){
+      console.log("Error: ".red,err);
+    } else {
+      var return_data = {
+        songs: [],
+        plays: [],
+        colors: ['#0000b4','#0082ca','#0094ff','#0d4bcf','#0066AE','#074285','#00187B','#285964','#405F83','#416545','#4D7069','#6E9985','#7EBC89','#0283AF','#79BCBF','#99C19E'],
+      };
+
+      var object_arr = [];
+      for(var i=0;i<rows.length;i++){
+        object_arr.push({
+          name: rows[i].title,
+          size: rows[i].playcount
+        });
+      }
+
+      //Sort
+      object_arr.sort(compare);
+      object_arr = object_arr.slice(0,return_data.colors.length);
+      for(var i=0;i<object_arr.length;i++){
+        return_data.songs.push(object_arr[i].name);
+        return_data.plays.push(object_arr[i].size);
+      }
+
+      res.send(return_data);
+    }
+  });
+}
 function compare(a,b) {
   if (a.size < b.size)
      return 1;

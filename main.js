@@ -130,6 +130,7 @@ var multer = require('multer');
         self.posts['/getCloudData'] = router.getCloudData;
         self.posts['/getBubbleData'] = router.getBubbleData;
         self.posts['/getTagData'] = router.getTagData;
+        self.posts['/getTrackData'] = router.getTrackData;
     };
 
 
