@@ -304,7 +304,6 @@ exports.uploadXML = function(req,res){
 exports.userPage = function(req, res){
   var userLoadedQuery = "SELECT * FROM users WHERE user='"+req.params.user+"'";
   sqlStarter.connection.query(userLoadedQuery,function(err,rows,fields){
-    console.log(rows);
     if (!err && rows.length > 0){
       if (rows[0].complete != 1){
         //User isnt done loading so we pull up the load screen
@@ -319,8 +318,8 @@ exports.userPage = function(req, res){
             //Giving the lib view its initial sort
             sortedSongs = rows;
             quickSort(sortedSongs,'title');
-            user = req.params.user + " | ";
-            user = user.substr(0, 1).toUpperCase() + user.substr(1);
+            user = rows[0].user + " | ";
+            // user = user.substr(0, 1).toUpperCase() + user.substr(1);
             res.render('userPage',{css: ['../css/userPage.css','//fonts.googleapis.com/css?family=Roboto:100'],js: ['../js/userPage.js'], user: user , albums: albums, sortedSongs: sortedSongs});
           }else{
             console.log(err); 
