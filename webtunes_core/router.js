@@ -95,7 +95,7 @@ exports.uploadXML = function(req,res){
           if (thissong[k]==" Album Artist"){currentsong[2]=thissong[k+1].split("  ")[1];}
           if (thissong[k]==" Album"){currentsong[3]=thissong[k+1].split("  ")[1];}
           if (thissong[k]==" Play Count"){currentsong[4]=thissong[k+1].split("  ")[1];}
-          if (thissong[k].split("  ")[1]=="Podcast"){callback();}
+          if (thissong[k].split("  ")[1]=="Podcast"){callback(); return;}
         }
       //console.log(currentsong);
         spotifyApi.searchTracks(currentsong[0]+" - "+currentsong[1])
