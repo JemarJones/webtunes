@@ -24,12 +24,15 @@ html
 				li.navItem
 					.navDiv.normal(data-cont= '#visView') Visualizations
 		//- Content (diff ways of displaying music)
-		include ./player.jade
-		include ./albumView.jade
-		include ./songView.jade
-		//***Visualizations should be included here***
 
 		//Scripts section
 		script(src='../js/jquery-1.11.2.min.js')
+			
+		include ./player.jade
+		include ./albumView.jade
+		include ./songView.jade
+		include ./visView.jade
+		//***Visualizations should be included here***
+
 		each script in js
 			script(src= script)

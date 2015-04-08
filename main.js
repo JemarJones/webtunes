@@ -127,6 +127,9 @@ var multer = require('multer');
         self.routes['/'] = router.homePage;
         self.posts['/upload_xml'] = router.uploadXML;
         self.posts['/ping_user'] = router.pingUser;
+        self.posts['/getCloudData'] = router.getCloudData;
+        self.posts['/getBubbleData'] = router.getBubbleData;
+        self.posts['/getTagData'] = router.getTagData;
     };
 
 

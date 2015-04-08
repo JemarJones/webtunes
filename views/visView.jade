@@ -1,0 +1,15 @@
+script(src='http://d3js.org/d3.v3.min.js')
+script(src='../js/d3.layout.cloud.js')
+script(src='../js/drawCloud.js')
+script(src='../js/drawBubble.js')
+script(src='../js/drawTag.js')
+#visView
+	button(class="visbtn",onclick="drawCloud()").
+		Draw Cloud of Artists
+	br
+	button(class="visbtn",onclick="drawBubble()").
+		Draw Bubble Chart of Artists
+	br
+	button(class="visbtn",onclick="drawTag()").
+		Draw Bubble Chart of Tags
+	#visualization
