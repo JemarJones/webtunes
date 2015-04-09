@@ -19,7 +19,7 @@ function drawTrack(){
 		});
 
 		var xscale = d3.scale.linear()
-						.domain([10,250])
+						.domain([10,dollars[0]])
 						.range([0,722]);
 
 		var yscale = d3.scale.linear()
