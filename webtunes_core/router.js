@@ -347,25 +347,6 @@ exports.userPage = function(req, res){
     }
   });
 };
-//A function that client js can call to get the albums array
-exports.albumData = function(req,res){
-  //Setting up request
-	var query = "SELECT * FROM user_libraries WHERE user='"+req.params.user+"'";
-	var albums;
-  //Making request
-	sqlStarter.connection.query(query,function(err,rows,fields){
-		if (!err){
-      //Organizing music data before sending it
-			albums = algorithms.organize(rows);
-      sortedSongs = rows;
-      algorithms.quickSort(sortedSongs,'title');
-      //Finally sending data to front end
-      res.send([albums, sortedSongs]);
-    }else{
-     console.log(err);
-   }
- });
-};
 //A function that searches and sorts user songs as instructed
 exports.musicSearchAndSort = function(req, res){
   //Getting parameters
