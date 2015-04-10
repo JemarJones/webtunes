@@ -121,6 +121,7 @@ var colors = require('colors');
         //     res.setHeader('Content-Type', 'text/html');
         //     res.send(self.cache_get('index.html') );
         // };
+        self.routed['/instructions'] = router.instructionsPage
         self.routes['/u/:user'] = router.userPage;
         self.routes['/data/:user'] = router.albumData;
         self.routes['/organize/:user/:key/:sortby'] = router.musicSearchAndSort;

@@ -19,6 +19,11 @@ var spotifyApi = new SpotifyWebApi({
 exports.homePage = function(req,res){
 	res.render('homePage',{css: ['../css/homePage.css','//fonts.googleapis.com/css?family=Roboto:100'],js: ['https://code.jquery.com/jquery-2.1.3.min.js','../js/homePage.js']});
 };
+
+exports.instructionsPage = function(req,res){
+  res.render('instructionsPage',{css: ['../css/instructionsPage.css','//fonts.googleapis.com/css?family=Roboto:100'],js: ['https://code.jquery.com/jquery-2.1.3.min.js']});
+};
+
 function parseXML(input_user,data,callback){
   //callback : function(input_user,xml_data)
   var xml_document = new xmldoc.XmlDocument(data);
