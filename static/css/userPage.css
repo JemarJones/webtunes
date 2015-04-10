@@ -214,7 +214,7 @@ input:-moz-placeholder { color: rgba(255,255,255,0.6); }
 	text-overflow: ellipsis;
 }
 .hover{
-	color: rgb(236, 236, 236);
+	color: white;
 	text-shadow:
   	 	-1px -1px 0 #000,  
     	1px -1px 0 #000,
