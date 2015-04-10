@@ -1,3 +1,6 @@
+var sqlStarter = require('./sqlStarter.js');
+var algorithms = require('./algorithms.js');
+
 exports.getCloudData = function(req,res){
   var user = req.body.user;
   //Query DB for data for the cloud. Let's try artists first
@@ -179,3 +182,8 @@ function compare(a,b) {
     return -1;
   return 0;
 }
+
+function shuffle(o){ //v1.0
+    for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+    return o;
+};
