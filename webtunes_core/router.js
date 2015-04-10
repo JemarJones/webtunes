@@ -323,7 +323,6 @@ exports.userPage = function(req, res){
         var albums;
         sqlStarter.connection.query(query,function(err,rows,fields){
           if (!err){
-            console.log(rows);
             albums = algorithms.organize(rows);
             //Giving the lib view its initial sort
             sortedSongs = rows;
@@ -410,7 +409,7 @@ exports.pingUser = function(req,res){
  var query = "SELECT * FROM users WHERE user='"+req.body.user+"'";
  sqlStarter.connection.query(query,function(err,rows,fields){
   if(!err){
-   if(rows.length==0){
+   if(rows.length===0){
 				//No user by that name exists.
 				res.send("User Not Found");
 			} else {
@@ -425,7 +424,7 @@ exports.pingUser = function(req,res){
      console.log(err);
    }
  });
-}
+};
 
 function isUserTaken(user,callback){
   //This check is just to make sure that a taken username isnt submitted, 
