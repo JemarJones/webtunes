@@ -122,7 +122,7 @@ var colors = require('colors');
         //     res.send(self.cache_get('index.html') );
         // };
         self.routes['/u/:user'] = router.userPage;
-        self.routes['/data/:user'] = router.albumData;
+
         self.routes['/organize/:user/:key/:sortby'] = router.musicSearchAndSort;
         self.routes['/organize/:user/:sortby'] = router.musicSearchAndSort;//For the special case of an empty search key
         self.routes['/'] = router.homePage;
