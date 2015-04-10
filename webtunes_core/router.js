@@ -306,6 +306,7 @@ exports.userPage = function(req, res){
         var albums;
         sqlStarter.connection.query(query,function(err,rows,fields){
           if (!err){
+            console.log(rows);
             albums = algorithms.organize(rows);
             //Giving the lib view its initial sort
             sortedSongs = rows;
