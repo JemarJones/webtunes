@@ -30,6 +30,7 @@ function drawTrack(){
 						.domain([0,categories.length])
 						.range(colors);
 
+		$("#visualization").html("");
 		var canvas = d3.select('#visualization')
 						.append('svg')
 						.attr({'width':1200,'height':700});
