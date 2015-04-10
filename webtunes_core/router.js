@@ -3,6 +3,7 @@ var xmldoc = require('xmldoc');
 var async = require('async');
 var SpotifyWebApi = require('spotify-web-api-node');
 var sqlStarter = require('./sqlStarter');
+var algorithms = require('./algorithms');
 var LastfmAPI = require('lastfmapi');
 var lfm = new LastfmAPI({
   'api_key' : 'e0d66a3b8ea5fa90bb9ab39aa51762fd',
@@ -13,28 +14,9 @@ var colors = require('colors');
 exports.homePage = function(req,res){
 	res.render('homePage',{css: ['../css/homePage.css','//fonts.googleapis.com/css?family=Roboto:100'],js: ['https://code.jquery.com/jquery-2.1.3.min.js','../js/homePage.js']});
 };
-//Check used by page to preemptively check that the username isnt taken
-exports.checkuser = function(req,res){
-  //We just make a query for the user and check if one with that name exists
-  var userLoadedQuery = "SELECT * FROM users WHERE user='"+req.params.user+"'";
-  sqlStarter.connection.query(userLoadedQuery,function(err,rows,fields){
-    if (!err){
-      var taken;
-      if (rows.length !== 0){
-        //There is an existing user with this name so its taken
-        taken = true;
-      }else{
-        //No users with this name, so we're good
-        taken = false;
-      }
-      //Sending username status to front end
-      res.send(taken);
-    }else{
-      console.log(err);
-    }
-  });
-};
+
 exports.uploadXML = function(req,res){
+
 	console.log(req.files.xml_file.path);
 	console.log(req.body.username);
   //This check is just to make sure that a taken username isnt submitted, 
@@ -324,10 +306,10 @@ exports.userPage = function(req, res){
         var albums;
         sqlStarter.connection.query(query,function(err,rows,fields){
           if (!err){
-            albums = organize(rows);
+            albums = algorithms.organize(rows);
             //Giving the lib view its initial sort
             sortedSongs = rows;
-            quickSort(sortedSongs,'title');
+            algorithms.quickSort(sortedSongs,'title');
             user = rows[0].user + " | ";
             // user = user.substr(0, 1).toUpperCase() + user.substr(1);
             res.render('userPage',{css: ['../css/userPage.css','//fonts.googleapis.com/css?family=Roboto:100'],js: ['../js/userPage.js'], user: user , albums: albums, sortedSongs: sortedSongs});
@@ -352,9 +334,9 @@ exports.albumData = function(req,res){
 	sqlStarter.connection.query(query,function(err,rows,fields){
 		if (!err){
       //Organizing music data before sending it
-			albums = organize(rows);
+			albums = algorithms.organize(rows);
       sortedSongs = rows;
-      quickSort(sortedSongs,'title');
+      algorithms.quickSort(sortedSongs,'title');
       //Finally sending data to front end
       res.send([albums, sortedSongs]);
     }else{
@@ -382,7 +364,7 @@ exports.musicSearchAndSort = function(req, res){
         var matched = true;
         var keyParts = key.split(" ");
         for (var k = 0; k < keyParts.length; k++){
-          if (!(keyWithin(rows[i].title.toLowerCase(),keyParts[k].toLowerCase()) || keyWithin(rows[i].album.toLowerCase(),keyParts[k].toLowerCase()) || keyWithin(rows[i].artist.toLowerCase(),keyParts[k].toLowerCase()))){
+          if (!(algorithms.keyWithin(rows[i].title.toLowerCase(),keyParts[k].toLowerCase()) || algorithms.keyWithin(rows[i].album.toLowerCase(),keyParts[k].toLowerCase()) || algorithms.keyWithin(rows[i].artist.toLowerCase(),keyParts[k].toLowerCase()))){
             matched = false;
           }
         }
@@ -391,176 +373,36 @@ exports.musicSearchAndSort = function(req, res){
           matches[matches.length] = rows[i];
         }
       }
-      quickSort(matches,sortby);//Sorting the library according to the requested field
+      algorithms.quickSort(matches,sortby);//Sorting the library according to the requested field
       //Sending back an array of all songs and an array of all albums for their corresponding views
-      res.send([matches, organize(matches)]);
+      res.send([matches, algorithms.organize(matches)]);
     }else{
       console.log(err);
     }
   });
 };
-//A function that uses boyer-moore to check for a key in a chunk of text, returns true if found and false if not
-var keyWithin = function(text,keyPat){
-  //Implementation of Boyer-moore substring search
-    var R = 256;//Radix value
-    //Array for mapping the bad and good characters, helps with skipping
-    var charSkip = [];
-    for (var c = 0; c < R; c++){
-      charSkip[c] = -1;
-    }
-    for (var j = 0; j < keyPat.length; j++){
-      charSkip[keyPat.charCodeAt(j)] = j;
-    }
-    //Performing boyer-moore search, boolean return value will indicate if the key was found
-    var M = keyPat.length;
-    var N = text.length;
-    var skip;
-    for (var i = 0; i <= N - M; i += skip){
-      skip = 0;
-      for (var j = M-1; j >= 0; j--){
-            //If theres a mismatch we calculate the skip and break out
-            if (keyPat[j] != text[i+j]){
-              skip = Math.max(1, j-charSkip[text.charCodeAt(i+j)]);
-              break;
-            }
-          }
-        //Returning true if the pattern has been found
-        if (skip === 0) return true;
-      }
-    //Pattern wasnt found so we indicate so with a value of false
-    return false;
-  };
-//Collection of some quicksort varaitions for sorting songs
-var quickSort = function(a,sortBy){
-  var CUTOFF = 15;//The amount at which we will switch to insertion sort due to overhead
 
-  //An implementation of 3-way quicksort for strings
-  var sortStr = function(a,lo,hi,d){
-    //cutoff to insertionsort for small subarrays
-    if (hi <= lo + CUTOFF) {
-      insertionStr(a, lo, hi, d);
-      return;
-    }
-
-    //Some setup for this step
-    var lt = lo;
-    var gt = hi;
-    var v = getVal(a[lo],sortBy)[d];
-    var i = lo + 1;
-    //Partitioning this section
-    while (i <= gt) {
-      var t = getVal(a[i],sortBy)[d];
-      if (t < v){
-        exch(a, lt++, i++);
-      } else if (t > v) {
-        exch(a, i, gt--);
-      } else{
-        i++;
+//Check used by page to preemptively check that the username isnt taken
+exports.checkuser = function(req,res){
+  //We just make a query for the user and check if one with that name exists
+  var userLoadedQuery = "SELECT * FROM users WHERE user='"+req.params.user+"'";
+  sqlStarter.connection.query(userLoadedQuery,function(err,rows,fields){
+    if (!err){
+      var taken;
+      if (rows.length !== 0){
+        //There is an existing user with this name so its taken
+        taken = true;
+      }else{
+        //No users with this name, so we're good
+        taken = false;
       }
+      //Sending username status to front end
+      res.send(taken);
+    }else{
+      console.log(err);
     }
-    //Recursevly continuing the quicksort on each partition as necesary
-    sortStr(a, lo, lt-1, d);
-    if (v !== undefined) {
-      sortStr(a, lt, gt, d+1);
-    }
-    sortStr(a, gt+1, hi, d);
-  };
-  //Simple string insertion sort for the cutoff
-  var insertionStr = function(a,lo,hi,d){
-    for (var i = lo; i <= hi; i++){
-      for (var j = i; j > lo && less(a[j], a[j-1], d); j--){
-        exch(a, j, j-1);
-      }
-    }
-  };
-  //Quick comparision function
-  var less = function(v,w,d){
-    for (var i = d; i < Math.min(v.title.length, w.title.length); i++) {
-      if (getVal(v,sortBy)[i] < getVal(w,sortBy)[i]) {
-        return true;
-      }
-      if (getVal(v,sortBy)[i] > getVal(w,sortBy)[i]) {
-        return false;
-      }
-    }
-    return getVal(v,sortBy).length < getVal(w,sortBy).length;
-  };
-  //An implementation of quicksort for ints
-  var sortInt = function(a,lo,hi){
-    if (hi <= lo + CUTOFF){
-      insertionInt(a,lo,hi);
-      return;
-    }
-    //Partitioning this section
-    var i = lo;
-    var j = hi + 1;
-    var v = getVal(a[lo],sortBy);
-    while (true){
-      while(getVal(a[++i],sortBy) > v){
-        if (i == hi){
-          break;
-        }
-      }
-      while(v > getVal(a[--j],sortBy)){
-        if (j == lo){
-          break;
-        }
-      }
-      if (i >= j){
-        break;
-      }
-      exch (a,i,j);
-    }
-    exch(a,lo,j);
-    //Recursevly continuing the quicksort on each partition as necesary
-    sortInt(a,lo,j-1);
-    sortInt(a,j+1,hi);
-  };
-  //Simple int insertion sort for the cutoff
-  var insertionInt = function(a,lo,hi){
-    for (var i = lo; i <= hi; i++){
-      for (var j = i; j > lo && a[j].playcount > a[j-1].playcount; j--){
-        exch(a, j, j-1);
-      }
-    }
-  };
-  //A implementation of the knuth shuffle algorithm
-  var kShuffle = function(array) {
-    for (var i = 0; i < array.length; i++){
-      //Choosng random index
-      var r = Math.floor(Math.random() * i);
-      //Exchanging with random index
-      exch(array,i,r);
-    }
-  };
-  //Straightforward exchange function
-  var exch = function(a,i,j){
-    var temp = a[i];
-    a[i] = a[j];
-    a[j] = temp;
-  };
-  //This function gets the approprieve value to be used for sorting according to what is requested to sort by
-  var getVal = function(obj, sortBy){
-    switch(sortBy){
-      case 'title':
-        return obj.title.toLowerCase();
-      case 'album':
-        return obj.album.toLowerCase();
-      case 'artist':
-        return obj.artist.toLowerCase();
-      case 'playcount':
-        return obj.playcount;
-    }
-  };
-  kShuffle(a);//Shuffle to mitigate the worst case input
-  //Calling the sort appropriate for the type of our sortBy 
-  if (sortBy == "playcount"){
-    sortInt(a, 0, a.length - 1);
-  }else{
-    sortStr(a, 0, a.length - 1, 0);
-  }
+  });
 };
-
 exports.pingUser = function(req,res){
  var query = "SELECT * FROM users WHERE user='"+req.body.user+"'";
  sqlStarter.connection.query(query,function(err,rows,fields){
@@ -581,33 +423,6 @@ exports.pingUser = function(req,res){
    }
  });
 }
-//Organizes rows into albums
-var organize = function(rows){
-	var albums = [];
-  //Processing all songs
-	for (var i = 0; i < rows.length; i++){
-		var position = posToPlace(albums,rows[i]);//Getting position where this song should be placed
-		if (position == albums.length){
-      //Initializng album position if it wasnt previously existant
-			albums[position] = [];
-		}
-    //Insertign song into its album
-		albums[position][albums[position].length] = rows[i];
-	}
-  //Returning fully organized albums
-	return albums;
-};
-//Finds the position that the new track should be placed
-var posToPlace = function(albums, newTrack){
-  //Going through all albums already created and checking if the new track belongs in any of them
-	for (var i = 0; i < albums.length; i++){
-		if (albums[i][0].album == newTrack.album){
-			return i;
-		}
-	}
-  //If a matchign album wasnt found, we place this one in a new album at the end of the array
-	return albums.length;
-};
 
 //song name, album , artist , play count, album art url, track id, album id
 function Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid,tags){
@@ -629,187 +444,6 @@ function Album(artmd,album,artist){
   this.artist=artist;
 }
 
-exports.getCloudData = function(req,res){
-  var user = req.body.user;
-  //Query DB for data for the cloud. Let's try artists first
-  var query = "SELECT * FROM user_libraries WHERE user='"+user+"'";
-  sqlStarter.connection.query(query,function(err,rows,fields){
-    if(err){
-      console.log("Error: ".red,err);
-    } else {
-      //Run through the data and return the words
-      var artist_data = {};
-      for(var i=0;i<rows.length;i++){
-        if(artist_data[rows[i].artist]!= null){
-          artist_data[rows[i].artist].size += rows[i].playcount;
-        } else {
-          artist_data[rows[i].artist] = {
-            size: rows[i].playcount,
-            text: rows[i].artist
-          };
-        }
-      }
-      //Now that we've got this list, flatten it
-      var return_data = [];
-      for(var artist in artist_data){
-        return_data.push(artist_data[artist]);
-      }
-
-      res.send(return_data);
-    }
-  });
-}
-
-exports.getBubbleData = function(req,res){
-  var user = req.body.user;
-  //Query DB for data for the cloud. Let's try artists first
-  var query = "SELECT * FROM user_libraries WHERE user='"+user+"'";
-  sqlStarter.connection.query(query,function(err,rows,fields){
-    if(err){
-      console.log("Error: ".red,err);
-    } else {
-      //Count the artists
-      var counted_artists = {};
-
-      for(var i=0;i<rows.length;i++){
-        if(counted_artists[rows[i].artist]!= null){
-          counted_artists[rows[i].artist].size += rows[i].playcount;
-        } else {
-          counted_artists[rows[i].artist] = {
-            size: rows[i].playcount,
-            name: rows[i].artist
-          };
-        }
-      }
-
-      var to_sort = [];
-      //Now we've got an object filled with artists. Turn it into an array and sort it
-      for(var artist in counted_artists){
-        to_sort.push(counted_artists[artist]);
-      }
-
-      to_sort.sort(compare);
-      to_sort = to_sort.slice(0,50);
-      shuffle(to_sort);
-
-      //We now have a list of length 25, sorted in order
-      //Put it all in return_data
-      var return_data = {
-        "name": "flare",
-        "children": []
-      };
-
-      for(var i=0;i<to_sort.length;i++){
-        return_data.children.push(to_sort[i]);
-      }
-
-      res.send(return_data);
-    }
-  });
-}
+/*Helper Functions*/
 
 
-exports.getTagData = function(req,res){
-  var user = req.body.user;
-  //Query DB for data for the cloud. Let's try artists first
-  var query = "SELECT * FROM user_libraries WHERE user='"+user+"'";
-  sqlStarter.connection.query(query,function(err,rows,fields){
-    if(err){
-      console.log("Error: ".red,err);
-    } else {
-      //Count the artists
-      var counted_artists = {};
-
-      for(var i=0;i<rows.length;i++){
-        var tags = rows[i].tags.split(",");
-        console.log(tags);
-        for(var j=0;j<tags.length;j++){
-          if(tags[j] == '') continue;
-
-          if(tags[j] == "hiphop" || tags[j] == "hip hop"){
-            tags[j] = "hip-hop";
-          }
-
-
-          if(counted_artists[tags[j]] != null){
-            counted_artists[tags[j]].size++;
-          } else {
-            counted_artists[tags[j]] = {
-              size : 1,
-              name : tags[j]
-            }
-          }
-        }
-      }
-
-      var to_sort = [];
-      //Now we've got an object filled with artists. Turn it into an array and sort it
-      for(var artist in counted_artists){
-        to_sort.push(counted_artists[artist]);
-      }
-
-      to_sort.sort(compare);
-      to_sort = to_sort.slice(0,100);
-      shuffle(to_sort);
-
-      //We now have a list of length 25, sorted in order
-      //Put it all in return_data
-      var return_data = {
-        "name": "flare",
-        "children": []
-      };
-
-      for(var i=0;i<to_sort.length;i++){
-        return_data.children.push(to_sort[i]);
-      }
-
-      res.send(return_data);
-    }
-  });
-}
-
-exports.getTrackData = function(req,res){
-  var user = req.body.user;
-  //Query DB for data for the cloud. Let's try artists first
-  var query = "SELECT * FROM user_libraries WHERE user='"+user+"'";
-  sqlStarter.connection.query(query,function(err,rows,fields){
-    if(err){
-      console.log("Error: ".red,err);
-    } else {
-      var return_data = {
-        songs: [],
-        plays: [],
-        colors: ['#0000b4','#0082ca','#0094ff','#0d4bcf','#0066AE','#074285','#00187B','#285964','#405F83','#416545','#4D7069','#6E9985','#7EBC89','#0283AF','#79BCBF','#99C19E'],
-      };
-
-      var object_arr = [];
-      for(var i=0;i<rows.length;i++){
-        object_arr.push({
-          name: rows[i].title,
-          size: rows[i].playcount
-        });
-      }
-
-      //Sort
-      object_arr.sort(compare);
-      object_arr = object_arr.slice(0,return_data.colors.length);
-      for(var i=0;i<object_arr.length;i++){
-        return_data.songs.push(object_arr[i].name);
-        return_data.plays.push(object_arr[i].size);
-      }
-
-      res.send(return_data);
-    }
-  });
-}
-function compare(a,b) {
-  if (a.size < b.size)
-     return 1;
-  if (a.size > b.size)
-    return -1;
-  return 0;
-}
-function shuffle(o){ //v1.0
-    for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
-    return o;
-};

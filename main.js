@@ -11,17 +11,25 @@ var routes = express();
 
 //Router for the custom page
 var router = require('./webtunes_core/router');
-var xmlrouter = require('./webtunes_core/xmlparser');
+var visualizations = require('./webtunes_core/visualizations');
 var multer = require('multer');
+var colors = require('colors');
 
 
 /**
  *  Define the sample application.
  */
- var SampleApp = function() {
-
-    console.log("test");
-    console.log("testing again");
+ var WebTunes = function() {
+    console.log(" __          __  _  _______                    ");
+    console.log(" \\ \\        / / | ||__   __|                   ".cyan.bold);
+    console.log("  \\ \\  /\\  / /__| |__ | |_   _ _ __   ___  ___ ".cyan.bold);
+    console.log("   \\ \\/  \\/ / _ \\ '_ \\| | | | | '_ \\ / _ \\/ __|".cyan.bold);
+    console.log("    \\  /\\  /  __/ |_) | | |_| | | | |  __/\\__ \\".cyan.bold);
+    console.log("     \\/  \\/ \\___|_.__/|_|\\__,_|_| |_|\\___||___/".cyan.bold);
+    console.log("Created by: ");
+    console.log("\tNikolai Savas".bold+" - "+"http://savas.ca/".cyan+" - McMaster University");
+    console.log("\tJemar Jones".bold+" - "+"http://jkjones.me/".cyan+" - McMaster University");
+    console.log("\tSamraj Nalwa".bold+" - "+"http://nalwa.ca/".cyan+" - McMaster University");
     //  Scope.
     var self = this;
 
@@ -51,12 +59,7 @@ var multer = require('multer');
      *  Populate the cache.
      */
      self.populateCache = function() {
-        if (typeof self.zcache === "undefined") {
-            self.zcache = { 'index.html': '' };
-        }
-
-        //  Local cache for static content.
-        self.zcache['index.html'] = fs.readFileSync('./index.html');
+        //Removed index.html
     };
 
 
@@ -122,15 +125,14 @@ var multer = require('multer');
         self.routes['/data/:user'] = router.albumData;
         self.routes['/organize/:user/:key/:sortby'] = router.musicSearchAndSort;
         self.routes['/organize/:user/:sortby'] = router.musicSearchAndSort;//For the special case of an empty search key
-        self.routes['/nalwa'] = xmlrouter.xml;
         self.routes['/'] = router.homePage;
         self.routes['/checkuser/:user'] = router.checkuser;
         self.posts['/upload_xml'] = router.uploadXML;
         self.posts['/ping_user'] = router.pingUser;
-        self.posts['/getCloudData'] = router.getCloudData;
-        self.posts['/getBubbleData'] = router.getBubbleData;
-        self.posts['/getTagData'] = router.getTagData;
-        self.posts['/getTrackData'] = router.getTrackData;
+        self.posts['/getCloudData'] = visualizations.getCloudData;
+        self.posts['/getBubbleData'] = visualizations.getBubbleData;
+        self.posts['/getTagData'] = visualizations.getTagData;
+        self.posts['/getTrackData'] = visualizations.getTrackData;
     };
 
 
@@ -181,7 +183,7 @@ var multer = require('multer');
      self.start = function() {
         //  Start the app on the specific interface (and port).
         self.app.listen(self.port, self.ipaddress, function() {
-            console.log('%s: Node server started on %s:%d ...',
+            console.log('%s: WebTunes started on %s:%d ...',
                 Date(Date.now() ), self.ipaddress, self.port);
         });
     };
@@ -193,7 +195,7 @@ var multer = require('multer');
 /**
  *  main():  Main code.
  */
- var zapp = new SampleApp();
+ var zapp = new WebTunes();
  zapp.initialize();
  zapp.start();
 

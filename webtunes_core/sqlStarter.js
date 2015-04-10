@@ -23,7 +23,7 @@ function handleDisconnect() {
 		console.log('error when connecting to db:', err);
 		setTimeout(handleDisconnect, 2000); // We introduce a delay before attempting to reconnect,
 	} else {
-        console.log("Successfully restarted SQL connection",connection);
+        console.log("Successfully started SQL connection");
         module.exports.connection = connection;
 	}                                    // to avoid a hot loop, and to allow our node script to
 	});                                     // process asynchronous requests in the meantime.
