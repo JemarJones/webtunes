@@ -20,7 +20,7 @@ var colors = require('colors');
  *  Define the sample application.
  */
  var WebTunes = function() {
-    console.log(" __          __  _  _______                    ");
+    console.log(" __          __  _  _______                    ".cyan.bold);
     console.log(" \\ \\        / / | ||__   __|                   ".cyan.bold);
     console.log("  \\ \\  /\\  / /__| |__ | |_   _ _ __   ___  ___ ".cyan.bold);
     console.log("   \\ \\/  \\/ / _ \\ '_ \\| | | | | '_ \\ / _ \\/ __|".cyan.bold);
