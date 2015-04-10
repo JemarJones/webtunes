@@ -277,6 +277,13 @@ exports.uploadXML = function(req,res){
               sqlStarter.connection.query(update_complete,function(err,rows,fields){
                 console.log("Everything added to DB".green.bold);
                 console.log("Number of songs where the API timed out = "+errorCounter);
+                fs.unlink(req.files.xml_file.path,function(err){
+                  if(err){
+                    console.log(err);
+                  } else {
+                    console.log("Deleted XML at location: "+req.files.xml_file.path);
+                  }
+                })
               });
           }
         } else {
