@@ -96,7 +96,7 @@ function drawTrack(){
 							.data(dollars)
 							.enter()
 							.append('text')
-							.attr({'x':function(d) {return xscale(d)-200; },'y':function(d,i){ return yscale(i)+35; }})
+							.attr({'x':function(d) {return xscale(d)-100; },'y':function(d,i){ return yscale(i)+35; }})
 							.text(function(d){ return d; }).style({'fill':'#fff','font-size':'14px'});
 
   });
