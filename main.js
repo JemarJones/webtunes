@@ -121,7 +121,7 @@ var colors = require('colors');
         //     res.setHeader('Content-Type', 'text/html');
         //     res.send(self.cache_get('index.html') );
         // };
-        self.routes['/instructions'] = router.instructionsPage
+        self.routes['/instructions'] = router.instructionsPage;
         self.routes['/u/:user'] = router.userPage;
         self.routes['/organize/:user/:key/:sortby'] = router.musicSearchAndSort;
         self.routes['/organize/:user/:sortby'] = router.musicSearchAndSort;//For the special case of an empty search key
