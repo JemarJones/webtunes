@@ -5,71 +5,86 @@ var SpotifyWebApi = require('spotify-web-api-node');
 var sqlStarter = require('./sqlStarter');
 var algorithms = require('./algorithms');
 var LastfmAPI = require('lastfmapi');
+var xmlparser = require('./xmlparser.js');
 var lfm = new LastfmAPI({
   'api_key' : 'e0d66a3b8ea5fa90bb9ab39aa51762fd',
   'secret' : 'is 8ab78265bdc75215631380724adefbcf'
 });
 var colors = require('colors');
+var spotifyApi = new SpotifyWebApi({
+    clientId : '228486b3feaf411586151d99d358c135',
+    clientSecret : '4c9d49e596ac40809c1a4ac90c5fa0d3'
+  });
 
 exports.homePage = function(req,res){
 	res.render('homePage',{css: ['../css/homePage.css','//fonts.googleapis.com/css?family=Roboto:100'],js: ['https://code.jquery.com/jquery-2.1.3.min.js','../js/homePage.js']});
 };
+function parseXML(input_user,data,callback){
+  //callback : function(input_user,xml_data)
+  var xml_document = new xmldoc.XmlDocument(data);
+  var extracteddata = xml_document.childrenNamed("dict")[0].childrenNamed("dict")[0].childrenNamed("dict");
 
-exports.uploadXML = function(req,res){
-
-	console.log(req.files.xml_file.path);
-	console.log(req.body.username);
-  //This check is just to make sure that a taken username isnt submitted, 
-  //even though the client side should take care of it (Because really all they have to do is change the "disabled" attr on the button anyway..)
-  var userLoadedQuery = "SELECT * FROM users WHERE user='"+req.params.username+"'";
-  var taken;
-  sqlStarter.connection.query(userLoadedQuery,function(err,rows,fields){
-    if (!err){
-      if (rows.length !== 0){
-        taken = true;
-      }else{
-        taken = false;
-      }
-    }else{
-      console.log(err);
-    }
-  });
-  if (taken){
-    return;//Because i have no earthly idea how to wrap that mess down there..
-  }
-  //Please clean this up and then do that ^ if statement correctly..
-  var tagarray=new Array();
-	var songarray=new Array();
-	var albumarray=new Array();
-	var playcounter;
+  //Keep track of how many items we've processed
   var parsedCounter = 0;
-  var albtest;
-  var spotifyCounter=0;
-  var databaseAddedCounter=0;
-  var errorCounter=0;
-  var spotifyApi = new SpotifyWebApi({
-    clientId : '228486b3feaf411586151d99d358c135',
-    clientSecret : '4c9d49e596ac40809c1a4ac90c5fa0d3'
-  });
-  var started=0;
-  var currentsong=['','','','',0];
 
-  fs.readFile(req.files.xml_file.path, function(err, data) {
-    if(err){
-      console.log("Error reading XML.");
-      res.send("Critical Error: Failed to load file");
-    }
+  //Parsed data: Array of objects
+  var parsed_songs = [];
 
-    console.log("XMl Read successfully.");
+  //Now that we have the data, we can start to parse it.
+  //Let's use a queue,because we're software engineers and that's how we do
+  //Implemented using async.js : 10 worker asynchronous queue
+  var spotifyQueue = async.queue(parseSong);
 
+  //Add all of the items in our XML to the queue
+  for(var i=0;i<extracteddata.length;i++){
 
-    var document = new xmldoc.XmlDocument(data);
-    var extracteddata = document.childrenNamed("dict")[0].childrenNamed("dict")[0].childrenNamed("dict");
-          //extracteddata=result.plist.dict[0].dict[0].dict;
-    /*
-      HEY GUYS WE'RE SOFTWARE ENGINEERS! LOOK AT US USE A QUEUE!
-      */
-      var spotifyQueue = async.queue(function(task,callback){
+    //Parse the XML into an array of data
+    var parseString=extracteddata[i].toString().replace(/\s<key>/g,"").replace(/<\/key>/g,"").replace(/<integer>/g,"").replace(/<\/integer>/g,"").replace(/<string>/g,"").replace(/<\/string>/g,"");
+    var parseArray=parseString.split("\n")
+    parseArray=parseArray.splice(1,parseArray.length-2)
+
+    //Pass the array of data to the queue
+    spotifyQueue.push({
+      thissong : parseArray
+    },function (song) {
+      //Run this code after each item in the queue is processed
+      if(!song){
+        //We didn't find a song, just skip it.
+        console.log("No song found. Skipping");
+      } else {
+        //Add the song to our parsed data
+        parsed_songs.push(song);
+
+        //Increment the number of processed items
+        parsedCounter++;
+        //Every 5 items, update the DB (or if it's the last one)
+        if(spotifyQueue.length()==0 || parsedCounter%5 == 0){
+          var update_trackcount = "UPDATE users SET track_count='"+parsedCounter+"' WHERE user='"+input_user+"'";
+          sqlStarter.connection.query(update_trackcount,function(err,rows){
+            if(err){
+              console.log(err);
+            }
+            console.log("Updated the parsedCounter on the SQL Database".green);
+          });
+        }
+
+        //Print how many we have left
+      }
+      console.log("Queue items left: ".magenta + spotifyQueue.length());
+
+    });
+  }
+
+  //Once the queue is finished
+  spotifyQueue.drain = function(){
+    //This is the callback for parseXML being called. It will return us to uploadXML
+    console.log("Calling the drain function");
+    callback(input_user,parsed_songs);
+  };
+}
+
+function parseSong(task,callback){
+
         var thissong = task.thissong;
         currentsong=['','','','',0];
 
@@ -82,7 +97,7 @@ exports.uploadXML = function(req,res){
           if (thissong[k]==" Play Count"){currentsong[4]=thissong[k+1].split("  ")[1];}
           if (thissong[k].split("  ")[1]=="Podcast"){callback(); return;}
         }
-      //console.log(currentsong);
+        //console.log(currentsong);
         spotifyApi.searchTracks(currentsong[0]+" - "+currentsong[1])
         .then(function(data) {
           //console.log("spotify search done");
@@ -106,6 +121,10 @@ exports.uploadXML = function(req,res){
               var playcount = currentsong[4];
               var tagarray=[];
               //console.log("got all info from spotify");
+
+              //Last.fm api seems to be calling back twice, so let's do a check
+              var hasCalledBack = false;
+              
               lfm.track.getInfo({
                    'track' : currentsong[0],
                    'artist' : currentsong[1]
@@ -121,12 +140,16 @@ exports.uploadXML = function(req,res){
                       tagarray=tagarray.slice(0,4);
                     }
                     console.log("Found Spotify data and tags for: ".cyan+name+" - "+artist);
-                    songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid,tagarray.toString()));
-                    callback(); 
+                    if(!hasCalledBack){
+                      hasCalledBack = true;
+                      callback(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid,tagarray.toString()));
+                    }
                   } else {
                     console.log("Found Spotify data and no tags for: ".cyan+name+" - "+artist);
-                    songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid,"")); 
-                    callback();
+                    if(!hasCalledBack){
+                      hasCalledBack = true;
+                      callback(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid,""));
+                    }
                   }
               });
 
@@ -135,7 +158,7 @@ exports.uploadXML = function(req,res){
               //albumarray.push(new Album(artmd,album,albumartist)); 
             } else {
               console.log("No Album Art");
-              callback();
+              callback(false);
             }
           } else {
             lastfmsong=currentsong.slice(0);
@@ -172,11 +195,10 @@ exports.uploadXML = function(req,res){
                 //console.log(tagarray.toString());
                 //console.log(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid);
                 console.log("Found Last.fm data for: ".cyan + name + " - " + artist);
-                songarray.push(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid,tagarray.toString()));
-                callback();
+                callback(new Song(name,artist,album,playcount,artlg,artmd,artsm,trackid,albumid,tagarray.toString()));
               } else if (track==undefined || track.album==undefined || err){
                 console.log("No data found for: ".yellow + lastfmsong[0] + " - " + lastfmsong[1]);
-                callback();
+                callback(false);
               }
               if (err) {
                 console.log("Error: ".red,err);
@@ -184,114 +206,109 @@ exports.uploadXML = function(req,res){
             });
           }
         }, function(err) {
-            errorCounter++;
-            console.log(err);
-            console.log(errorCounter);
-            callback();
-        });
-  },5);
-
-  //Add all of the items to the queue
-  for(var i=0;i<extracteddata.length;i++){
-    //Put each item from the data into are queue to be processed by spotify
-    var parseString=extracteddata[i].toString().replace(/\s<key>/g,"").replace(/<\/key>/g,"").replace(/<integer>/g,"").replace(/<\/integer>/g,"").replace(/<string>/g,"").replace(/<\/string>/g,"");
-    var parseArray=parseString.split("\n")
-    parseArray=parseArray.splice(1,parseArray.length-2)
-
-    spotifyQueue.push({
-      thissong : parseArray
-        //thissong : extracteddata[i].string,
-        //thisint : extracteddata[i].integer,
-        //keycheck : extracteddata[i].key
-      },function (err) {
-        parsedCounter++;
-      //Every 5 or so, update the DB (or if it's the last one)
-      if(spotifyQueue.length()==0 || parsedCounter%5 == 0){
-        var update_trackcount = "UPDATE users SET track_count='"+parsedCounter+"' WHERE user='"+req.body.username+"'";
-        sqlStarter.connection.query(update_trackcount,function(err,rows){
           if(err){
             console.log(err);
+            callback(false);
           }
-          console.log("Updated the parsedCounter on the SQL Database".green);
         });
-      }
+}
 
-      console.log("Queue items left: ".magenta + spotifyQueue.length());
-    });
-  }
-          //spotifyQueue.resume();
+function addSongsToDB(input_user,parsed_songs,callback){
+  //Loop through all of the songs asynchronously
+  algorithms.asyncLoop(parsed_songs.length,function(loop){
+    var i=loop.iteration();
+    //Each loop, run this
 
-  spotifyQueue.drain = function(){
-  //Once the queue is empty
-  console.log("All items processed.".magenta);
-  //res.render('customCoverArt',{css: ['./css/userPage.css'],js: ['./js/userPage.js'], albums: albumarray});
-  
-  //Let's just push this to the sql db for now.
-  for(var i=0;i<songarray.length;i++){
-      started=1;
-      var song = songarray[i];
-      //song.name=song.name.replace(/-/g,"").replace(/\?/g,"").replace(/Interlude/g,"");
-      var query = "INSERT INTO user_libraries (user,title,artist,album,playcount,art_lg,art_md,art_sm,track_id,album_id,tags) VALUES ('"+req.body.username+"','"
-        +sqlStarter.escape(song.name)+"','"
-        +sqlStarter.escape(song.artist)+"','"
-        +sqlStarter.escape(song.album)+"',"
-        +song.playcount+",'"
-        +sqlStarter.escape(song.artlg)+"','"
-        +sqlStarter.escape(song.artmd)+"','"
-        +sqlStarter.escape(song.artsm)+"','"
-        +sqlStarter.escape(song.trackid)+"','"
-        +sqlStarter.escape(song.albumid)+"','"
-        +sqlStarter.escape(song.tags)+"')";
-        //console.log(song.tags);
+    var song = parsed_songs[i];
 
-      spotifyCounter++;
-      //console.log(query);
+    var query = "INSERT INTO user_libraries (user,title,artist,album,playcount,art_lg,art_md,art_sm,track_id,album_id,tags) VALUES ('"+input_user+"','"
+      +sqlStarter.escape(song.name)+"','"
+      +sqlStarter.escape(song.artist)+"','"
+      +sqlStarter.escape(song.album)+"',"
+      +song.playcount+",'"
+      +sqlStarter.escape(song.artlg)+"','"
+      +sqlStarter.escape(song.artmd)+"','"
+      +sqlStarter.escape(song.artsm)+"','"
+      +sqlStarter.escape(song.trackid)+"','"
+      +sqlStarter.escape(song.albumid)+"','"
+      +sqlStarter.escape(song.tags)+"')";
 
-      sqlStarter.connection.query(query,function(err,rows,fields){
-        if (!err){
-          databaseAddedCounter++;
-          console.log("Added to db.");
-          console.log("i ="+i+" databaseAddedCounter = "+ databaseAddedCounter+" spotifyCounter = "+spotifyCounter);
-                  //console.log(spotifyQueue.length());
-          if (databaseAddedCounter==spotifyCounter){
-              //Update complete to 1
-              var update_complete = "UPDATE users SET complete=1 WHERE user='"+req.body.username+"'";
-              sqlStarter.connection.query(update_complete,function(err,rows,fields){
-                console.log("Everything added to DB".green.bold);
-                console.log("Number of songs where the API timed out = "+errorCounter);
-                fs.unlink(req.files.xml_file.path,function(err){
-                  if(err){
-                    console.log(err);
-                  } else {
-                    console.log("Deleted XML at location: "+req.files.xml_file.path);
-                  }
-                })
-              });
-          }
-        } else {
-            console.log(err);
-        }
-      });
-  }
-  }   
-
-    spotifyQueue.pause();
-    //Now let's render the waiting room. First update the database to include the final size of the library
-    var add_user = "INSERT INTO users (user,complete,track_count,total_tracks) VALUES ('"+req.body.username+"','0','0','"+spotifyQueue.length()+"')";
-    console.log("Adding the user. "+add_user);
-    sqlStarter.connection.query(add_user,function(err,rows,fields){
-      if(!err){
-        console.log("User added");
-        spotifyQueue.resume();
-        res.render('waitingRoom',{css: ['../css/loader.css','//fonts.googleapis.com/css?family=Roboto:100'],js:['https://code.jquery.com/jquery-2.1.3.min.js','../js/pinger.js'],user:req.body.username});
+    sqlStarter.connection.query(query,function(err,rows,fields){
+      if (!err){
+        console.log("Added song: " + i + " of "+parsed_songs.length);
       } else {
         console.log(err);
-        res.send("Database error");
       }
+      loop.next();
     });
+  },function(){
+    //Once the asyncloop is done (all songs have been added)
+    callback();
+  });
+}
+
+exports.uploadXML = function(req,res){
+  var input_user = req.body.username;
+  var input_xml = req.files.xml_file.path;
+
+  isUserTaken(input_user,function(usernameTaken){
+    if(usernameTaken){
+      res.send(false);
+    } else {
+      //Username isn't taken
+      fs.readFile(req.files.xml_file.path,function(err,data){
+        if(err){
+          console.log("Error reading XML.".red,err);
+          res.send("Critical Error: Failed to load file");
+        } else {
+          //Successfully read XML file
+          console.log("XML Read Successfully.".green);
+
+          //Add the user to the database to show that we're currently parsing their data
+          console.log("Adding the user:  "+req.body.username);
+
+
+          var xml_document = new xmldoc.XmlDocument(data);
+          var extracteddata = xml_document.childrenNamed("dict")[0].childrenNamed("dict")[0].childrenNamed("dict");
+
+          var add_user = "INSERT INTO users (user,complete,track_count,total_tracks) VALUES ('"+req.body.username+"','0','0','"+extracteddata.length+"')";
+          sqlStarter.connection.query(add_user,function(err,rows,fields){
+            if(!err){
+              console.log("User added");
+
+              //Render the waiting room for the user
+              res.render('waitingRoom',{css: ['../css/loader.css','//fonts.googleapis.com/css?family=Roboto:100'],js:['https://code.jquery.com/jquery-2.1.3.min.js','../js/pinger.js'],user:req.body.username});
+              parseXML(input_user,data,function(input_user,xml_data){
+                //We're done parsing the XML, add it all to the db
+                console.log("Calling addSongsToDB...");
+                addSongsToDB(input_user,xml_data,function(){
+                  //We done!
+                  var update_complete = "UPDATE users SET complete=1 WHERE user='"+req.body.username+"'";
+                  sqlStarter.connection.query(update_complete,function(err,rows,fields){
+                    console.log("Everything added to DB".green.bold);
+                    fs.unlink(req.files.xml_file.path,function(err){
+                      if(err){
+                        console.log(err);
+                      } else {
+                        console.log("Deleted XML at location: "+req.files.xml_file.path);
+                        console.log("User upload Completed: ".green.bold + input_user);
+                      }
+                    })
+                  });
+                });
+              });
+            } else {
+              console.log(err);
+              res.send("Database error");
+            }
+          });
+
+          
+        }
+      });
+    }
   });
 };
-
 //Router functions for the userPage
 exports.userPage = function(req, res){
   var userLoadedQuery = "SELECT * FROM users WHERE user='"+req.params.user+"'";
@@ -384,23 +401,8 @@ exports.musicSearchAndSort = function(req, res){
 
 //Check used by page to preemptively check that the username isnt taken
 exports.checkuser = function(req,res){
-  //We just make a query for the user and check if one with that name exists
-  var userLoadedQuery = "SELECT * FROM users WHERE user='"+req.params.user+"'";
-  sqlStarter.connection.query(userLoadedQuery,function(err,rows,fields){
-    if (!err){
-      var taken;
-      if (rows.length !== 0){
-        //There is an existing user with this name so its taken
-        taken = true;
-      }else{
-        //No users with this name, so we're good
-        taken = false;
-      }
-      //Sending username status to front end
-      res.send(taken);
-    }else{
-      console.log(err);
-    }
+  isUserTaken(req.params.user,function(isTaken){
+    res.send(isTaken);
   });
 };
 exports.pingUser = function(req,res){
@@ -422,6 +424,27 @@ exports.pingUser = function(req,res){
      console.log(err);
    }
  });
+}
+
+function isUserTaken(user,callback){
+  //This check is just to make sure that a taken username isnt submitted, 
+  //even though the client side should take care of it (Because really all they have to do is change the "disabled" attr on the button anyway..)
+  var userLoadedQuery = "SELECT * FROM users WHERE user='"+user+"'";
+  sqlStarter.connection.query(userLoadedQuery,function(err,rows,fields){
+    if (!err){
+      if (rows.length !== 0){
+        //A row has been returned, therefore the username is taken
+        callback(true);
+      }else{
+        //Username isn't taken
+        callback(false);
+      }
+    }else{
+      //If there's an error, we will just pretend that it's taken
+      console.log(err);
+      callback(true);
+    }
+  });
 }
 
 //song name, album , artist , play count, album art url, track id, album id
