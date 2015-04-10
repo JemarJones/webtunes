@@ -21,10 +21,13 @@ exports.checkuser = function(req,res){
     if (!err){
       var taken;
       if (rows.length !== 0){
+        //There is an existing user with this name so its taken
         taken = true;
       }else{
+        //No users with this name, so we're good
         taken = false;
       }
+      //Sending username status to front end
       res.send(taken);
     }else{
       console.log(err);
@@ -322,7 +325,7 @@ exports.userPage = function(req, res){
             // user = user.substr(0, 1).toUpperCase() + user.substr(1);
             res.render('userPage',{css: ['../css/userPage.css','//fonts.googleapis.com/css?family=Roboto:100'],js: ['../js/userPage.js'], user: user , albums: albums, sortedSongs: sortedSongs});
           }else{
-            console.log(err); 
+            console.log(err);
           }
         });
       }
@@ -335,21 +338,25 @@ exports.userPage = function(req, res){
 };
 //A function that client js can call to get the albums array
 exports.albumData = function(req,res){
+  //Setting up request
 	var query = "SELECT * FROM user_libraries WHERE user='"+req.params.user+"'";
 	var albums;
+  //Making request
 	sqlStarter.connection.query(query,function(err,rows,fields){
 		if (!err){
+      //Organizing music data before sending it
 			albums = organize(rows);
       sortedSongs = rows;
       quickSort(sortedSongs,'title');
+      //Finally sending data to front end
       res.send([albums, sortedSongs]);
     }else{
      console.log(err);
    }
  });
 };
-//A function that finds all matching music in a users library and returns it
-exports.musicSearch = function(req, res){
+//A function that searches and sorts user songs as instructed
+exports.musicSearchAndSort = function(req, res){
   //Getting parameters
   var user = req.params.user;
   var key = req.params.key;//Search key
@@ -372,12 +379,13 @@ exports.musicSearch = function(req, res){
             matched = false;
           }
         }
+        //Adding this to the list of songs matching the request
         if (matched){
           matches[matches.length] = rows[i];
         }
       }
+      quickSort(matches,sortby);//Sorting the library according to the requested field
       //Sending back an array of all songs and an array of all albums for their corresponding views
-      quickSort(matches,sortby);
       res.send([matches, organize(matches)]);
     }else{
       console.log(err);
@@ -510,7 +518,7 @@ var quickSort = function(a,sortBy){
     }
   };
   //A implementation of the knuth shuffle algorithm
-  var shuffle = function(array) {
+  var kShuffle = function(array) {
     for (var i = 0; i < array.length; i++){
       //Choosng random index
       var r = Math.floor(Math.random() * i);
@@ -528,20 +536,16 @@ var quickSort = function(a,sortBy){
   var getVal = function(obj, sortBy){
     switch(sortBy){
       case 'title':
-      return obj.title.toLowerCase();
-      break;
+        return obj.title.toLowerCase();
       case 'album':
-      return obj.album.toLowerCase();
-      break;
+        return obj.album.toLowerCase();
       case 'artist':
-      return obj.artist.toLowerCase();
-      break;
+        return obj.artist.toLowerCase();
       case 'playcount':
-      return obj.playcount;
-      break;
+        return obj.playcount;
     }
   };
-  shuffle(a);//Shuffle to mitigate the worst case input
+  kShuffle(a);//Shuffle to mitigate the worst case input
   //Calling the sort appropriate for the type of our sortBy 
   if (sortBy == "playcount"){
     sortInt(a, 0, a.length - 1);
@@ -573,37 +577,28 @@ exports.pingUser = function(req,res){
 //Organizes rows into albums
 var organize = function(rows){
 	var albums = [];
+  //Processing all songs
 	for (var i = 0; i < rows.length; i++){
-		var position = posToPlace(albums,rows[i]);
+		var position = posToPlace(albums,rows[i]);//Getting position where this song should be placed
 		if (position == albums.length){
+      //Initializng album position if it wasnt previously existant
 			albums[position] = [];
 		}
+    //Insertign song into its album
 		albums[position][albums[position].length] = rows[i];
 	}
+  //Returning fully organized albums
 	return albums;
 };
 //Finds the position that the new track should be placed
 var posToPlace = function(albums, newTrack){
-  // var lo = 0;
-  // var hi = albums.length - 1;
-  // var mid;
-  // while(hi >= lo){
-  //   mid = lo + (hi - lo)/2;
-  //   if (albums[mid][0].album == newTrack.album){
-  //     return mid;
-  //   }else if (albums[mid][0].album < newTrack.album) {
-  //     lo = mid + 1;
-  //   }else{
-  //     hi = mid - 1;
-  //   }
-  // }
-  // return mid;
-	//Todo: implement with binaryinsertionsort
+  //Going through all albums already created and checking if the new track belongs in any of them
 	for (var i = 0; i < albums.length; i++){
 		if (albums[i][0].album == newTrack.album){
 			return i;
 		}
 	}
+  //If a matchign album wasnt found, we place this one in a new album at the end of the array
 	return albums.length;
 };
 
