@@ -20,7 +20,6 @@ var lastKey = "";//Keeps track of last search to help fend off async issues
 var sortBy = 'title';
 var playableOnly = false;
 $(document).ready(function(){
-	initData();//Getting intial album and user data
 	$('#search').keyup(search);
 	$('#search').on('search',search);
 	$('#searchForm').submit(function(e){
@@ -36,14 +35,6 @@ $(document).ready(function(){
 	$('.sorter').on('click', sort);
 	$('.playCol').on('click',togglePlayable);
 });
-//Getting initial user data
-var initData = function(){
-	user = $('meta[name="user"]').attr('content');
-	$.get("../../data/" + user,function(res){
-		albums = res[0];
-		songs = res[1];
-	});
-};
 //handler to fade between views nicely
 var switchMode = function(){
 	var fadeIn = $(this).attr("data-cont");
