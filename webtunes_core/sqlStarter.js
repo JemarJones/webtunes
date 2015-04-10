@@ -23,7 +23,8 @@ function handleDisconnect() {
 		console.log('error when connecting to db:', err);
 		setTimeout(handleDisconnect, 2000); // We introduce a delay before attempting to reconnect,
 	} else {
-	   console.log("Successfully restarted SQL connection",connection);
+        console.log("Successfully restarted SQL connection",connection);
+        module.exports.connection = connection;
 	}                                    // to avoid a hot loop, and to allow our node script to
 	});                                     // process asynchronous requests in the meantime.
                                           // If you're also serving http, display a 503 error.
@@ -40,7 +41,6 @@ function handleDisconnect() {
 }
 
 
-exports.connection = connection;
 
 exports.escape = function(str) {
     return str.replace(/[\0\x08\x09\x1a\n\r"'\\\%]/g, function (char) {
