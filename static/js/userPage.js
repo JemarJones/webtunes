@@ -98,11 +98,7 @@ var sort = function(){
 		keySection = "/" + lastKey;
 	}
 	//Making the actual request for the server to do the sorting
-<<<<<<< HEAD
-	$.get("../../searchandsort/" + user + keySection + "/" + sortBy, function(matches){
-=======
 	$.get("../../musicSearchAndSort/" + user + keySection + "/" + sortBy, function(matches){
->>>>>>> 5032788e7184aa744592a1421b2bb12d1859ebe6
 		songs = matches[0];//Updating our list of songs to this new sorted version
 		populateLib(matches[0],playableOnly);//Loading the songs into the lib view
 	});
