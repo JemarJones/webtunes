@@ -3,9 +3,6 @@
 //Include express.js
 var express = require('express');
 
-//Do we need file system access? Maybe not
-var fs      = require('fs');
-var xmldoc = require('xmldoc');
 //Set up routes
 var routes = express();
 
@@ -53,22 +50,6 @@ var colors = require('colors');
             self.ipaddress = "127.0.0.1";
         };
     };
-
-
-    /**
-     *  Populate the cache.
-     */
-     self.populateCache = function() {
-        //Removed index.html
-    };
-
-
-    /**
-     *  Retrieve entry (content) from cache.
-     *  @param {string} key  Key identifying content to retrieve from cache.
-     */
-     self.cache_get = function(key) { return self.zcache[key]; };
-
 
     /**
      *  terminator === the termination handler
@@ -123,8 +104,8 @@ var colors = require('colors');
         // };
         self.routes['/u/:user'] = router.userPage;
         self.routes['/data/:user'] = router.albumData;
-        self.routes['/organize/:user/:key/:sortby'] = router.musicSearchAndSort;
-        self.routes['/organize/:user/:sortby'] = router.musicSearchAndSort;//For the special case of an empty search key
+        self.routes['/searchandsort/:user/:key/:sortby'] = router.musicSearchAndSort;
+        self.routes['/searchandsort/:user/:sortby'] = router.musicSearchAndSort;//For the special case of an empty search key
         self.routes['/'] = router.homePage;
         self.routes['/checkuser/:user'] = router.checkuser;
         self.posts['/upload_xml'] = router.uploadXML;
@@ -169,7 +150,6 @@ var colors = require('colors');
      */
      self.initialize = function() {
         self.setupVariables();
-        self.populateCache();
         self.setupTerminationHandlers();
 
         // Create the express server and routes.

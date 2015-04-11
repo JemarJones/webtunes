@@ -70,7 +70,7 @@ var search = function(){
 		keySection = "/" + lastKey;
 	}
 	//Making the actual request to the server to do the searching
-	$.get("../../organize/" + user + keySection + "/" + sortBy , function(searchMatches){
+	$.get("../../searchandsort/" + user + keySection + "/" + sortBy , function(searchMatches){
 		if (lastKey == key){//Due to async if a new key has been requested since this one, we stop trying to do this one
 			populateLib(searchMatches[0],playableOnly);//Loading matches songs into library
 			songs = searchMatches[0];
@@ -107,7 +107,7 @@ var sort = function(){
 		keySection = "/" + lastKey;
 	}
 	//Making the actual request for the server to do the sorting
-	$.get("../../organize/" + user + keySection + "/" + sortBy, function(matches){
+	$.get("../../searchandsort/" + user + keySection + "/" + sortBy, function(matches){
 		songs = matches[0];//Updating our list of songs to this new sorted version
 		populateLib(matches[0],playableOnly);//Loading the songs into the lib view
 	});

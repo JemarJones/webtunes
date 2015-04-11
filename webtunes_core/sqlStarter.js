@@ -1,4 +1,5 @@
 var mysql = require('mysql');
+var colors = require('colors');
 // console.log("1:"+process.env.OPENSHIFT_MYSQL_DB_HOST);
 // console.log("2:"+process.env.OPENSHIFT_MYSQL_DB_PORT);
 // console.log("3:"+process.env.OPENSHIFT_MYSQL_DB_USERNAME);
