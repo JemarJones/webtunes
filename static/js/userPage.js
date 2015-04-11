@@ -20,7 +20,6 @@ var lastKey = "";//Keeps track of last search to help fend off async issues
 var sortBy = 'title';
 var playableOnly = false;
 $(document).ready(function(){
-	initData();//Getting intial album and user data
 	$('#search').keyup(search);
 	$('#search').on('search',search);
 	$('#searchForm').submit(function(e){
@@ -36,14 +35,6 @@ $(document).ready(function(){
 	$('.sorter').on('click', sort);
 	$('.playCol').on('click',togglePlayable);
 });
-//Getting initial user data
-var initData = function(){
-	user = $('meta[name="user"]').attr('content');
-	$.get("../../data/" + user,function(res){
-		albums = res[0];
-		songs = res[1];
-	});
-};
 //handler to fade between views nicely
 var switchMode = function(){
 	var fadeIn = $(this).attr("data-cont");
@@ -70,7 +61,7 @@ var search = function(){
 		keySection = "/" + lastKey;
 	}
 	//Making the actual request to the server to do the searching
-	$.get("../../searchandsort/" + user + keySection + "/" + sortBy , function(searchMatches){
+	$.get("../../musicSearchAndSort/" + user + keySection + "/" + sortBy , function(searchMatches){
 		if (lastKey == key){//Due to async if a new key has been requested since this one, we stop trying to do this one
 			populateLib(searchMatches[0],playableOnly);//Loading matches songs into library
 			songs = searchMatches[0];
@@ -107,7 +98,11 @@ var sort = function(){
 		keySection = "/" + lastKey;
 	}
 	//Making the actual request for the server to do the sorting
+<<<<<<< HEAD
 	$.get("../../searchandsort/" + user + keySection + "/" + sortBy, function(matches){
+=======
+	$.get("../../musicSearchAndSort/" + user + keySection + "/" + sortBy, function(matches){
+>>>>>>> 5032788e7184aa744592a1421b2bb12d1859ebe6
 		songs = matches[0];//Updating our list of songs to this new sorted version
 		populateLib(matches[0],playableOnly);//Loading the songs into the lib view
 	});
@@ -124,7 +119,7 @@ var populateLib = function(songArray,showPlayableOnly){
 	//Adding each song to the song view
 	var skipped = 0;//Number of songs skipped (unplayable ones)
 	for (var i = 0; i < songArray.length; i++){
-		if (!(songArray[i].track_id == "-" && showPlayableOnly)){//If we're not showing unplayables and this is one, we naturally skip it
+		if (!(songArray[i].trac_id == "-" && showPlayableOnly)){//If we're not showing unplayables and this is one, we naturally skip it
 			//Figuring out the correct class to assign for styling purposes
 			var classToAdd = "";
 			if ((i-skipped) % 2 === 0){

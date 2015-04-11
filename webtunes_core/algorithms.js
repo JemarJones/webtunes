@@ -124,12 +124,12 @@ exports.quickSort = function(a,sortBy){
     }
   };
   //A implementation of the knuth shuffle algorithm
-  var kShuffle = function(array) {
-    for (var i = 0; i < array.length; i++){
+  var kShuffle = function(a) {
+    for (var i = 0; i < a.length; i++){
       //Choosng random index
       var r = Math.floor(Math.random() * i);
       //Exchanging with random index
-      exch(array,i,r);
+      exch(a,i,r);
     }
   };
   //Straightforward exchange function
@@ -192,7 +192,6 @@ function shuffle(o){ //v1.0
     for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
     return o;
 };
-
 exports.asyncLoop = function(iterations, func, callback) {
   //From: http://stackoverflow.com/questions/4288759/asynchronous-for-cycle-in-javascript
     var index = 0;

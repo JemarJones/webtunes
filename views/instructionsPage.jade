@@ -1,0 +1,43 @@
+//- This is the landing page for WebTunes
+doctype html
+html
+	head
+		title Instructions | WebTunes - Share Your Music Library!
+		each sheet in css
+			link(type="text/css", rel="stylesheet", href=sheet)
+		each script in js
+			script(src= script)
+	body
+		#logo
+			img(src="../images/webtunes_logo.png")
+		p.desc
+			| The Instructions Manual
+
+		p.instructions
+			|1) Open the playlist or library you would like to export
+			br
+			img(src="../images/ins0.png", height="50%",width="50%")
+			br
+			br
+			|2) Then click File > Library > Export (Library or Playlist)
+			br
+			img(src="../images/ins1.png")
+			br
+			br
+			|3) Name the file anything you like, and set the format to XML
+			br
+			img(src="../images/ins2.png")
+			br
+			br
+			|4) Go back to the 
+			a(href='http://app-webtunes.rhcloud.com') WebTunes Homepage
+			br
+			| and upload the XML file you just saved on your computer
+			br
+			img(src="../images/ins3.png", height="50%",width="50%")
+			br
+			br
+
+
+		#credits.
+			Created by Nikolai Savas, Jemar Jones, and Sam Nalwa

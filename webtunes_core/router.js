@@ -19,6 +19,11 @@ var spotifyApi = new SpotifyWebApi({
 exports.homePage = function(req,res){
 	res.render('homePage',{css: ['../css/homePage.css','//fonts.googleapis.com/css?family=Roboto:100'],js: ['https://code.jquery.com/jquery-2.1.3.min.js','../js/homePage.js']});
 };
+
+exports.instructionsPage = function(req,res){
+  res.render('instructionsPage',{css: ['../css/instructionsPage.css','//fonts.googleapis.com/css?family=Roboto:100'],js: ['https://code.jquery.com/jquery-2.1.3.min.js']});
+};
+
 function parseXML(input_user,data,callback){
   //callback : function(input_user,xml_data)
   var xml_document = new xmldoc.XmlDocument(data);
@@ -342,25 +347,6 @@ exports.userPage = function(req, res){
     }
   });
 };
-//A function that client js can call to get the albums array
-exports.albumData = function(req,res){
-  //Setting up request
-	var query = "SELECT * FROM user_libraries WHERE user='"+req.params.user+"'";
-	var albums;
-  //Making request
-	sqlStarter.connection.query(query,function(err,rows,fields){
-		if (!err){
-      //Organizing music data before sending it
-			albums = algorithms.organize(rows);
-      sortedSongs = rows;
-      algorithms.quickSort(sortedSongs,'title');
-      //Finally sending data to front end
-      res.send([albums, sortedSongs]);
-    }else{
-     console.log(err);
-   }
- });
-};
 //A function that searches and sorts user songs as instructed
 exports.musicSearchAndSort = function(req, res){
   //Getting parameters
@@ -409,7 +395,7 @@ exports.pingUser = function(req,res){
  var query = "SELECT * FROM users WHERE user='"+req.body.user+"'";
  sqlStarter.connection.query(query,function(err,rows,fields){
   if(!err){
-   if(rows.length==0){
+   if(rows.length===0){
 				//No user by that name exists.
 				res.send("User Not Found");
 			} else {
@@ -424,7 +410,7 @@ exports.pingUser = function(req,res){
      console.log(err);
    }
  });
-}
+};
 
 function isUserTaken(user,callback){
   //This check is just to make sure that a taken username isnt submitted, 

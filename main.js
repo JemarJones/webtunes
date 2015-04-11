@@ -102,10 +102,10 @@ var colors = require('colors');
         //     res.setHeader('Content-Type', 'text/html');
         //     res.send(self.cache_get('index.html') );
         // };
+        self.routes['/instructions'] = router.instructionsPage;
         self.routes['/u/:user'] = router.userPage;
-        self.routes['/data/:user'] = router.albumData;
-        self.routes['/searchandsort/:user/:key/:sortby'] = router.musicSearchAndSort;
-        self.routes['/searchandsort/:user/:sortby'] = router.musicSearchAndSort;//For the special case of an empty search key
+        self.routes['/musicSearchAndSort/:user/:key/:sortby'] = router.musicSearchAndSort;
+        self.routes['/musicSearchAndSort/:user/:sortby'] = router.musicSearchAndSort;//For the special case of an empty search key
         self.routes['/'] = router.homePage;
         self.routes['/checkuser/:user'] = router.checkuser;
         self.posts['/upload_xml'] = router.uploadXML;

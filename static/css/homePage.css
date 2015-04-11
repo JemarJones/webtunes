@@ -56,12 +56,13 @@ body {
   width: 300px;
   margin-left: auto;
   margin-right: auto;
+  text-align: center;
 }
 
 #upload_button {
   font-family: "Roboto";
   display: inline-block;
-  margin-top: 200px;
+  margin-top: 50%;
   margin-left: auto;
   margin-right: auto;
   color: #fff;
@@ -119,4 +120,10 @@ body {
   margin-left: auto;
   display: block;
   margin-right: auto;
+}
+
+#intro{
+  font-size: 22px;
+  font-family: "Roboto";
+  color: #414f63;
 }
