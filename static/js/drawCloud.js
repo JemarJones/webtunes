@@ -3,7 +3,7 @@ function drawCloud(){
   fill = d3.scale.category20();
   
   $.post("../getCloudData",{
-    user: $('meta[name="user"]').attr('content')
+    user: user
   }).done(function(data){
     $("#visualization").html("");
     var max = 0;

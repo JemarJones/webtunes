@@ -93,7 +93,6 @@ exports.getTagData = function(req,res){
 
       for(var i=0;i<rows.length;i++){
         var tags = rows[i].tags.split(",");
-        console.log(tags);
         for(var j=0;j<tags.length;j++){
           if(tags[j] == '') continue;
 

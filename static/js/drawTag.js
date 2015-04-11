@@ -1,7 +1,7 @@
 function drawTag(){
 
   $.post("../getTagData",{
-    user: $('meta[name="user"]').attr('content')
+    user: user
   }).done(function(data){
     $("#visualization").html("");
     var diameter = 960,

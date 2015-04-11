@@ -1,7 +1,7 @@
 function drawTrack(){
 
   $.post("../getTrackData",{
-    user: $('meta[name="user"]').attr('content')
+    user: user
   }).done(function(data){
   		var categories = data.songs;
   		var dollars = data.plays;
