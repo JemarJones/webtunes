@@ -1,15 +1,15 @@
-//A little hack to open up the spotify trackset window without loosing focus
-if (window.name != "final"){
-	var url = window.location.href;
-	var newWin = window.open(url,"final");
-	if(!newWin || newWin.closed || typeof newWin.closed=='undefined'){
-		//This breaks down quickly with popup blockers
-		newWin = undefined;
-		alert("Please disable your popup blocker to enjoy Webtunes. We promise to be responsible!");
-	}else{
-		window.location = "https://play.spotify.com/trackset";
-	}
-}
+// //A little hack to open up the spotify trackset window without loosing focus
+// if (window.name != "final"){
+// 	var url = window.location.href;
+// 	var newWin = window.open(url,"final");
+// 	if(!newWin || newWin.closed || typeof newWin.closed=='undefined'){
+// 		//This breaks down quickly with popup blockers
+// 		newWin = undefined;
+// 		alert("Please disable your popup blocker to enjoy Webtunes. We promise to be responsible!");
+// 	}else{
+// 		window.location = "https://play.spotify.com/trackset";
+// 	}
+// }
 //Client side js for customPage
 var albums;//The albums currently being displayed for this user
 var songs;
@@ -115,7 +115,7 @@ var populateLib = function(songArray,showPlayableOnly){
 	//Adding each song to the song view
 	var skipped = 0;//Number of songs skipped (unplayable ones)
 	for (var i = 0; i < songArray.length; i++){
-		if (!(songArray[i].trac_id == "-" && showPlayableOnly)){//If we're not showing unplayables and this is one, we naturally skip it
+		if (!(songArray[i].track_id == "-" && showPlayableOnly)){//If we're not showing unplayables and this is one, we naturally skip it
 			//Figuring out the correct class to assign for styling purposes
 			var classToAdd = "";
 			if ((i-skipped) % 2 === 0){
