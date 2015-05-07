@@ -154,7 +154,7 @@ var colors = require('colors');
 
         // Create the express server and routes.
         self.initializeServer();
-    };
+    }; 
 
 
     /**
