@@ -125,6 +125,12 @@ input:-moz-placeholder { color: rgba(255,255,255,0.6); }
 	width: 100%;
 	background-color: rgba(68,89,120,1.0);
 }
+th{
+	cursor: pointer;
+}
+.song{
+	cursor: pointer;
+}
 .odd{
 	background-color: rgba(255,255,255,0.1);
 }
@@ -169,6 +175,7 @@ input:-moz-placeholder { color: rgba(255,255,255,0.6); }
 	text-align: center;
 	font-size: 2em;
 	padding-top: 1.5%;
+	cursor: pointer;
 }
 #albWrapper{
 	margin-top: 5%;
@@ -176,6 +183,7 @@ input:-moz-placeholder { color: rgba(255,255,255,0.6); }
 	width: 90%;
 	padding: 1%;
 	border-radius: 5px;
+	cursor: pointer;
 }
 #bigAlb{
 	/*margin-top: 5%;*/
@@ -214,6 +222,7 @@ input:-moz-placeholder { color: rgba(255,255,255,0.6); }
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	cursor: pointer;
 }
 .hover{
 	color: white;
