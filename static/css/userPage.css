@@ -32,6 +32,7 @@ body{
 	height: 20%;
 	width: 31.5%;
 	text-align: center;
+	cursor: pointer;
 }
 .navItem > div{
 	padding: 0.2em;
@@ -96,6 +97,7 @@ input:-moz-placeholder { color: rgba(255,255,255,0.6); }
 	text-align: center;
 	width: 150px;
 	height: 176px;
+	cursor: pointer;
 }
 .albCover{
 	width: 150px;
