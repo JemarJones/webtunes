@@ -1,64 +1,64 @@
 body{
-	background-color: rgb(239,239,249);
-	color: white;
-	font-family: 'Roboto', sans-serif; 
-	width:100vw;
-	height: 100vh;
-	margin:0px;
+    background-color: rgb(239,239,249);
+    color: white;
+    font-family: 'Roboto', sans-serif; 
+    width:100vw;
+    height: 100vh;
+    margin:0px;
 }
 #header{
-	position: relative;
-	height: 125px;
-	background-color: rgb(239,239,249);
-	margin-top: -10px;
-	margin-left: -10px;
-	border-bottom: 7px solid rgb(68,89,120);
+    position: relative;
+    height: 125px;
+    background-color: rgb(239,239,249);
+    margin-top: -10px;
+    margin-left: -10px;
+    border-bottom: 7px solid rgb(68,89,120);
 }
 #logo img {
-	height:120px;
-	position:absolute;
-	left:20px;
-	top:0px;
+    height:120px;
+    position:absolute;
+    left:20px;
+    top:0px;
 }
 #nav{
-	position: relative;
-	top: 75%;
-	left: 56.5%;
-	width: 40%;
+    position: relative;
+    top: 75%;
+    left: 56.5%;
+    width: 40%;
 }
 .navItem{
-	display: inline-block;
-	font-size: 1.3em;
-	height: 20%;
-	width: 31.5%;
-	text-align: center;
-	cursor: pointer;
+    display: inline-block;
+    font-size: 1.3em;
+    height: 20%;
+    width: 31.5%;
+    text-align: center;
+    cursor: pointer;
 }
 .navItem > div{
-	padding: 0.2em;
+    padding: 0.2em;
 }
 .highlighted{
-	background-color: rgba(68,89,120,1.0); 
+    background-color: rgba(68,89,120,1.0); 
 }
 .normal{
-	background-color: rgba(68,89,120,0.7);
+    background-color: rgba(68,89,120,0.7);
 }
 #sortCont{
-	/*Initially set to no opacity so it doesnt flash on screen before js takes care of it*/
-	opacity: 0.0;
+    /*Initially set to no opacity so it doesnt flash on screen before js takes care of it*/
+    opacity: 0.0;
 }
 #sortOpt{
-	display: inline-block;
-	font-size: 0.9em;
-	color: white;
-	width: 100%;
-	background-color: rgba(68,89,120,0);
-	border: 0px;
-	margin: auto;
-	font-family: 'Roboto', sans-serif; 
+    display: inline-block;
+    font-size: 0.9em;
+    color: white;
+    width: 100%;
+    background-color: rgba(68,89,120,0);
+    border: 0px;
+    margin: auto;
+    font-family: 'Roboto', sans-serif; 
 }
 #sortOpt:focus{
-	outline: none;
+    outline: none;
 }
 ::-webkit-input-placeholder { color: rgba(255,255,255,0.6); }
 ::-moz-placeholder { color: rgba(255,255,255,0.6); } /* firefox 19+ */
@@ -66,181 +66,181 @@ body{
 input:-moz-placeholder { color: rgba(255,255,255,0.6); }
 
 .hide{
-	display: none;
+    display: none;
 }
 #searchForm{
-	display: inline-block;
-	float: right;
-	margin-top: 1%;
-	margin-right: 2.7%;
+    display: inline-block;
+    float: right;
+    margin-top: 1%;
+    margin-right: 2.7%;
 }
 #search{
-	font-family: 'Roboto', sans-serif; 
-	background-color: rgba(145,206,207,1.0);
-	color: white;
-	border: 0px;
-	font-size: 1.7em;
-	padding: 0.2em;
+    font-family: 'Roboto', sans-serif; 
+    background-color: rgba(145,206,207,1.0);
+    color: white;
+    border: 0px;
+    font-size: 1.7em;
+    padding: 0.2em;
 }
 #albumView{
-	display: inline-block;
-	width: 98%;
-	padding: 1%;
-	clear: both;
-	margin-top: 20px;
-	font-size: 0.7em;
+    display: inline-block;
+    width: 98%;
+    padding: 1%;
+    clear: both;
+    margin-top: 20px;
+    font-size: 0.7em;
 }
 .albumCont{
-	display: inline-block;
-	margin-left: 2%;
-	margin-bottom: 2%;
-	text-align: center;
-	width: 150px;
-	height: 176px;
-	cursor: pointer;
+    display: inline-block;
+    margin-left: 2%;
+    margin-bottom: 2%;
+    text-align: center;
+    width: 150px;
+    height: 176px;
+    cursor: pointer;
 }
 .albCover{
-	width: 150px;
-	height: 150px;
-	border-radius: 3px;
-	box-shadow: 5px 5px 30px grey;
+    width: 150px;
+    height: 150px;
+    border-radius: 3px;
+    box-shadow: 5px 5px 30px grey;
 }
 .albumCont > p{
-	margin-top: 0px;
-	margin-bottom: 0px;
-	text-align: right;
-	color: black;
-	/*Truncates long text nicely*/
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    text-align: right;
+    color: black;
+    /*Truncates long text nicely*/
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .albTitle{
-	font-size: 1.3em;
+    font-size: 1.3em;
 }
 .albArtist{
-	font-size: 1.1em;
+    font-size: 1.1em;
 }
 #songView{
-	width: 100%;
-	background-color: rgba(68,89,120,1.0);
+    width: 100%;
+    background-color: rgba(68,89,120,1.0);
 }
 th{
-	cursor: pointer;
+    cursor: pointer;
 }
 .song{
-	cursor: pointer;
+    cursor: pointer;
 }
 .odd{
-	background-color: rgba(255,255,255,0.1);
+    background-color: rgba(255,255,255,0.1);
 }
 .even{
-	background-color: rgba(0,0,0,0.3);
+    background-color: rgba(0,0,0,0.3);
 }
 .notplayable{
-	background-color: red;
+    background-color: red;
 }
 .playable{
-	background-color: green;
+    background-color: green;
 }
 #bg{
-	position: absolute;
-	display: none;
-	background-size: cover;
-	-webkit-filter: blur(25px);
-	width: 100%;
-	height: 100%;
-	overflow: scroll;
+    position: absolute;
+    display: none;
+    background-size: cover;
+    -webkit-filter: blur(25px);
+    width: 100%;
+    height: 100%;
+    overflow: scroll;
 }
 #overlay{
-	position: absolute;
-	/*text-align: center;*/
-	z-index: 1;
-	display: none;
-	width: 100%;
-	height: 100%;
-	overflow: scroll;
-	margin: 0 auto -73px;
+    position: absolute;
+    /*text-align: center;*/
+    z-index: 1;
+    display: none;
+    width: 100%;
+    height: 100%;
+    overflow: scroll;
+    margin: 0 auto -73px;
 }
 #closeBar{
-	width: 100%;
-	height: 10%;
-	background-color: rgba(255,255,255,0.3);
-	text-shadow:
-  	 	-1px -1px 0 #000,  
-    	1px -1px 0 #000,
-    	-1px 1px 0 #000,
-     	1px 1px 0 #000;
-	color: rgb(236, 236, 236);
-	text-align: center;
-	font-size: 2em;
-	padding-top: 1.5%;
-	cursor: pointer;
+    width: 100%;
+    height: 10%;
+    background-color: rgba(255,255,255,0.3);
+    text-shadow:
+        -1px -1px 0 #000,  
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000;
+    color: rgb(236, 236, 236);
+    text-align: center;
+    font-size: 2em;
+    padding-top: 1.5%;
+    cursor: pointer;
 }
 #albWrapper{
-	margin-top: 5%;
-	margin-left: 5%;
-	width: 90%;
-	padding: 1%;
-	border-radius: 5px;
-	cursor: pointer;
+    margin-top: 5%;
+    margin-left: 5%;
+    width: 90%;
+    padding: 1%;
+    border-radius: 5px;
+    cursor: pointer;
 }
 #bigAlb{
-	/*margin-top: 5%;*/
-	border-radius: 5px;
-	vertical-align: middle;
-	/*width: 35vw;
-	height: 35vw;*/
-	width: 20vw;
-	height: 20vw;
-	/*margin-left: 5%;*/
+    /*margin-top: 5%;*/
+    border-radius: 5px;
+    vertical-align: middle;
+    /*width: 35vw;
+    height: 35vw;*/
+    width: 20vw;
+    height: 20vw;
+    /*margin-left: 5%;*/
 }
 #songInfo{
-	display: inline-block;
-	vertical-align: middle;
-	text-align: center;
-	max-width:600px;
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+    max-width:600px;
     word-wrap:break-word;
-	margin-left: 10%;
-	font-size: 3em;
-	font-weight: bold;
-	letter-spacing: 4px;
+    margin-left: 10%;
+    font-size: 3em;
+    font-weight: bold;
+    letter-spacing: 4px;
 }
 #trackList{
-	list-style-type: none;
-	margin-left: 2%;
-	width: 70%;
-	font-size: 2em;
+    list-style-type: none;
+    margin-left: 2%;
+    width: 70%;
+    font-size: 2em;
 }
 .trkImg{
-	width: 2vw;
-	height: 2vw;
+    width: 2vw;
+    height: 2vw;
 }
 .track{
-	padding: 1%;
-	border-radius: 5px;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	cursor: pointer;
+    padding: 1%;
+    border-radius: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
 }
 .hover{
-	color: white;
-	text-shadow:
-  	 	-1px -1px 0 #000,  
-    	1px -1px 0 #000,
-    	-1px 1px 0 #000,
-     	1px 1px 0 #000;
+    color: white;
+    text-shadow:
+        -1px -1px 0 #000,  
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000;
 }
 .hover:hover{
-	background-color: rgba(0,0,0,0.3);
+    background-color: rgba(0,0,0,0.3);
 }
 iframe{
-	position: absolute;
-	bottom: 0px;
-	left: 76.5vw;
-	right: 0px;
-	height: 73px;
+    position: absolute;
+    bottom: 0px;
+    left: 76.5vw;
+    right: 0px;
+    height: 73px;
 }
 
 .visbtn {
@@ -269,16 +269,16 @@ iframe{
 }
 
 .visbtn:hover {
-	background-color:#414f63;
-	cursor: pointer;
+    background-color:#414f63;
+    cursor: pointer;
 }
 
 #visView {
-	margin-top:30px;
+    margin-top:30px;
 }
 
 #visualization svg {
-	margin-left: auto;
+    margin-left: auto;
   margin-right: auto;
   display: block;
 }
