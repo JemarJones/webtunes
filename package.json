@@ -2,6 +2,9 @@
   "name": "WebTunes",
   "version": "0.0.1",
   "description": "Share your library online!",
+  "scripts": {
+    "start": "node main.js"
+  },
   "keywords": [
     "Music",
     "iTunes",

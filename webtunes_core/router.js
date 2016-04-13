@@ -17,11 +17,11 @@ var spotifyApi = new SpotifyWebApi({
     });
 
 exports.homePage = function(req,res){
-    res.render('homePage',{css: ['../css/homePage.css','//fonts.googleapis.com/css?family=Roboto:100'],js: ['https://code.jquery.com/jquery-2.1.3.min.js','../js/homePage.js']});
+    res.render('homePage',{css: ['../css/homePage.min.css','//fonts.googleapis.com/css?family=Roboto:100'],js: ['https://code.jquery.com/jquery-2.1.3.min.js','../js/homePage.min.js']});
 };
 
 exports.instructionsPage = function(req,res){
-    res.render('instructionsPage',{css: ['../css/instructionsPage.css','//fonts.googleapis.com/css?family=Roboto:100'],js: ['https://code.jquery.com/jquery-2.1.3.min.js']});
+    res.render('instructionsPage',{css: ['../css/instructionsPage.min.css','//fonts.googleapis.com/css?family=Roboto:100'],js: ['https://code.jquery.com/jquery-2.1.3.min.js']});
 };
 
 function parseXML(input_user,data,callback){
@@ -282,7 +282,7 @@ exports.uploadXML = function(req,res){
                             console.log("User added");
 
                             //Render the waiting room for the user
-                            res.render('waitingRoom',{css: ['../css/loader.css','//fonts.googleapis.com/css?family=Roboto:100'],js:['https://code.jquery.com/jquery-2.1.3.min.js','../js/pinger.js'],user:req.body.username});
+                            res.render('waitingRoom',{css: ['../css/loader.min.css','//fonts.googleapis.com/css?family=Roboto:100'],js:['https://code.jquery.com/jquery-2.1.3.min.js','../js/pinger.min.js'],user:req.body.username});
                             parseXML(input_user,data,function(input_user,xml_data){
                                 //We're done parsing the XML, add it all to the db
                                 console.log("Calling addSongsToDB...");
@@ -321,7 +321,7 @@ exports.userPage = function(req, res){
         if (!err && rows.length > 0){
             if (rows[0].complete != 1){
                 //User isnt done loading so we pull up the load screen
-                res.render('waitingRoom',{css: ['../css/loader.css','//fonts.googleapis.com/css?family=Roboto:100'],js:['https://code.jquery.com/jquery-2.1.3.min.js','../js/pinger.js'],user:req.params.user});
+                res.render('waitingRoom',{css: ['../css/loader.min.css','//fonts.googleapis.com/css?family=Roboto:100'],js:['https://code.jquery.com/jquery-2.1.3.min.js','../js/pinger.min.js'],user:req.params.user});
             }else{
                 //The user exists and is done loading so he go ahead and render there page
                 var query = "SELECT * FROM user_libraries WHERE user='"+req.params.user+"'";
@@ -334,7 +334,7 @@ exports.userPage = function(req, res){
                         algorithms.quickSort(sortedSongs,'title');
                         user = rows[0].user + " | ";
                         // user = user.substr(0, 1).toUpperCase() + user.substr(1);
-                        res.render('userPage',{css: ['../css/userPage.css','//fonts.googleapis.com/css?family=Roboto:100'],js: ['../js/userPage.js'], user: user , albums: albums, sortedSongs: sortedSongs});
+                        res.render('userPage',{css: ['../css/userPage.min.css','//fonts.googleapis.com/css?family=Roboto:100'],js: ['../js/userPage.min.js'], user: user , albums: albums, sortedSongs: sortedSongs});
                     }else{
                         console.log(err);
                     }
