@@ -1,7 +1,7 @@
 var fs = require('fs');
 var xmldoc = require('xmldoc');
 var async = require('async');
-var SpotifyWebApi = require('spotify-web-api-node');
+var spotifyApi = require('.spotify');
 var sqlStarter = require('./sqlStarter');
 var algorithms = require('./algorithms');
 var LastfmAPI = require('lastfmapi');
@@ -11,10 +11,6 @@ var lfm = new LastfmAPI({
     'secret' : 'is 8ab78265bdc75215631380724adefbcf'
 });
 var colors = require('colors');
-var spotifyApi = new SpotifyWebApi({
-        clientId : '228486b3feaf411586151d99d358c135',
-        clientSecret : '4c9d49e596ac40809c1a4ac90c5fa0d3'
-    });
 
 exports.homePage = function(req,res){
     res.render('homePage',{css: ['../css/homePage.min.css','//fonts.googleapis.com/css?family=Roboto:100'],js: ['https://code.jquery.com/jquery-2.1.3.min.js','../js/homePage.min.js']});

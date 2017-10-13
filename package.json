@@ -14,9 +14,9 @@
   "author": {
     "name": "Samraj Nalwa, Jemar Jones, Nikolai Savas",
     "email": "niko@savas.ca",
-    "url": "http://app-webtunes.rhcloud.com/"
+    "url": "http://webtunes-webtunes.193b.starter-ca-central-1.openshiftapps.com/"
   },
-  "homepage": "http://app-webtunes.rhcloud.com/",
+  "homepage": "http://webtunes-webtunes.193b.starter-ca-central-1.openshiftapps.com/",
   "repository": {
     "type": "git",
     "url": "https://github.com/sam-nalwa/WebTunes"
