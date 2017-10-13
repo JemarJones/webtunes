@@ -15,4 +15,4 @@ function refreshToken() {
 
 spotifyApi.clientCredentialsGrant().then(setToken);
 
-exports = spotifyApi;
+module.exports = spotifyApi;
