@@ -31,7 +31,7 @@
     "spotify-web-api-node": "^2.0.1",
     "xml2js": "0.4.5",
     "async": "0.9.0",
-    "mysql": "2.5.5",
+    "mysql": "2.14.0",
     "multer": "0.1.8",
     "xmldoc": "0.3.0",
     "lastfmapi": "0.0.6",
