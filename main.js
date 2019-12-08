@@ -40,15 +40,7 @@ var colors = require('colors');
      */
      self.setupVariables = function() {
         //  Set the environment variables we need.
-        self.ipaddress = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
-        self.port      = process.env.OPENSHIFT_NODEJS_PORT || 8080;
-
-        if (typeof self.ipaddress === "undefined") {
-            //  Log errors on OpenShift but continue w/ 127.0.0.1 - this
-            //  allows us to run/test the app locally.
-            console.warn('No OPENSHIFT_NODEJS_IP var, using 127.0.0.1');
-            self.ipaddress = "127.0.0.1";
-        };
+        self.port = process.env.PORT || 8080;
     };
 
     /**
@@ -154,7 +146,7 @@ var colors = require('colors');
 
         // Create the express server and routes.
         self.initializeServer();
-    }; 
+    };
 
 
     /**
@@ -162,9 +154,9 @@ var colors = require('colors');
      */
      self.start = function() {
         //  Start the app on the specific interface (and port).
-        self.app.listen(self.port, self.ipaddress, function() {
-            console.log('%s: WebTunes started on %s:%d ...',
-                Date(Date.now() ), self.ipaddress, self.port);
+        self.app.listen(self.port, function() {
+            console.log('%s: WebTunes started on port: %d ...',
+                Date(Date.now() ), self.port);
         });
     };
 
