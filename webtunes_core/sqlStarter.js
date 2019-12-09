@@ -5,14 +5,15 @@ var colors = require('colors');
 // console.log("3:"+process.env.OPENSHIFT_MYSQL_DB_USERNAME);
 // console.log("4:"+process.env.OPENSHIFT_MYSQL_DB_PASSWORD);
 // console.log("5:"+process.env.OPENSHIFT_MYSQL_DB_SOCKET);
-var db_config = {
-    host     : process.env.OPENSHIFT_MYSQL_DB_HOST,
-    port     : process.env.OPENSHIFT_MYSQL_DB_PORT,
-    user     : process.env.OPENSHIFT_MYSQL_DB_USERNAME,
-    password : process.env.OPENSHIFT_MYSQL_DB_PASSWORD,
-    database : process.env.OPENSHIFT_MYSQL_DB_NAME,
-    // socket   : process.env.OPENSHIFT_MYSQL_DB_SOCKET
-};
+// var db_config = {
+//     host     : process.env.OPENSHIFT_MYSQL_DB_HOST,
+//     port     : process.env.OPENSHIFT_MYSQL_DB_PORT,
+//     user     : process.env.OPENSHIFT_MYSQL_DB_USERNAME,
+//     password : process.env.OPENSHIFT_MYSQL_DB_PASSWORD,
+//     database : process.env.OPENSHIFT_MYSQL_DB_NAME,
+//     // socket   : process.env.OPENSHIFT_MYSQL_DB_SOCKET
+// };
+var db_config = process.env.JAWSDB_MARIA_URL
 
 var connection;
 handleDisconnect();
