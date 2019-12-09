@@ -153,19 +153,14 @@ var expandAlbum = function(){
         var elem = this;
         var tracks = albums[$(elem).data("albumnum")];//Getting the associated album
         //Loading in the data for all tracks on this album
-        var src = "https://embed.spotify.com/?uri=spotify:trackset:"+tracks[0].album+ ":";
+        var src = "https://open.spotify.com/embed/album/" + tracks[0].album_id
         for (var i = 0; i < tracks.length; i++){
-            if (i == tracks.length - 1 ){
-                src += tracks[i].track_id;
-            }else{
-                src += tracks[i].track_id + ",";
-            }
             $('#trackList').append('<li class="track hover" data-id="'+ tracks[i].track_id+ '"data-title="'+ tracks[i].title+ '"data-artist="'+ tracks[i].artist+ '" data-num='+ i+ '>' +'<img class="trkImg" src="../images/play_button.png"/>  '+tracks[i].title + " - " + tracks[i].artist + '</li>');
         }
         $('#albWrapper').addClass('hover');//Adding some css for reactivity
         //Setting up rest of player
         displayPlayer([tracks[0].art_lg,tracks[0].album,tracks[0].artist],$('#albumView'));
-        $('#albWrapper').attr('data-ids', src);
+        $('#albWrapper').attr('data-album-embed', src);
         $('.track').on('click', playTrack);
     }
 };
@@ -190,7 +185,7 @@ var expandSong = function(){
         $('#albWrapper').removeClass('hover');
         //Setting up iframe(spotify player) for this song
         if ($(this).attr("data-id") !== "-"){
-            var src = "https://embed.spotify.com/?uri=spotify:trackset:"+$('#songAlbum').text()+ ":" + $(this).attr('data-id');
+            var src = "https://open.spotify.com/embed/track/" + $(this).attr('data-id')
             $('iframe').remove();
             var iframe = $('<iframe frameborder="0" allowtransparency="true" src="'+src+'">'+'</iframe>');
             $('#overlay').append(iframe);
@@ -221,7 +216,7 @@ var playTrack = function(){
     $('.track').fadeOut();
     if ($(this).attr('data-id') != "-"){
         //Showing iframe if this track is playable
-        var src = "https://embed.spotify.com/?uri=spotify:trackset:"+$(this).attr('data-title')+ ":" + $(this).attr('data-id');
+        var src = "https://open.spotify.com/embed/track/" + $(this).attr('data-id')
         $('iframe').remove();
         var iframe = $('<iframe frameborder="0" allowtransparency="true" src="'+src+'">'+'</iframe>');
         $('#overlay').append(iframe);
@@ -232,6 +227,6 @@ var playTrack = function(){
 var playFull = function(){
     //Settign up iframe with full album ids included
     $('iframe').remove();
-    var iframe = $('<iframe frameborder="0" allowtransparency="true" src="'+$(this).attr('data-ids')+'">'+'</iframe>');
+    var iframe = $('<iframe frameborder="0" allowtransparency="true" src="'+$(this).attr('data-album-embed')+'">'+'</iframe>');
     $('#overlay').append(iframe);
 };
