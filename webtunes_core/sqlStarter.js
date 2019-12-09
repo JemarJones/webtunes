@@ -1,25 +1,12 @@
 var mysql = require('mysql');
-var colors = require('colors');
-// console.log("1:"+process.env.OPENSHIFT_MYSQL_DB_HOST);
-// console.log("2:"+process.env.OPENSHIFT_MYSQL_DB_PORT);
-// console.log("3:"+process.env.OPENSHIFT_MYSQL_DB_USERNAME);
-// console.log("4:"+process.env.OPENSHIFT_MYSQL_DB_PASSWORD);
-// console.log("5:"+process.env.OPENSHIFT_MYSQL_DB_SOCKET);
-// var db_config = {
-//     host     : process.env.OPENSHIFT_MYSQL_DB_HOST,
-//     port     : process.env.OPENSHIFT_MYSQL_DB_PORT,
-//     user     : process.env.OPENSHIFT_MYSQL_DB_USERNAME,
-//     password : process.env.OPENSHIFT_MYSQL_DB_PASSWORD,
-//     database : process.env.OPENSHIFT_MYSQL_DB_NAME,
-//     // socket   : process.env.OPENSHIFT_MYSQL_DB_SOCKET
-// };
-var db_config = process.env.JAWSDB_MARIA_URL
+
+var dbConnectionString = process.env.JAWSDB_MARIA_URL
 
 var connection;
 handleDisconnect();
 
 function handleDisconnect() {
-    connection = mysql.createConnection(db_config); // Recreate the connection, since the old one cannot be reused.
+    connection = mysql.createConnection(dbConnectionString); // Recreate the connection, since the old one cannot be reused.
     connection.connect(function(err) {              // The server is either down
     if(err) {                                     // or restarting (takes a while sometimes).
         console.log('error when connecting to db:', err);
