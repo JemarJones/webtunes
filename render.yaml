@@ -10,7 +10,3 @@ services:
     numInstances: 1
     domains: # custom domains
       - 'webtunes.jkjones.me'
-    envVars:
-      - key: JAWSDB_MARIA_URL # Imported from Heroku app
-        value: mysql://bkn067qsfm8uf9r4:nirp0n0joph8tlgk@thzz882efnak0xod.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/b78l68x0vmp8cmlb
-
